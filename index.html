@@ -2031,8 +2031,16 @@
 
         /* 隐藏状态栏功能 */
         body.hide-status-bar .status-bar {
-            visibility: hidden !important;
-            /* 保持占位空间，避免内容上移 */
+            display: none !important;
+        }
+
+        /* 主页面隐藏状态栏时的调整 */
+        body.hide-status-bar .iphone-container {
+            /* 确保容器仍然填满可用空间 */
+        }
+
+        body.hide-status-bar .main-content {
+            /* flex: 1 自动扩展到可用空间 */
         }
 
         /* ========== 统一页面适配逻辑 ========== */
@@ -2053,16 +2061,34 @@
         body:not(.hide-status-bar) .settings-screen .status-bar,
         body:not(.hide-status-bar) .friend-settings-screen .status-bar,
         body:not(.hide-status-bar) .worldbookModal .status-bar {
-            visibility: visible !important;
+            display: block !important;
         }
 
-        /* 隐藏状态栏时：弹窗页面的.status-bar隐藏但保留占位空间 */
+        /* 隐藏状态栏时：弹窗页面的.status-bar完全隐藏 */
         body.hide-status-bar #chatModal .status-bar,
         body.hide-status-bar #apiModal .status-bar,
         body.hide-status-bar .settings-screen .status-bar,
         body.hide-status-bar .friend-settings-screen .status-bar,
         body.hide-status-bar .worldbookModal .status-bar {
-            visibility: hidden !important;
+            display: none !important;
+        }
+
+        /* 隐藏状态栏时，各屏幕内容区应扩展到顶部 */
+        body.hide-status-bar .settings-screen,
+        body.hide-status-bar #chatModal .modal-content,
+        body.hide-status-bar #apiModal .modal-content,
+        body.hide-status-bar .friend-settings-screen,
+        body.hide-status-bar .worldbookModal {
+            padding-top: 0 !important;
+        }
+
+        /* 隐藏状态栏时，导航栏调整为紧靠顶部 */
+        body.hide-status-bar #chatModal .modal-header,
+        body.hide-status-bar #apiModal .modal-header,
+        body.hide-status-bar .settings-nav,
+        body.hide-status-bar .friend-settings-nav {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
         }
 
         /* 3. 统一所有弹窗页面的返回栏位置 */
@@ -2088,9 +2114,6 @@
         #apiModal .modal-content {
             padding-top: 0;
         }
-
-        /* 6. 状态栏隐藏时保持原有布局，不需要特殊处理 */
-        /* 使用 visibility: hidden 保留占位空间，页面布局不受影响 */
 
         /* 所有返回按钮确保可点击和高层级 */
         .settings-back,
