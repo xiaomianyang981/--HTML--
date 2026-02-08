@@ -1303,19 +1303,19 @@
         
         /* 头像上传样式 */
         .avatar-upload-preview {
-            width: 100%;
-            height: 120px;
-            border: 2px dashed #ddd;
-            border-radius: 10px;
+            width: 84px;
+            height: 84px;
+            border: 2px dashed #f0d6d7;
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             background-color: #fafafa;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
-            margin-bottom: 15px;
-            color: #999;
+            transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+            margin: 0 auto 15px;
+            color: #f0d6d7;
             overflow: hidden;
             background-size: cover;
             background-position: center;
@@ -1324,16 +1324,18 @@
         .avatar-upload-preview:hover {
             border-color: #f0d6d7;
             background-color: #f6f2f1;
+            transform: scale(1.05);
         }
         
         .avatar-upload-preview i {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 32px;
+            margin-bottom: 4px;
         }
         
         .avatar-upload-preview p {
-            font-size: 14px;
+            font-size: 12px;
             margin: 0;
+            text-align: center;
         }
         
         .avatar-upload-preview.has-image {
@@ -2383,13 +2385,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>头像</label>
-                    <div id="avatarPreview" class="avatar-upload-preview">
-                        <i class="fas fa-image"></i>
-                        <p>点击选择头像</p>
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                    <div class="form-group" style="width: auto; text-align: center;">
+                        <div id="avatarPreview" class="avatar-upload-preview">
+                            <i class="fas fa-user"></i>
+                            <p>点击添加</p>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 8px;">点击头像选择</div>
+                        <input type="file" id="avatarInput" class="form-control" accept="image/*" style="display: none;">
                     </div>
-                    <input type="file" id="avatarInput" class="form-control" accept="image/*" style="display: none;">
                 </div>
                 
                 <div class="form-group">
@@ -4381,6 +4385,7 @@
         function resetAddFriendForm() {
             friendName.value = '';
             friendPersona.value = '';
+            pendingAddFriendAvatar = '';
             avatarPreview.style.backgroundImage = '';
             avatarPreview.classList.remove('has-image');
             addFriendStatus.style.display = 'none';
@@ -4403,6 +4408,8 @@
         }
         
         // 头像上传处理
+        let pendingAddFriendAvatar = '';
+        
         avatarPreview.addEventListener('click', () => {
             avatarInput.click();
         });
@@ -4413,6 +4420,7 @@
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const imageUrl = event.target.result;
+                    pendingAddFriendAvatar = imageUrl;
                     avatarPreview.style.backgroundImage = `url('${imageUrl}')`;
                     avatarPreview.classList.add('has-image');
                 };
@@ -4424,9 +4432,7 @@
         confirmAddFriend.addEventListener('click', () => {
             const name = friendName.value.trim();
             const persona = friendPersona.value.trim();
-            const avatar = avatarPreview.style.backgroundImage 
-                ? avatarPreview.style.backgroundImage.match(/url\('(.+)'\)/)?.[1] 
-                : '';
+            const avatar = pendingAddFriendAvatar || '';
             
             if (!name) {
                 showAddFriendStatus('请输入昵称', 'error');
@@ -6404,6 +6410,15 @@
                 const freshFriend = friends.find(f => f.id === friend.id) || friend;
                 this.currentFriendId = freshFriend.id;
                 chatTitle.textContent = friend.name;
+                
+                // 更新聊天头部的好友头像
+                if (freshFriend.avatar) {
+                    // 移除可能存在的旧头像
+                    const existingAvatar = document.getElementById('chatFriendAvatarIcon');
+                    if (existingAvatar && existingAvatar.nextSibling === chatTitle) {
+                        existingAvatar.remove();
+                    }
+                }
 
                 const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
                 const apiWarning = document.getElementById('apiWarning');
