@@ -2074,7 +2074,15 @@
             visibility: hidden !important;
         }
 
-
+        /* 隐藏状态栏时，导航栏紧靠顶部并优化高度 */
+        body.hide-status-bar #chatModal .modal-header,
+        body.hide-status-bar #apiModal .modal-header,
+        body.hide-status-bar .settings-nav,
+        body.hide-status-bar .friend-settings-nav {
+            padding-top: 0 !important;
+            height: 42px !important;
+            min-height: 42px !important;
+        }
 
         /* 3. 统一所有弹窗页面的返回栏位置 */
         #chatModal .modal-header,
