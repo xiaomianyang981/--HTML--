@@ -330,8 +330,8 @@
         .brush-icon { background: linear-gradient(135deg, #debeeb 0%, #debeeb 100%); }
         
         .dock {
-            height: 80px;
-            min-height: 80px;
+            height: 96px;
+            min-height: 96px;
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.75) 100%);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
@@ -339,22 +339,22 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 8px 24px 12px;
+            padding: 10px 24px 16px;
             border-bottom-left-radius: 40px;
             border-bottom-right-radius: 40px;
             box-shadow: 0 -8px 24px rgba(120, 119, 133, 0.06);
         }
         
         .dock-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
+            width: 75px;
+            height: 75px;
+            border-radius: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 22px;
+            font-size: 26px;
             color: white;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
             transition: transform 0.2s ease, opacity 0.15s ease;
             cursor: pointer;
         }
@@ -391,16 +391,6 @@
             overflow-y: auto;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
-        }
-
-        /* profileWidgetModal 特殊处理 */
-        #profileWidgetModal {
-            z-index: 3000 !important;
-        }
-
-        #profileWidgetModal .btn {
-            pointer-events: auto !important;
-            cursor: pointer !important;
         }
 
         /* API 配置弹窗全屏（手机内）样式 */
@@ -1436,10 +1426,10 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            height: 52px;
+            height: 60px;
             background: #fff;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 10px 0 14px 0;
+            padding-bottom: 8px;
         }
 
         .friend-list-nav-item {
@@ -2084,30 +2074,14 @@
             visibility: hidden !important;
         }
 
-        /* 隐藏状态栏时，导航栏紧靠顶部并优化高度 */
-        body.hide-status-bar #chatModal .modal-header,
-        body.hide-status-bar #apiModal .modal-header,
-        body.hide-status-bar .settings-nav,
-        body.hide-status-bar .friend-settings-nav,
-        body.hide-status-bar .chat-nav {
-            padding-top: 0 !important;
-            height: 38px !important;
-            min-height: 38px !important;
-        }
 
-        /* 隐藏状态栏时，好友设置屏幕背景改为白色 */
-        body.hide-status-bar .friend-settings-screen {
-            background: #FFFFFF !important;
-        }
 
         /* 3. 统一所有弹窗页面的返回栏位置 */
         #chatModal .modal-header,
         #apiModal .modal-header,
         .settings-nav,
-        .friend-settings-nav,
-        .chat-nav {
+        .friend-settings-nav {
             padding-top: 10px !important;
-            padding-bottom: 10px !important;
             padding-left: 16px !important;
             height: 48px !important;
             min-height: 48px !important;
@@ -2453,7 +2427,7 @@
             </div>
 
             <!-- 导航栏 -->
-            <div class="chat-nav" style="background-color: #FFFFFF; padding-top: 10px; padding-bottom: 10px; padding-left: 16px; padding-right: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f6f2f1; flex-shrink: 0; height: 48px;">
+            <div style="background-color: #FFFFFF; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f6f2f1; flex-shrink: 0;">
                 <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-chevron-left"></i>
                 </button>
@@ -2723,7 +2697,7 @@
 
                 <div class="friend-settings-card">
                     <div class="friend-settings-label">好友昵称</div>
-                    <input id="charNameInput" class="friend-settings-input">
+                    <input id="charNameInput" class="friend-settings-input" readonly>
                 </div>
 
                 <div class="friend-settings-card">
@@ -3402,9 +3376,12 @@
 
             saveChanges() {
                 if (this.currentField) {
-                    this.data[this.currentField] = this.tempValue;
-                    this.save();
-                    this.updateUI();
+                    // 只有在tempValue不为空时才保存，避免清空现有数据
+                    if (this.tempValue) {
+                        this.data[this.currentField] = this.tempValue;
+                        this.save();
+                        this.updateUI();
+                    }
                 }
                 this.closeModal();
             }
@@ -7241,9 +7218,11 @@
                     // 延迟执行，等待键盘完全弹出
                     setTimeout(() => {
                         if (chatMessages) {
-                            // 只滚动消息区域内的内容，不要移动整个容器
+                            // 滚动到最新消息
                             chatMessages.scrollTop = chatMessages.scrollHeight;
                         }
+                        // 确保输入框可见
+                        chatInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }, 300);
                 });
 
