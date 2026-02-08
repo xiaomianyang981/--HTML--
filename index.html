@@ -393,6 +393,16 @@
             animation: modalSlideIn 0.3s ease;
         }
 
+        /* profileWidgetModal 特殊处理 */
+        #profileWidgetModal {
+            z-index: 3000 !important;
+        }
+
+        #profileWidgetModal .btn {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+
         /* API 配置弹窗全屏（手机内）样式 */
         #apiModal .modal-content {
             width: 100%;
@@ -1426,10 +1436,10 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            height: 60px;
+            height: 52px;
             background: #fff;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 8px;
+            padding: 10px 0 14px 0;
         }
 
         .friend-list-nav-item {
@@ -2713,7 +2723,7 @@
 
                 <div class="friend-settings-card">
                     <div class="friend-settings-label">好友昵称</div>
-                    <input id="charNameInput" class="friend-settings-input" readonly>
+                    <input id="charNameInput" class="friend-settings-input">
                 </div>
 
                 <div class="friend-settings-card">
@@ -7231,11 +7241,9 @@
                     // 延迟执行，等待键盘完全弹出
                     setTimeout(() => {
                         if (chatMessages) {
-                            // 滚动到最新消息
+                            // 只滚动消息区域内的内容，不要移动整个容器
                             chatMessages.scrollTop = chatMessages.scrollHeight;
                         }
-                        // 确保输入框可见
-                        chatInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }, 300);
                 });
 
