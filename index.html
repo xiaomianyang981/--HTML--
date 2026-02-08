@@ -2078,18 +2078,26 @@
         body.hide-status-bar #chatModal .modal-header,
         body.hide-status-bar #apiModal .modal-header,
         body.hide-status-bar .settings-nav,
-        body.hide-status-bar .friend-settings-nav {
+        body.hide-status-bar .friend-settings-nav,
+        body.hide-status-bar .chat-nav {
             padding-top: 0 !important;
             height: 42px !important;
             min-height: 42px !important;
+        }
+
+        /* 隐藏状态栏时，好友设置屏幕背景改为白色 */
+        body.hide-status-bar .friend-settings-screen {
+            background: #FFFFFF !important;
         }
 
         /* 3. 统一所有弹窗页面的返回栏位置 */
         #chatModal .modal-header,
         #apiModal .modal-header,
         .settings-nav,
-        .friend-settings-nav {
+        .friend-settings-nav,
+        .chat-nav {
             padding-top: 10px !important;
+            padding-bottom: 10px !important;
             padding-left: 16px !important;
             height: 48px !important;
             min-height: 48px !important;
@@ -2435,7 +2443,7 @@
             </div>
 
             <!-- 导航栏 -->
-            <div style="background-color: #FFFFFF; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f6f2f1; flex-shrink: 0;">
+            <div class="chat-nav" style="background-color: #FFFFFF; padding-top: 10px; padding-bottom: 10px; padding-left: 16px; padding-right: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f6f2f1; flex-shrink: 0; height: 48px;">
                 <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-chevron-left"></i>
                 </button>
