@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        :root {
+            /* 顶部栏高度CSS变量（自动适配安全区） */
+            --header-base-height: 48px;
+            --header-base-height-hidden: 38px;
+            --header-height-normal: calc(var(--header-base-height) + env(safe-area-inset-top, 0px));
+            --header-height-hidden: calc(var(--header-base-height-hidden) + env(safe-area-inset-top, 0px));
+
+            /* 内容区域自动计算偏移（如需使用） */
+            --content-offset-top: var(--header-height-normal);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -2008,12 +2019,23 @@
             #apiModal .modal-header,
             .settings-nav,
             .friend-settings-nav {
-                padding-top: max(10px, env(safe-area-inset-top)) !important;
-                height: auto !important;
-                min-height: 50px !important;
+                padding-top: env(safe-area-inset-top, 10px) !important;
+                padding-bottom: 10px !important;
+                padding-left: 16px !important;
+                box-sizing: border-box !important;
+                height: var(--header-height-normal) !important;
+                min-height: calc(50px + env(safe-area-inset-top, 0px)) !important;
+                transition: height 0.3s ease, min-height 0.3s ease;
             }
 
-            /* 移动端隐藏状态栏时保持原有布局，不需要特殊调整 */
+            /* 移动端隐藏状态栏时顶部栏高度减少 */
+            body.hide-status-bar #chatModal .modal-header,
+            body.hide-status-bar #apiModal .modal-header,
+            body.hide-status-bar .settings-nav,
+            body.hide-status-bar .friend-settings-nav {
+                height: var(--header-height-hidden) !important;
+                min-height: calc(40px + env(safe-area-inset-top, 0px)) !important;
+            }
         }
 
         /* 非移动端：弹窗页面仿照主页面大小 */
@@ -2078,15 +2100,27 @@
 
 
 
-        /* 3. 统一所有弹窗页面的返回栏位置 */
+        /* 3. 统一所有弹窗页面的返回栏位置（支持安全区） */
         #chatModal .modal-header,
         #apiModal .modal-header,
         .settings-nav,
         .friend-settings-nav {
-            padding-top: 10px !important;
+            padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+            padding-bottom: 10px !important;
             padding-left: 16px !important;
-            height: 48px !important;
-            min-height: 48px !important;
+            box-sizing: border-box !important;
+            height: var(--header-height-normal) !important;
+            min-height: var(--header-height-normal) !important;
+            transition: height 0.3s ease, min-height 0.3s ease;
+        }
+
+        /* 3.1 状态栏隐藏时的顶部栏高度自适应 */
+        body.hide-status-bar #chatModal .modal-header,
+        body.hide-status-bar #apiModal .modal-header,
+        body.hide-status-bar .settings-nav,
+        body.hide-status-bar .friend-settings-nav {
+            height: var(--header-height-hidden) !important;
+            min-height: var(--header-height-hidden) !important;
         }
 
         /* 4. 确保主屏幕完全不受影响（明确保留原有样式） */
@@ -2977,7 +3011,6 @@
         };
 
         // 基础功能
-        const statusEl = document.getElementById('statusText');
         const statusTimeEl = document.getElementById('statusTime');
         const statusSignalEl = document.getElementById('statusSignal');
         const statusWifiEl = document.getElementById('statusWifi');
@@ -2996,7 +3029,6 @@
         const apiStatusSignal = document.getElementById('apiStatusSignal');
         const apiStatusWifi = document.getElementById('apiStatusWifi');
         const apiStatusBattery = document.getElementById('apiStatusBattery');
-        const greetingText = document.getElementById('greetingText');
 
         function setStatusIcon(el, iconClass) {
             if (!el || !iconClass) return;
@@ -3086,15 +3118,7 @@
         }
         setInterval(updateTime, 1000);
         
-        // 状态提示
-        function announce(name) {
-            if (!statusEl) return;
-            const original = statusEl.textContent;
-            statusEl.textContent = `打开了 ${name}`;
-            setTimeout(() => {
-                statusEl.textContent = original;
-            }, 900);
-        }
+
 
         function launchApp(appId) {
             if (!window.appManager || typeof window.appManager.launch !== 'function') return;
@@ -3105,44 +3129,12 @@
             }
         }
 
-        function loadGreetingText() {
-            const fallback = '小小世界，开心至上';
-            const saved = friendSystem
-                ? friendSystem.getStorage('homeGreeting', fallback)
-                : fallback;
-            if (greetingText) {
-                greetingText.textContent = (saved || fallback).trim();
-            }
+        function announce(name) {
+            // 空实现：statusEl已删除（HTML中不存在id="statusText"）
+            // 保留函数签名以防止引用错误
         }
 
-        function enableGreetingEdit() {
-            if (!greetingText) return;
-            greetingText.setAttribute('contenteditable', 'true');
-            greetingText.focus();
-            const selection = window.getSelection();
-            if (selection && greetingText.firstChild) {
-                const range = document.createRange();
-                range.selectNodeContents(greetingText);
-                range.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
 
-        function saveGreetingText() {
-            if (!greetingText) return;
-            const text = greetingText.textContent.trim() || '小小世界，开心至上';
-            greetingText.textContent = text;
-            greetingText.removeAttribute('contenteditable');
-            if (friendSystem) {
-                friendSystem.setStorage('homeGreeting', text);
-            } else {
-                localStorage.setItem('homeGreeting', JSON.stringify(text));
-            }
-        }
-        
-        // ========== 获取DOM元素 ==========
-        
         // 图标元素
         const phoneIcon = document.getElementById('phoneIcon');
         const novelIcon = document.getElementById('novelIcon');
@@ -3171,8 +3163,6 @@
         const apiStatus = document.getElementById('apiStatus');
         
         // 设置显示元素
-        const currentApiUrlDisplay = document.getElementById('currentApiUrlDisplay');
-        const currentModelDisplay = document.getElementById('currentModelDisplay');
         const configStatus = document.getElementById('configStatus');
         
         // 好友列表相关元素
@@ -3668,7 +3658,6 @@
         const charNameInput = document.getElementById('charNameInput');
         const charPersonaInput = document.getElementById('charPersonaInput');
         const charAvatarDisplay = document.getElementById('charAvatarDisplay');
-        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
         const charAvatarInput = document.getElementById('charAvatarInput');
         const worldBookSelect = document.getElementById('worldBookSelect');
         const voiceIdInput = document.getElementById('voiceIdInput');
@@ -3892,24 +3881,6 @@
             confirmDeleteModal.style.display = 'none';
         });
         
-        if (openApiConfig) {
-            openApiConfig.addEventListener('click', () => {
-                settingsModal.style.display = 'none';
-                apiModal.style.display = 'flex';
-
-                if (!apiService) return;
-                const config = apiService.getConfig();
-                if (config.apiUrl) {
-                    apiUrlInput.value = config.apiUrl;
-                }
-                if (config.apiKey) {
-                    apiKeyInput.value = config.apiKey;
-                }
-                if (config.models && config.models.length > 0) {
-                    apiService.updateModelSelect(config.models);
-                }
-            });
-        }
 
         function downloadJson(data, filename) {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -4044,7 +4015,6 @@
                 profileWidget.updateUI();
             }
             renderFriendList();
-            loadGreetingText();
         }
 
         function handleImportFile(file) {
@@ -4504,30 +4474,9 @@
                 const config = this.getConfig();
 
                 if (config.apiUrl && config.apiKey) {
-                    const shortUrl = config.apiUrl.length > 30
-                        ? config.apiUrl.substring(0, 30) + '...'
-                        : config.apiUrl;
-                    if (currentApiUrlDisplay) {
-                        currentApiUrlDisplay.textContent = shortUrl;
-                        currentApiUrlDisplay.style.color = '#48bb78';
-                    }
-
-                    if (currentModelDisplay) {
-                        currentModelDisplay.textContent = config.model || '未选择';
-                        currentModelDisplay.style.color = config.model ? '#48bb78' : '#f56565';
-                    }
-
                     configStatus.textContent = '已配置';
                     configStatus.classList.add('ok');
                 } else {
-                    if (currentApiUrlDisplay) {
-                        currentApiUrlDisplay.textContent = '未设置';
-                        currentApiUrlDisplay.style.color = '#f56565';
-                    }
-                    if (currentModelDisplay) {
-                        currentModelDisplay.textContent = '未选择';
-                        currentModelDisplay.style.color = '#f56565';
-                    }
                     configStatus.textContent = '未配置';
                     configStatus.classList.remove('ok');
                 }
@@ -7187,6 +7136,46 @@
                     document.body.classList.remove('hide-status-bar');
                 }
             });
+
+            // 动态更新顶部栏高度（考虑安全区）
+            function updateHeaderHeight() {
+                const hasHideClass = document.body.classList.contains('hide-status-bar');
+
+                // 读取实际的安全区域值
+                const rootStyles = getComputedStyle(document.documentElement);
+                const safeAreaTop = parseFloat(rootStyles.getPropertyValue('padding-top')) || 0;
+
+                // 计算实际高度
+                const baseHeight = hasHideClass ? 38 : 48;
+                const actualHeight = baseHeight + safeAreaTop;
+
+                // 更新CSS变量（用于JS读取或特殊场景）
+                document.documentElement.style.setProperty('--header-actual-height', `${actualHeight}px`);
+
+                // 同步更新内容偏移量
+                const currentHeaderVar = hasHideClass ? 'var(--header-height-hidden)' : 'var(--header-height-normal)';
+                document.documentElement.style.setProperty('--content-offset-top', currentHeaderVar);
+
+                console.log(`[顶部栏] 高度已更新: ${actualHeight}px (基础: ${baseHeight}px + 安全区: ${safeAreaTop}px)`);
+            }
+
+            // 监听body的class变化（用于顶部栏高度自适应）
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        updateHeaderHeight();
+                    }
+                });
+            });
+
+            // 只监听一次，避免重复绑定
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // 初始化时更新一次
+            updateHeaderHeight();
         }
 
         // 页面加载时初始化
@@ -7199,17 +7188,6 @@
 
             registerApps();
             renderHomeApps();
-            loadGreetingText();
-            if (greetingText) {
-                greetingText.addEventListener('click', enableGreetingEdit);
-                greetingText.addEventListener('blur', saveGreetingText);
-                greetingText.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        greetingText.blur();
-                    }
-                });
-            }
             if (window.appManager && typeof window.appManager.setStatus === 'function') {
                 window.appManager.setStatus({
                     signal: 'fa-signal',
