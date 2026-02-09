@@ -15,7 +15,7 @@
             /* 顶部栏高度定义 */
             --status-bar-height: 50px;
             --status-bar-height-hidden: 0px;
-            --header-base-height: 44px;
+            --header-base-height: 40px;
             --header-base-height-hidden: 36px;
             --header-height-normal: calc(var(--header-base-height) + env(safe-area-inset-top, 0px));
             --header-height-hidden: calc(var(--header-base-height-hidden) + env(safe-area-inset-top, 0px));
@@ -2031,12 +2031,14 @@
             #apiModal .modal-header,
             .settings-nav,
             .friend-settings-nav {
-                padding-top: env(safe-area-inset-top, 10px) !important;
+                padding: 0 !important;
+                padding-top: calc(0px + env(safe-area-inset-top, 0px)) !important;
                 padding-bottom: 10px !important;
                 padding-left: 16px !important;
+                padding-right: 16px !important;
                 box-sizing: border-box !important;
                 height: var(--header-height-normal) !important;
-                min-height: calc(50px + env(safe-area-inset-top, 0px)) !important;
+                min-height: var(--header-height-normal) !important;
                 transition: height 0.3s ease, min-height 0.3s ease;
             }
 
@@ -2046,7 +2048,7 @@
             body.hide-status-bar .settings-nav,
             body.hide-status-bar .friend-settings-nav {
                 height: var(--header-height-hidden) !important;
-                min-height: calc(40px + env(safe-area-inset-top, 0px)) !important;
+                min-height: var(--header-height-hidden) !important;
             }
         }
 
@@ -2067,8 +2069,8 @@
 
         /* 隐藏状态栏功能 */
         body.hide-status-bar .status-bar {
-            visibility: hidden !important;
-            /* 保留占位空间，避免布局上移 */
+            display: none !important;
+            /* 完全不占位空间 */
         }
 
         /* 主页面隐藏状态栏时的调整 */
@@ -2101,13 +2103,13 @@
             visibility: visible !important;
         }
 
-        /* 隐藏状态栏时：弹窗页面的.status-bar隐藏但保留占位空间 */
+        /* 隐藏状态栏时：弹窗页面的.status-bar隐藏且不占位 */
         body.hide-status-bar #chatModal .status-bar,
         body.hide-status-bar #apiModal .status-bar,
         body.hide-status-bar .settings-screen .status-bar,
         body.hide-status-bar .friend-settings-screen .status-bar,
         body.hide-status-bar .worldbookModal .status-bar {
-            visibility: hidden !important;
+            display: none !important;
         }
 
 
@@ -2117,7 +2119,8 @@
         #apiModal .modal-header,
         .settings-nav,
         .friend-settings-nav {
-            padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+            padding: 0 !important;
+            padding-top: calc(0px + env(safe-area-inset-top, 0px)) !important;
             padding-bottom: 10px !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
