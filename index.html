@@ -2027,28 +2027,36 @@
                 box-shadow: none;
             }
 
-            #chatModal .modal-header,
-            #apiModal .modal-header,
-            .settings-nav,
-            .friend-settings-nav {
+            /* 显示状态栏时的导航栏样式（紧贴状态栏） */
+            body:not(.hide-status-bar) #chatModal .modal-header,
+            body:not(.hide-status-bar) #apiModal .modal-header,
+            body:not(.hide-status-bar) .settings-nav,
+            body:not(.hide-status-bar) .friend-settings-nav {
+                padding: 0 !important;
+                padding-top: 0px !important;
+                padding-bottom: 10px !important;
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+                box-sizing: border-box !important;
+                height: 40px !important;
+                min-height: 40px !important;
+                transition: height 0.3s ease, min-height 0.3s ease;
+            }
+
+            /* 隐藏状态栏时的导航栏样式（考虑安全区） */
+            body.hide-status-bar #chatModal .modal-header,
+            body.hide-status-bar #apiModal .modal-header,
+            body.hide-status-bar .settings-nav,
+            body.hide-status-bar .friend-settings-nav {
                 padding: 0 !important;
                 padding-top: calc(0px + env(safe-area-inset-top, 0px)) !important;
                 padding-bottom: 10px !important;
                 padding-left: 16px !important;
                 padding-right: 16px !important;
                 box-sizing: border-box !important;
-                height: var(--header-height-normal) !important;
-                min-height: var(--header-height-normal) !important;
-                transition: height 0.3s ease, min-height 0.3s ease;
-            }
-
-            /* 移动端隐藏状态栏时顶部栏高度减少 */
-            body.hide-status-bar #chatModal .modal-header,
-            body.hide-status-bar #apiModal .modal-header,
-            body.hide-status-bar .settings-nav,
-            body.hide-status-bar .friend-settings-nav {
                 height: var(--header-height-hidden) !important;
                 min-height: var(--header-height-hidden) !important;
+                transition: height 0.3s ease, min-height 0.3s ease;
             }
         }
 
@@ -2115,28 +2123,36 @@
 
 
         /* 3. 统一顶部栏位置（含安全区） */
-        #chatModal .modal-header,
-        #apiModal .modal-header,
-        .settings-nav,
-        .friend-settings-nav {
+        /* 显示状态栏时的导航栏样式（紧贴状态栏） */
+        body:not(.hide-status-bar) #chatModal .modal-header,
+        body:not(.hide-status-bar) #apiModal .modal-header,
+        body:not(.hide-status-bar) .settings-nav,
+        body:not(.hide-status-bar) .friend-settings-nav {
+            padding: 0 !important;
+            padding-top: 0px !important;
+            padding-bottom: 10px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            box-sizing: border-box !important;
+            height: 40px !important;
+            min-height: 40px !important;
+            transition: height 0.3s ease, min-height 0.3s ease;
+        }
+
+        /* 隐藏状态栏时的导航栏样式（考虑安全区） */
+        body.hide-status-bar #chatModal .modal-header,
+        body.hide-status-bar #apiModal .modal-header,
+        body.hide-status-bar .settings-nav,
+        body.hide-status-bar .friend-settings-nav {
             padding: 0 !important;
             padding-top: calc(0px + env(safe-area-inset-top, 0px)) !important;
             padding-bottom: 10px !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
             box-sizing: border-box !important;
-            height: var(--header-height-normal) !important;
-            min-height: var(--header-height-normal) !important;
-            transition: height 0.3s ease, min-height 0.3s ease;
-        }
-
-        /* 状态栏隐藏时高度减少 */
-        body.hide-status-bar #chatModal .modal-header,
-        body.hide-status-bar #apiModal .modal-header,
-        body.hide-status-bar .settings-nav,
-        body.hide-status-bar .friend-settings-nav {
             height: var(--header-height-hidden) !important;
             min-height: var(--header-height-hidden) !important;
+            transition: height 0.3s ease, min-height 0.3s ease;
         }
 
         /* 4. 主屏幕不受影响 */
