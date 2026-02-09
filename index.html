@@ -1456,6 +1456,76 @@
             gap: 14px;
         }
 
+        /* 页面提示词统一样式 */
+        .page-hint {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #787785;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+        }
+
+        /* 页面内容容器统一样式 */
+        .page-content-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* ========== 页面布局规范化文档 ==========
+           所有新页面必须遵循以下结构以确保整齐对齐：
+           
+           <div class="settings-screen" style="display: flex; flex-direction: column;">
+               <div class="status-bar">...</div>
+               <div class="settings-nav">
+                   <button class="settings-back">...</button>
+                   <div class="settings-title">标题</div>
+                   <button class="settings-back">...</button>
+               </div>
+               <div class="settings-scroll">
+                   <div class="page-hint">提示词（可选）</div>
+                   <div class="page-content-list">
+                       <!-- 内容列表 -->
+                   </div>
+               </div>
+           </div>
+           
+           关键要点：
+           1. 使用 .settings-screen 作为主容器（display: flex; flex-direction: column）
+           2. status-bar 放在顶部
+           3. settings-nav 放在导航栏（左、中、右三列布局）
+           4. 内容区使用 .settings-scroll（自动处理 padding 和 overflow）
+           5. 提示词使用 .page-hint 类
+           6. 内容列表使用 .page-content-list 类
+           这样所有页面都能自动对齐和规范化。
+        ========== */
+
+        /* 聊天页面导航栏适配 */
+        #chatModal .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 16px;
+            border-bottom: 1px solid #f6f2f1;
+            background: #fff;
+            flex-shrink: 0;
+            min-height: 50px;
+            padding-left: 10px;
+        }
+
+        #chatModal .modal-header h3 {
+            margin: 0;
+            color: #787785;
+            font-size: 18px;
+            font-weight: 700;
+            flex: 1;
+            text-align: center;
+        }
+
         .friend-list-nav {
             display: flex;
             justify-content: space-around;
@@ -2262,7 +2332,169 @@
         .worldbook-icon {
             color: #444;
         }
+
+        /* 世界书玻璃按钮样式 */
+        .wb-glass-btn {
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.3) 0%, rgba(200, 220, 240, 0.2) 100%), rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);
+        }
+
+        .wb-glass-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(120, 119, 133, 0.15);
+        }
+
+        .wb-glass-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 世界书卡片样式 */
+        .wb-card {
+            background-color: #FFFFFF;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .wb-card:hover {
+            box-shadow: 0 6px 16px rgba(200, 170, 210, 0.15);
+        }
+
+        .wb-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .wb-card-preview {
+            font-size: 13px;
+            color: #999;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+        }
+
+        .wb-card-actions {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .wb-card-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.2) 0%, rgba(200, 220, 240, 0.15) 100%), rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+
+        .wb-card-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.2);
+        }
+
+        .wb-card-btn:active {
+            transform: translateY(0);
+        }
+
+        /* HTML游戏卡片样式 (复用世界书样式) */
+        .hg-card {
+            background-color: #FFFFFF;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .hg-card:hover {
+            box-shadow: 0 6px 16px rgba(200, 170, 210, 0.15);
+        }
+
+        .hg-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .hg-card-preview {
+            font-size: 13px;
+            color: #999;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+        }
+
+        .hg-card-actions {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .hg-card-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.2) 0%, rgba(200, 220, 240, 0.15) 100%), rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+
+        .hg-card-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.2);
+        }
+
+        .hg-card-btn:active {
+            transform: translateY(0);
+        }
     </style>
+
 </head>
 <body>
     <div class="iphone-container">
@@ -2453,7 +2685,7 @@
                     <!-- 好友列表将动态生成 -->
                 </div>
                 <div id="noFriends" class="no-friends">
-                    <p style="color: #787785; text-align: center; padding: 30px;">暂无好友，点击右上角 + 添加好友</p>
+                    <div class="page-hint" style="margin-bottom: 0;">暂无好友，点击右上角 + 添加好友</div>
                 </div>
             </div>
             <div class="friend-list-nav">
@@ -2529,17 +2761,19 @@
             </div>
 
             <!-- 导航栏 -->
-            <div class="modal-header">
+            <div class="modal-header" style="position: relative;">
                 <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <h3 id="chatTitle" style="margin: 0; color: #787785; font-size: 18px; font-weight: 700; flex: 1; text-align: center;">季燃</h3>
-                <button id="heartVoiceBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; margin-right: 18px;" aria-label="心声">
-                    <i class="fas fa-heart"></i>
-                </button>
-                <button id="charSettingsBtn" style="background: none; border: none; font-size: 20px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <h3 id="chatTitle" style="margin: 0; color: #787785; font-size: 18px; font-weight: 700; position: absolute; left: 50%; transform: translateX(-50%); top: 50%; transform: translate(-50%, -50%);">季燃</h3>
+                <div style="display: flex; gap: 8px; margin-left: auto;">
+                    <button id="heartVoiceBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" aria-label="心声">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button id="charSettingsBtn" style="background: none; border: none; font-size: 20px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
             </div>
             
             <div id="apiWarning" class="api-warning" style="display: none; background-color: #f6f2f1; border-bottom: 1px solid #debb7b; padding: 12px 20px; color: #debb7b; font-size: 13px; text-align: center;">
@@ -2877,9 +3111,10 @@
         </div>
     </div>
 
-    <!-- 世界书全屏页面 -->
+    <!-- 创世书全屏页面 -->
     <div class="modal" id="worldbookModal" style="display:none;">
-        <div class="settings-screen" style="display: flex; flex-direction: column;">
+        <!-- 创世书主页面 -->
+        <div id="worldbookMainPage" class="settings-screen" style="display: flex; flex-direction: column;">
             <!-- 状态栏 -->
             <div class="status-bar">
                 <div id="worldbookStatusTime" class="time">14:30</div>
@@ -2894,7 +3129,7 @@
                     <i class="fas fa-chevron-left"></i>
                     返回
                 </button>
-                <div class="settings-title">世界书</div>
+                <div class="settings-title">创世书</div>
                 <span style="width: 42px;"></span>
             </div>
             <div class="settings-scroll" style="padding: 20px 16px; display: flex; flex-direction: column;">
@@ -2905,11 +3140,11 @@
              <i class="fas fa-book" style="font-size: 30px; color: #888;"></i>
             <span style="font-size: 15px; font-weight: 600; color: #888; letter-spacing: 0.5px;">世界书</span>
             </button>
-    <!-- HTML游戏按钮 -->
-    <button id="htmlGameBtn" style="flex: 1; max-width: 140px; padding: 20px 16px; border-radius: 28px; background: linear-gradient(135deg, rgba(240, 214, 215, 0.25) 0%, rgba(200, 220, 240, 0.25) 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);">
-        <i class="fas fa-gamepad" style="font-size: 30px; color: #888;"></i>
-        <span style="font-size: 15px; font-weight: 600; color: #888; letter-spacing: 0.5px;">HTML 游戏</span>
-    </button>
+                   <!-- HTML游戏按钮 -->
+           <button id="htmlGameBtn" style="flex: 1; max-width: 140px; padding: 20px 16px; border-radius: 28px; background: linear-gradient(135deg, rgba(240, 214, 215, 0.25) 0%, rgba(200, 220, 240, 0.25) 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);">
+               <i class="fas fa-gamepad" style="font-size: 30px; color: #888;"></i>
+              <span style="font-size: 15px; font-weight: 600; color: #888; letter-spacing: 0.5px;">HTML 游戏</span>
+        </button>
 </div>
 
                 <!-- 按钮添加交互效果样式 -->
@@ -2924,13 +3159,153 @@
                 </style>
 
                 <!-- 提示语区域 -->
-                <div style="text-align: center; margin-top: 28px; margin-bottom: 0;">
+                <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 28px; margin-bottom: 0; padding: 0;">
                     <p style="font-size: 13px; color: #787785; margin: 0 0 6px 0; font-weight: 500; letter-spacing: 0.3px;">世界书挂越少越好</p>
                     <p style="font-size: 13px; color: #787785; margin: 0; font-weight: 500; letter-spacing: 0.3px;">小游戏不玩时勿挂</p>
                 </div>
 
                 <!-- 底部留白 -->
                 <div style="flex: 1;"></div>
+            </div>
+        </div>
+
+        <!-- 世界书列表页面 -->
+        <div id="worldbookListPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="wbListStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="wbListStatusSignal" class="fas fa-signal"></i>
+                    <i id="wbListStatusWifi" class="fas fa-wifi"></i>
+                    <i id="wbListStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="wbListBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div class="settings-title">世界书</div>
+                <button id="wbAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
+                    <i class="fas fa-plus" style="font-size: 18px; color: #888;"></i>
+                </button>
+            </div>
+            <!-- 内容区域 -->
+            <div class="settings-scroll" style="flex: 1;">
+                <!-- 提示条 -->
+                <div class="page-hint">别挂太多哦</div>
+                <!-- 世界书列表 -->
+                <div id="wbListContainer" class="page-content-list">
+                    <!-- 世界书卡片将动态插入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 世界书编辑页面 -->
+        <div id="worldbookEditPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="wbEditStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="wbEditStatusSignal" class="fas fa-signal"></i>
+                    <i id="wbEditStatusWifi" class="fas fa-wifi"></i>
+                    <i id="wbEditStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="wbEditBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div id="wbEditTitle" class="settings-title">新建世界书</div>
+                <span style="width: 42px;"></span>
+            </div>
+            <!-- 编辑表单 -->
+            <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
+                    <input id="wbEditTitleInput" type="text" placeholder="输入世界书标题" style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
+                </div>
+                <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">内容</label>
+                    <textarea id="wbEditContentInput" placeholder="输入世界书内容" style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: inherit;"></textarea>
+                </div>
+            </div>
+            <!-- 保存按钮 -->
+            <div style="padding: 16px; display: flex; justify-content: center;">
+                <button id="wbSaveBtn" class="wb-glass-btn" style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
+                    保存
+                </button>
+            </div>
+        </div>
+
+        <!-- HTML游戏列表页面 -->
+        <div id="htmlGameListPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="hgListStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="hgListStatusSignal" class="fas fa-signal"></i>
+                    <i id="hgListStatusWifi" class="fas fa-wifi"></i>
+                    <i id="hgListStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="hgListBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div class="settings-title">HTML 游戏</div>
+                <button id="hgAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
+                    <i class="fas fa-plus" style="font-size: 18px; color: #888;"></i>
+                </button>
+            </div>
+            <!-- 内容区域 -->
+            <div class="settings-scroll" style="flex: 1;">
+                <!-- 提示条 -->
+                <div class="page-hint">不玩时请取消挂载</div>
+                <!-- HTML游戏列表 -->
+                <div id="hgListContainer" class="page-content-list">
+                    <!-- HTML游戏卡片将动态插入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- HTML游戏编辑页面 -->
+        <div id="htmlGameEditPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="hgEditStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="hgEditStatusSignal" class="fas fa-signal"></i>
+                    <i id="hgEditStatusWifi" class="fas fa-wifi"></i>
+                    <i id="hgEditStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="hgEditBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div id="hgEditTitle" class="settings-title">新建HTML游戏</div>
+                <span style="width: 42px;"></span>
+            </div>
+            <!-- 编辑表单 -->
+            <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
+                    <input id="hgEditTitleInput" type="text" placeholder="输入游戏名称" style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
+                </div>
+                <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">HTML 代码</label>
+                    <textarea id="hgEditContentInput" placeholder="输入HTML代码" style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: 'Courier New', monospace; line-height: 1.5;"></textarea>
+                </div>
+            </div>
+            <!-- 保存按钮 -->
+            <div style="padding: 16px; display: flex; justify-content: center;">
+                <button id="hgSaveBtn" class="hg-glass-btn" style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
+                    保存
+                </button>
             </div>
         </div>
     </div>
@@ -3150,6 +3525,36 @@
             setStatusIcon(apiStatusSignal, status.signal);
             setStatusIcon(apiStatusWifi, status.wifi);
             setStatusIcon(apiStatusBattery, status.battery);
+
+            // 更新世界书页面状态栏图标
+            const wbListStatusSignal = document.getElementById('wbListStatusSignal');
+            const wbListStatusWifi = document.getElementById('wbListStatusWifi');
+            const wbListStatusBattery = document.getElementById('wbListStatusBattery');
+            const wbEditStatusSignal = document.getElementById('wbEditStatusSignal');
+            const wbEditStatusWifi = document.getElementById('wbEditStatusWifi');
+            const wbEditStatusBattery = document.getElementById('wbEditStatusBattery');
+            
+            setStatusIcon(wbListStatusSignal, status.signal);
+            setStatusIcon(wbListStatusWifi, status.wifi);
+            setStatusIcon(wbListStatusBattery, status.battery);
+            setStatusIcon(wbEditStatusSignal, status.signal);
+            setStatusIcon(wbEditStatusWifi, status.wifi);
+            setStatusIcon(wbEditStatusBattery, status.battery);
+
+            // 更新HTML游戏页面状态栏图标
+            const hgListStatusSignal = document.getElementById('hgListStatusSignal');
+            const hgListStatusWifi = document.getElementById('hgListStatusWifi');
+            const hgListStatusBattery = document.getElementById('hgListStatusBattery');
+            const hgEditStatusSignal = document.getElementById('hgEditStatusSignal');
+            const hgEditStatusWifi = document.getElementById('hgEditStatusWifi');
+            const hgEditStatusBattery = document.getElementById('hgEditStatusBattery');
+            
+            setStatusIcon(hgListStatusSignal, status.signal);
+            setStatusIcon(hgListStatusWifi, status.wifi);
+            setStatusIcon(hgListStatusBattery, status.battery);
+            setStatusIcon(hgEditStatusSignal, status.signal);
+            setStatusIcon(hgEditStatusWifi, status.wifi);
+            setStatusIcon(hgEditStatusBattery, status.battery);
         }
         
         // 更新时间（北京时间实时更新）
@@ -3179,6 +3584,30 @@
             // 更新世界书页面时间
             if (worldbookStatusTime) {
                 worldbookStatusTime.textContent = timeStr;
+            }
+
+            // 更新世界书列表页时间
+            const wbListStatusTime = document.getElementById('wbListStatusTime');
+            if (wbListStatusTime) {
+                wbListStatusTime.textContent = timeStr;
+            }
+
+            // 更新世界书编辑页时间
+            const wbEditStatusTime = document.getElementById('wbEditStatusTime');
+            if (wbEditStatusTime) {
+                wbEditStatusTime.textContent = timeStr;
+            }
+
+            // 更新HTML游戏列表页时间
+            const hgListStatusTime = document.getElementById('hgListStatusTime');
+            if (hgListStatusTime) {
+                hgListStatusTime.textContent = timeStr;
+            }
+
+            // 更新HTML游戏编辑页时间
+            const hgEditStatusTime = document.getElementById('hgEditStatusTime');
+            if (hgEditStatusTime) {
+                hgEditStatusTime.textContent = timeStr;
             }
 
             // 更新设置页面时间
@@ -5007,7 +5436,7 @@
                 const sorted = [...history].reverse();
 
                 if (sorted.length === 0) {
-                    this.historyList.innerHTML = '<div style="padding: 40px; text-align: center; color: #999; font-size: 14px;">暂无历史心声</div>';
+                    this.historyList.innerHTML = '<div class="page-hint" style="margin-bottom: 0; color: #999; font-size: 14px; min-height: 200px; display: flex; align-items: center;\">暂无历史心声</div>';
                     return;
                 }
 
@@ -5618,6 +6047,430 @@
                 const appearance = appearanceList[Math.floor(Math.random() * appearanceList.length)];
 
                 return `${kaomoji} ${appearance}`;
+            }
+        }
+
+        // ========== 世界书系统 ==========
+        class WorldBookSystem {
+            constructor() {
+                this.storageKey = 'worldBooks';
+                this.currentEditingId = null;
+                this.books = this.loadBooks();
+                this.initEvents();
+            }
+
+            loadBooks() {
+                const data = localStorage.getItem(this.storageKey);
+                return data ? JSON.parse(data) : [];
+            }
+
+            saveBooks() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.books));
+            }
+
+            addBook(title, content) {
+                const book = {
+                    id: Date.now(),
+                    title: title.trim(),
+                    content: content.trim(),
+                    createdAt: new Date().toISOString()
+                };
+                this.books.push(book);
+                this.saveBooks();
+                return book;
+            }
+
+            updateBook(id, title, content) {
+                const book = this.books.find(b => b.id === id);
+                if (book) {
+                    book.title = title.trim();
+                    book.content = content.trim();
+                    this.saveBooks();
+                    return book;
+                }
+                return null;
+            }
+
+            deleteBook(id) {
+                const index = this.books.findIndex(b => b.id === id);
+                if (index > -1) {
+                    this.books.splice(index, 1);
+                    this.saveBooks();
+                    return true;
+                }
+                return false;
+            }
+
+            getBook(id) {
+                return this.books.find(b => b.id === id);
+            }
+
+            initEvents() {
+                const worldbookBtn = document.getElementById('worldbookBtn');
+                const wbListBack = document.getElementById('wbListBack');
+                const wbAddNewBtn = document.getElementById('wbAddNewBtn');
+                const wbEditBack = document.getElementById('wbEditBack');
+                const wbSaveBtn = document.getElementById('wbSaveBtn');
+
+                if (worldbookBtn) {
+                    worldbookBtn.addEventListener('click', () => this.showListPage());
+                }
+
+                if (wbListBack) {
+                    wbListBack.addEventListener('click', () => this.showMainPage());
+                }
+
+                if (wbAddNewBtn) {
+                    wbAddNewBtn.addEventListener('click', () => this.openNewBookPage());
+                }
+
+                if (wbEditBack) {
+                    wbEditBack.addEventListener('click', () => this.showListPage());
+                }
+
+                if (wbSaveBtn) {
+                    wbSaveBtn.addEventListener('click', () => this.saveBook());
+                }
+            }
+
+            showMainPage() {
+                const mainPage = document.getElementById('worldbookMainPage');
+                const listPage = document.getElementById('worldbookListPage');
+                const editPage = document.getElementById('worldbookEditPage');
+                if (mainPage) mainPage.style.display = 'flex';
+                if (listPage) listPage.style.display = 'none';
+                if (editPage) editPage.style.display = 'none';
+            }
+
+            showListPage() {
+                const mainPage = document.getElementById('worldbookMainPage');
+                const listPage = document.getElementById('worldbookListPage');
+                const editPage = document.getElementById('worldbookEditPage');
+                if (mainPage) mainPage.style.display = 'none';
+                if (listPage) listPage.style.display = 'flex';
+                if (editPage) editPage.style.display = 'none';
+                this.renderBookList();
+            }
+
+            showEditPage() {
+                const mainPage = document.getElementById('worldbookMainPage');
+                const listPage = document.getElementById('worldbookListPage');
+                const editPage = document.getElementById('worldbookEditPage');
+                if (mainPage) mainPage.style.display = 'none';
+                if (listPage) listPage.style.display = 'none';
+                if (editPage) editPage.style.display = 'flex';
+            }
+
+            renderBookList() {
+                const container = document.getElementById('wbListContainer');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (this.books.length === 0) {
+                    container.innerHTML = '<div class="page-hint" style="margin-bottom: 0; color: #999; font-size: 14px; min-height: 200px; display: flex; align-items: center;">还没有世界书，点击新建开始吧</div>';
+                    return;
+                }
+
+                this.books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'wb-card';
+                    card.style.paddingBottom = '50px';
+                    card.innerHTML = `
+                        <p class="wb-card-title">${book.title}</p>
+                        <p class="wb-card-preview">${book.content}</p>
+                        <div class="wb-card-actions">
+                            <button class="wb-card-btn wb-edit-btn" data-id="${book.id}"><i class="fas fa-edit"></i></button>
+                            <button class="wb-card-btn wb-delete-btn" data-id="${book.id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // 绑定编辑和删除按钮
+                container.querySelectorAll('.wb-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = parseInt(e.currentTarget.dataset.id);
+                        this.openEditBookPage(id);
+                    });
+                });
+
+                container.querySelectorAll('.wb-delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = parseInt(e.currentTarget.dataset.id);
+                        if (confirm('确定删除这个世界书吗？')) {
+                            this.deleteBook(id);
+                            this.renderBookList();
+                        }
+                    });
+                });
+            }
+
+            openNewBookPage() {
+                this.currentEditingId = null;
+                const titleInput = document.getElementById('wbEditTitleInput');
+                const contentInput = document.getElementById('wbEditContentInput');
+                const editTitle = document.getElementById('wbEditTitle');
+                
+                if (titleInput) titleInput.value = '';
+                if (contentInput) contentInput.value = '';
+                if (editTitle) editTitle.textContent = '新建世界书';
+                
+                this.showEditPage();
+            }
+
+            openEditBookPage(id) {
+                this.currentEditingId = id;
+                const book = this.getBook(id);
+                if (!book) return;
+
+                const titleInput = document.getElementById('wbEditTitleInput');
+                const contentInput = document.getElementById('wbEditContentInput');
+                const editTitle = document.getElementById('wbEditTitle');
+                
+                if (titleInput) titleInput.value = book.title;
+                if (contentInput) contentInput.value = book.content;
+                if (editTitle) editTitle.textContent = '编辑世界书';
+                
+                this.showEditPage();
+            }
+
+            saveBook() {
+                const titleInput = document.getElementById('wbEditTitleInput');
+                const contentInput = document.getElementById('wbEditContentInput');
+                
+                const title = titleInput ? titleInput.value.trim() : '';
+                const content = contentInput ? contentInput.value.trim() : '';
+
+                if (!title) {
+                    alert('标题不能为空');
+                    return;
+                }
+
+                if (!content) {
+                    alert('内容不能为空');
+                    return;
+                }
+
+                if (this.currentEditingId === null) {
+                    this.addBook(title, content);
+                } else {
+                    this.updateBook(this.currentEditingId, title, content);
+                }
+
+                this.showListPage();
+            }
+        }
+
+        // ========== HTML游戏系统 ==========
+        class HtmlGameSystem {
+            constructor() {
+                this.storageKey = 'htmlGames';
+                this.currentEditingId = null;
+                this.games = this.loadGames();
+                this.initEvents();
+            }
+
+            loadGames() {
+                const data = localStorage.getItem(this.storageKey);
+                return data ? JSON.parse(data) : [];
+            }
+
+            saveGames() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.games));
+            }
+
+            addGame(title, content) {
+                const game = {
+                    id: Date.now(),
+                    title: title.trim(),
+                    content: content.trim(),
+                    createdAt: new Date().toISOString()
+                };
+                this.games.push(game);
+                this.saveGames();
+                return game;
+            }
+
+            updateGame(id, title, content) {
+                const game = this.games.find(g => g.id === id);
+                if (game) {
+                    game.title = title.trim();
+                    game.content = content.trim();
+                    this.saveGames();
+                    return game;
+                }
+                return null;
+            }
+
+            deleteGame(id) {
+                const index = this.games.findIndex(g => g.id === id);
+                if (index > -1) {
+                    this.games.splice(index, 1);
+                    this.saveGames();
+                    return true;
+                }
+                return false;
+            }
+
+            getGame(id) {
+                return this.games.find(g => g.id === id);
+            }
+
+            initEvents() {
+                const htmlGameBtn = document.getElementById('htmlGameBtn');
+                const hgListBack = document.getElementById('hgListBack');
+                const hgAddNewBtn = document.getElementById('hgAddNewBtn');
+                const hgEditBack = document.getElementById('hgEditBack');
+                const hgSaveBtn = document.getElementById('hgSaveBtn');
+
+                if (htmlGameBtn) {
+                    htmlGameBtn.addEventListener('click', () => this.showListPage());
+                }
+
+                if (hgListBack) {
+                    hgListBack.addEventListener('click', () => this.showMainPage());
+                }
+
+                if (hgAddNewBtn) {
+                    hgAddNewBtn.addEventListener('click', () => this.openNewGamePage());
+                }
+
+                if (hgEditBack) {
+                    hgEditBack.addEventListener('click', () => this.showListPage());
+                }
+
+                if (hgSaveBtn) {
+                    hgSaveBtn.addEventListener('click', () => this.saveGame());
+                }
+            }
+
+            showMainPage() {
+                const mainPage = document.getElementById('worldbookMainPage');
+                const listPage = document.getElementById('htmlGameListPage');
+                const editPage = document.getElementById('htmlGameEditPage');
+                if (mainPage) mainPage.style.display = 'flex';
+                if (listPage) listPage.style.display = 'none';
+                if (editPage) editPage.style.display = 'none';
+            }
+
+            showListPage() {
+                const mainPage = document.getElementById('worldbookMainPage');
+                const listPage = document.getElementById('htmlGameListPage');
+                const editPage = document.getElementById('htmlGameEditPage');
+                if (mainPage) mainPage.style.display = 'none';
+                if (listPage) listPage.style.display = 'flex';
+                if (editPage) editPage.style.display = 'none';
+                this.renderGameList();
+            }
+
+            showEditPage() {
+                const mainPage = document.getElementById('worldbookMainPage');
+                const listPage = document.getElementById('htmlGameListPage');
+                const editPage = document.getElementById('htmlGameEditPage');
+                if (mainPage) mainPage.style.display = 'none';
+                if (listPage) listPage.style.display = 'none';
+                if (editPage) editPage.style.display = 'flex';
+            }
+
+            renderGameList() {
+                const container = document.getElementById('hgListContainer');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (this.games.length === 0) {
+                    container.innerHTML = '<div class="page-hint" style="margin-bottom: 0; color: #999; font-size: 14px; min-height: 200px; display: flex; align-items: center;">还没有HTML游戏，点击新建开始吧</div>';
+                    return;
+                }
+
+                this.games.forEach(game => {
+                    const card = document.createElement('div');
+                    card.className = 'hg-card';
+                    card.style.paddingBottom = '50px';
+                    card.innerHTML = `
+                        <p class="hg-card-title">${game.title}</p>
+                        <p class="hg-card-preview">${game.content}</p>
+                        <div class="hg-card-actions">
+                            <button class="hg-card-btn hg-edit-btn" data-id="${game.id}"><i class="fas fa-edit"></i></button>
+                            <button class="hg-card-btn hg-delete-btn" data-id="${game.id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // 绑定编辑和删除按钮
+                container.querySelectorAll('.hg-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = parseInt(e.currentTarget.dataset.id);
+                        this.openEditGamePage(id);
+                    });
+                });
+
+                container.querySelectorAll('.hg-delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = parseInt(e.currentTarget.dataset.id);
+                        if (confirm('确定删除这个HTML游戏吗？')) {
+                            this.deleteGame(id);
+                            this.renderGameList();
+                        }
+                    });
+                });
+            }
+
+            openNewGamePage() {
+                this.currentEditingId = null;
+                const titleInput = document.getElementById('hgEditTitleInput');
+                const contentInput = document.getElementById('hgEditContentInput');
+                const editTitle = document.getElementById('hgEditTitle');
+                
+                if (titleInput) titleInput.value = '';
+                if (contentInput) contentInput.value = '';
+                if (editTitle) editTitle.textContent = '新建HTML游戏';
+                
+                this.showEditPage();
+            }
+
+            openEditGamePage(id) {
+                this.currentEditingId = id;
+                const game = this.getGame(id);
+                if (!game) return;
+
+                const titleInput = document.getElementById('hgEditTitleInput');
+                const contentInput = document.getElementById('hgEditContentInput');
+                const editTitle = document.getElementById('hgEditTitle');
+                
+                if (titleInput) titleInput.value = game.title;
+                if (contentInput) contentInput.value = game.content;
+                if (editTitle) editTitle.textContent = '编辑HTML游戏';
+                
+                this.showEditPage();
+            }
+
+            saveGame() {
+                const titleInput = document.getElementById('hgEditTitleInput');
+                const contentInput = document.getElementById('hgEditContentInput');
+                
+                const title = titleInput ? titleInput.value.trim() : '';
+                const content = contentInput ? contentInput.value.trim() : '';
+
+                if (!title) {
+                    alert('标题不能为空');
+                    return;
+                }
+
+                if (!content) {
+                    alert('代码不能为空');
+                    return;
+                }
+
+                if (this.currentEditingId === null) {
+                    this.addGame(title, content);
+                } else {
+                    this.updateGame(this.currentEditingId, title, content);
+                }
+
+                this.showListPage();
             }
         }
 
@@ -7142,7 +7995,7 @@
         const appCatalog = [
             { id: 'message', name: '消息', iconClass: 'fa-envelope', styleClass: 'message-icon' },
             { id: 'feixin', name: '甜聊', iconClass: 'fa-comment-dots', styleClass: 'feixin-icon' },
-            { id: 'worldbook', name: '世界书', iconClass: 'fa-book-open', styleClass: 'book-icon' },
+            { id: 'worldbook', name: '创世书', iconClass: 'fa-book-open', styleClass: 'book-icon' },
             { id: 'settings', name: '设置', iconClass: 'fa-cog', styleClass: 'settings-icon' },
             { id: 'beautify', name: '美化', iconClass: 'fa-paint-brush', styleClass: 'brush-icon' },
             { id: 'phone', name: '手机', iconClass: 'fa-mobile-alt', styleClass: 'phone-icon' },
@@ -7268,6 +8121,8 @@
             chatSession = new ChatSession(friendSystem, apiService);
             heartVoiceSystem = new HeartVoiceSystem(friendSystem, apiService);
             profileWidget = new ProfileWidget();
+            const worldBookSystem = new WorldBookSystem();
+            const htmlGameSystem = new HtmlGameSystem();
 
             registerApps();
             renderHomeApps();
