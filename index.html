@@ -11,14 +11,26 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            /* 顶部栏高度CSS变量（自动适配安全区） */
-            --header-base-height: 48px;
-            --header-base-height-hidden: 38px;
+            /* ========== 全局高度适配变量 ========== */
+            /* 顶部栏高度定义 */
+            --status-bar-height: 50px;
+            --status-bar-height-hidden: 0px;
+            --header-base-height: 44px;
+            --header-base-height-hidden: 36px;
             --header-height-normal: calc(var(--header-base-height) + env(safe-area-inset-top, 0px));
             --header-height-hidden: calc(var(--header-base-height-hidden) + env(safe-area-inset-top, 0px));
-
-            /* 内容区域自动计算偏移（如需使用） */
-            --content-offset-top: var(--header-height-normal);
+            
+            /* 计算内容区和底部区的高度 */
+            --total-header-height: calc(var(--status-bar-height) + var(--header-height-normal));
+            --total-header-height-hidden: calc(var(--status-bar-height-hidden) + var(--header-height-hidden));
+            
+            /* 容器总高度 */
+            --container-height: 100vh;
+            
+            /* 内容区自动填充：容器高度 - 顶部栏高度 - 底部区高度 */
+            --footer-area-height: 0px;
+            --content-height: calc(var(--container-height) - var(--total-header-height) - var(--footer-area-height));
+            --content-height-hidden: calc(var(--container-height) - var(--total-header-height-hidden) - var(--footer-area-height));
         }
 
         * {
@@ -2100,7 +2112,7 @@
 
 
 
-        /* 3. 统一所有弹窗页面的返回栏位置（支持安全区） */
+        /* 3. 统一顶部栏位置（含安全区） */
         #chatModal .modal-header,
         #apiModal .modal-header,
         .settings-nav,
@@ -2108,13 +2120,14 @@
             padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important;
             padding-bottom: 10px !important;
             padding-left: 16px !important;
+            padding-right: 16px !important;
             box-sizing: border-box !important;
             height: var(--header-height-normal) !important;
             min-height: var(--header-height-normal) !important;
             transition: height 0.3s ease, min-height 0.3s ease;
         }
 
-        /* 3.1 状态栏隐藏时的顶部栏高度自适应 */
+        /* 状态栏隐藏时高度减少 */
         body.hide-status-bar #chatModal .modal-header,
         body.hide-status-bar #apiModal .modal-header,
         body.hide-status-bar .settings-nav,
@@ -2123,14 +2136,12 @@
             min-height: var(--header-height-hidden) !important;
         }
 
-        /* 4. 确保主屏幕完全不受影响（明确保留原有样式） */
+        /* 4. 主屏幕不受影响 */
         .home-screen {
             margin-top: 0 !important;
         }
 
-
-        /* 5. 修复弹窗页面顶部空白 */
-        /* 确保弹窗页面从顶部开始，无多余间距 */
+        /* 5. 弹窗页面无顶部空白 */
         #chatModal .modal-content,
         #apiModal .modal-content {
             padding-top: 0;
@@ -2465,7 +2476,7 @@
             </div>
 
             <!-- 导航栏 -->
-            <div style="background-color: #FFFFFF; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f6f2f1; flex-shrink: 0;">
+            <div class="modal-header">
                 <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-chevron-left"></i>
                 </button>
@@ -7137,29 +7148,22 @@
                 }
             });
 
-            // 动态更新顶部栏高度（考虑安全区）
+            // 动态更新顶部栏高度
             function updateHeaderHeight() {
                 const hasHideClass = document.body.classList.contains('hide-status-bar');
-
-                // 读取实际的安全区域值
                 const rootStyles = getComputedStyle(document.documentElement);
                 const safeAreaTop = parseFloat(rootStyles.getPropertyValue('padding-top')) || 0;
-
-                // 计算实际高度
                 const baseHeight = hasHideClass ? 38 : 48;
                 const actualHeight = baseHeight + safeAreaTop;
 
-                // 更新CSS变量（用于JS读取或特殊场景）
                 document.documentElement.style.setProperty('--header-actual-height', `${actualHeight}px`);
-
-                // 同步更新内容偏移量
                 const currentHeaderVar = hasHideClass ? 'var(--header-height-hidden)' : 'var(--header-height-normal)';
                 document.documentElement.style.setProperty('--content-offset-top', currentHeaderVar);
 
                 console.log(`[顶部栏] 高度已更新: ${actualHeight}px (基础: ${baseHeight}px + 安全区: ${safeAreaTop}px)`);
             }
 
-            // 监听body的class变化（用于顶部栏高度自适应）
+            // 监听body class变化
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -7168,13 +7172,11 @@
                 });
             });
 
-            // 只监听一次，避免重复绑定
             observer.observe(document.body, {
                 attributes: true,
                 attributeFilter: ['class']
             });
 
-            // 初始化时更新一次
             updateHeaderHeight();
         }
 
