@@ -645,9 +645,9 @@
 
         .cute-toast-content {
             background: linear-gradient(135deg, #debeeb 0%, #debeeb 100%);
-            padding: 28px 48px;
-            border-radius: 24px;
-            box-shadow: 0 12px 40px rgba(222, 190, 235, 0.3);
+            padding: 12px 24px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(222, 190, 235, 0.25);
             text-align: center;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -655,11 +655,11 @@
 
         .cute-toast-content p {
             color: #fff;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
             margin: 0;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         
         /* 聊天窗口按钮样式 */
@@ -680,9 +680,6 @@
             margin-right: 10px;
         }
 
-        #backToFriendList:hover {
-            background-color: #f6f2f1;
-        }
         
         .modal-body {
             padding: 20px;
@@ -1443,9 +1440,6 @@
             min-height: 40px;
         }
 
-        .settings-back:hover {
-            background: #f6f2f1;
-        }
 
         .settings-scroll {
             flex: 1;
@@ -1641,9 +1635,6 @@
             border-radius: 8px;
         }
 
-        .friend-settings-back:hover {
-            background: #f6f2f1;
-        }
 
         .friend-settings-spacer {
             width: 32px;
@@ -1743,6 +1734,68 @@
             border-radius: 999px;
         }
 
+        /* 世界书挂载按钮样式 */
+        .wb-mount-btn {
+            width: 100%;
+            padding: 18px 20px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.3) 0%, rgba(200, 220, 240, 0.2) 100%), rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.15);
+        }
+
+        .wb-mount-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(200, 170, 210, 0.25);
+        }
+
+        .wb-mount-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 世界书卡片列表项样式 */
+        .worldbook-mount-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: #fff;
+            border: 1.5px solid #f0f0f0;
+            border-radius: 18px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .worldbook-mount-item:hover {
+            background: #fef8f8;
+            border-color: #f0d6d7;
+        }
+
+        .worldbook-mount-item input[type="checkbox"] {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: #f0d6d7;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .worldbook-mount-item-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+
         .ios-switch {
             position: relative;
             width: 44px;
@@ -1800,11 +1853,11 @@
             width: 84px;
             height: 84px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #debeeb 0%, #debeeb 100%);
+            background: linear-gradient(135deg, #fff 0%, #fff 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #fff;
+            color: #d0d0d8;
             font-size: 40px;
             border: 4px solid #fff;
             box-shadow: 0 10px 24px rgba(120, 119, 133, 0.08);
@@ -1817,7 +1870,7 @@
 
         .friend-avatar-display:hover {
             transform: scale(1.08);
-            box-shadow: 0 12px 28px rgba(222, 190, 235, 0.2);
+            box-shadow: 0 12px 28px rgba(120, 119, 133, 0.12);
         }
 
         .friend-avatar-display::after {
@@ -2351,6 +2404,26 @@
         }
 
         .wb-glass-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .hg-glass-btn {
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.3) 0%, rgba(200, 220, 240, 0.2) 100%), rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);
+        }
+
+        .hg-glass-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(120, 119, 133, 0.15);
+        }
+
+        .hg-glass-btn:active {
             transform: translateY(-1px);
         }
 
@@ -3033,7 +3106,7 @@
 
                 <div class="friend-settings-card">
                     <div class="friend-settings-label">好友昵称</div>
-                    <input id="charNameInput" class="friend-settings-input" readonly>
+                    <input id="charNameInput" class="friend-settings-input">
                 </div>
 
                 <div class="friend-settings-card">
@@ -3041,20 +3114,12 @@
                     <textarea id="charPersonaInput" class="friend-settings-textarea" placeholder="描述性格、背景或说话风格"></textarea>
                 </div>
 
-                <div class="friend-settings-card">
-                    <div class="friend-settings-label">世界书</div>
-                    <details class="friend-settings-details">
-                        <summary>点击展开选项列表</summary>
-                        <div style="margin-top: 10px;">
-                            <select id="worldBookSelect" class="friend-settings-select">
-                                <option value="default">默认世界</option>
-                                <option value="campus">校园日常</option>
-                                <option value="idol">偶像练习生</option>
-                                <option value="fantasy">奇幻冒险</option>
-                                <option value="sci">科幻未来</option>
-                            </select>
-                        </div>
-                    </details>
+                <div class="friend-settings-card" style="padding: 20px;">
+                    <div class="friend-settings-label" style="margin-bottom: 16px;">挂载模块</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="wb-mount-btn" id="worldbookMountBtn">世界书</button>
+                        <button class="wb-mount-btn" id="htmlGameMountBtn">HTML游戏</button>
+                    </div>
                 </div>
 
                 <div class="friend-settings-card">
@@ -3448,6 +3513,48 @@
         </div>
     </div>
 
+    <!-- 世界书挂载弹窗 -->
+    <div id="worldbookMountModal" class="modal" style="display: none; z-index: 2100; background-color: rgba(0, 0, 0, 0.3);">
+        <div style="background-color: #FFFFFF; border-radius: 30px; width: 85%; max-width: 340px; padding: 24px 20px; box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2); animation: fadeInScale 0.3s ease-out;">
+            <!-- 弹窗标题 -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #333; letter-spacing: 0.3px;">选择世界书</h3>
+            </div>
+
+            <!-- 世界书卡片列表 -->
+            <div id="worldbookMountList" style="max-height: 260px; overflow-y: auto; margin-bottom: 20px; padding: 8px 0;">
+                <!-- 卡片将动态插入 -->
+            </div>
+
+            <!-- 底部按钮 -->
+            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                <button id="worldbookMountCancel" style="flex: 1; padding: 12px 16px; border-radius: 22px; background-color: #f6f2f1; color: #666; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">取消</button>
+                <button id="worldbookMountSave" style="flex: 1; padding: 12px 16px; border-radius: 22px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HTML游戏挂载弹窗 -->
+    <div id="htmlGameMountModal" class="modal" style="display: none; z-index: 2100; background-color: rgba(0, 0, 0, 0.3);">
+        <div style="background-color: #FFFFFF; border-radius: 30px; width: 85%; max-width: 340px; padding: 24px 20px; box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2); animation: fadeInScale 0.3s ease-out;">
+            <!-- 弹窗标题 -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #333; letter-spacing: 0.3px;">选择HTML游戏</h3>
+            </div>
+
+            <!-- HTML游戏卡片列表 -->
+            <div id="htmlGameMountList" style="max-height: 260px; overflow-y: auto; margin-bottom: 20px; padding: 8px 0;">
+                <!-- 卡片将动态插入 -->
+            </div>
+
+            <!-- 底部按钮 -->
+            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                <button id="htmlGameMountCancel" style="flex: 1; padding: 12px 16px; border-radius: 22px; background-color: #f6f2f1; color: #666; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">取消</button>
+                <button id="htmlGameMountSave" style="flex: 1; padding: 12px 16px; border-radius: 22px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">保存</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { appManager } from './app-manager.js';
         window.appManager = appManager;
@@ -3462,9 +3569,14 @@
         let heartVoiceSystem;
 
         // 可爱提示框函数
-        function showCuteToast() {
+        function showCuteToast(message = '等我⌯･3･⌯ಣ', type = 'default') {
             const cuteToast = document.getElementById('cuteToast');
             if (!cuteToast) return;
+            
+            const contentEl = cuteToast.querySelector('.cute-toast-content p');
+            if (contentEl) {
+                contentEl.textContent = message;
+            }
             
             cuteToast.style.display = 'block';
             setTimeout(() => {
@@ -4180,7 +4292,6 @@
         const charPersonaInput = document.getElementById('charPersonaInput');
         const charAvatarDisplay = document.getElementById('charAvatarDisplay');
         const charAvatarInput = document.getElementById('charAvatarInput');
-        const worldBookSelect = document.getElementById('worldBookSelect');
         const voiceIdInput = document.getElementById('voiceIdInput');
         const voiceIdMode = document.getElementById('voiceIdMode');
         const voiceIdStatus = document.getElementById('voiceIdStatus');
@@ -4237,9 +4348,6 @@
                     charPersonaInput.value = friend.persona || '';
                     pendingCharAvatar = friend.avatar || '';
                     setCharAvatarDisplay(pendingCharAvatar);
-                    if (worldBookSelect) {
-                        worldBookSelect.value = friend.worldBook || 'default';
-                    }
                     if (voiceIdInput) {
                         voiceIdInput.value = friend.voiceId || '';
                         updateVoiceStatus(voiceIdInput.value.trim());
@@ -4354,10 +4462,17 @@
         // 保存好友设置
         saveCharSettingsBtn.addEventListener('click', () => {
             const currentFriendId = chatSession ? chatSession.getCurrentFriendId() : null;
+            const newName = charNameInput.value.trim();
+            
+            if (!newName) {
+                showCuteToast('请输入好友昵称');
+                return;
+            }
+            
             const updated = friendSystem ? friendSystem.updateFriend(currentFriendId, {
+                name: newName,
                 persona: charPersonaInput.value.trim(),
                 avatar: pendingCharAvatar || null,
-                worldBook: worldBookSelect ? worldBookSelect.value : 'default',
                 voiceId: voiceIdInput ? voiceIdInput.value.trim() : '',
                 voiceIdMode: voiceIdMode ? voiceIdMode.value : 'auto',
                 chatShowTime: chatShowTimeToggle ? chatShowTimeToggle.checked : true,
@@ -4365,9 +4480,14 @@
                 chatHideAvatar: chatHideAvatarToggle ? chatHideAvatarToggle.checked : false
             }) : null;
             if (updated) {
-                // 注意：name 是只读的，不允许修改
                 charSettingsModal.style.display = 'none';
-                if (chatSession) chatSession.showChatStatus('好友设置已保存', 'success');
+                if (chatSession) {
+                    // 更新聊天对话框标题
+                    chatTitle.textContent = newName;
+                    chatSession.showChatStatus('好友设置已保存', 'success');
+                }
+                // 刷新好友列表
+                renderFriendList();
             }
         });
         
@@ -4401,7 +4521,218 @@
         confirmDeleteNo.addEventListener('click', () => {
             confirmDeleteModal.style.display = 'none';
         });
+
+        // ========== 世界书挂载模块 ==========
+        const worldbookMountBtn = document.getElementById('worldbookMountBtn');
+        const worldbookMountModal = document.getElementById('worldbookMountModal');
+        const worldbookMountList = document.getElementById('worldbookMountList');
+        const worldbookMountCancel = document.getElementById('worldbookMountCancel');
+        const worldbookMountSave = document.getElementById('worldbookMountSave');
         
+        // 初始化世界书列表
+        function initWorldbookMountList() {
+            const worldBookSystem = window.worldBookSystem;
+            if (!worldBookSystem) return;
+            
+            const books = worldBookSystem.books || [];
+            worldbookMountList.innerHTML = '';
+            
+            if (books.length === 0) {
+                worldbookMountList.innerHTML = '<div style="text-align: center; padding: 20px; color: #999; font-size: 14px;">还没有世界书</div>';
+                return;
+            }
+            
+            // 获取当前好友已挂载的世界书列表
+            const currentFriendId = chatSession ? chatSession.getCurrentFriendId() : null;
+            let mountedBooks = [];
+            if (currentFriendId && friendSystem) {
+                const friend = friendSystem.getFriendById(currentFriendId);
+                if (friend && friend.mountedWorldBooks) {
+                    mountedBooks = Array.isArray(friend.mountedWorldBooks) ? 
+                        friend.mountedWorldBooks.map(id => String(id)) : [];
+                }
+            }
+            
+            books.forEach(book => {
+                const label = document.createElement('label');
+                label.className = 'worldbook-mount-item';
+                label.style.cursor = 'pointer';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = book.id;
+                checkbox.dataset.bookId = book.id;
+                // 恢复之前的勾选状态
+                checkbox.checked = mountedBooks.includes(String(book.id));
+                
+                const text = document.createElement('span');
+                text.className = 'worldbook-mount-item-text';
+                text.textContent = book.title;
+                
+                label.appendChild(checkbox);
+                label.appendChild(text);
+                
+                // 点击卡片任意位置都能切换勾选框
+                label.addEventListener('click', (e) => {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                });
+                
+                worldbookMountList.appendChild(label);
+            });
+        }
+        
+        // 打开世界书挂载弹窗
+        if (worldbookMountBtn) {
+            worldbookMountBtn.addEventListener('click', () => {
+                initWorldbookMountList();
+                worldbookMountModal.style.display = 'flex';
+            });
+        }
+        
+        // 关闭弹窗（取消）
+        if (worldbookMountCancel) {
+            worldbookMountCancel.addEventListener('click', () => {
+                worldbookMountModal.style.display = 'none';
+            });
+        }
+        
+        // 保存选中的世界书
+        if (worldbookMountSave) {
+            worldbookMountSave.addEventListener('click', () => {
+                const checkboxes = worldbookMountList.querySelectorAll('input[type="checkbox"]');
+                const selectedBooks = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                
+                // 保存到当前好友
+                const currentFriendId = chatSession ? chatSession.getCurrentFriendId() : null;
+                if (currentFriendId && friendSystem) {
+                    friendSystem.updateFriend(currentFriendId, {
+                        mountedWorldBooks: selectedBooks
+                    });
+                    showCuteToast('保存成功');
+                }
+                
+                worldbookMountModal.style.display = 'none';
+            });
+        }
+        
+        // 点击弹窗背景关闭
+        if (worldbookMountModal) {
+            worldbookMountModal.addEventListener('click', (e) => {
+                if (e.target === worldbookMountModal) {
+                    worldbookMountModal.style.display = 'none';
+                }
+            });
+        }
+
+        // ========== HTML游戏挂载模块 ==========
+        const htmlGameMountBtn = document.getElementById('htmlGameMountBtn');
+        const htmlGameMountModal = document.getElementById('htmlGameMountModal');
+        const htmlGameMountList = document.getElementById('htmlGameMountList');
+        const htmlGameMountCancel = document.getElementById('htmlGameMountCancel');
+        const htmlGameMountSave = document.getElementById('htmlGameMountSave');
+        
+        // 初始化HTML游戏列表
+        function initHtmlGameMountList() {
+            const htmlGameSystem = window.htmlGameSystem;
+            if (!htmlGameSystem) return;
+            
+            const games = htmlGameSystem.games || [];
+            htmlGameMountList.innerHTML = '';
+            
+            if (games.length === 0) {
+                htmlGameMountList.innerHTML = '<div style="text-align: center; padding: 20px; color: #999; font-size: 14px;">还没有HTML游戏</div>';
+                return;
+            }
+            
+            // 获取当前好友已挂载的HTML游戏列表
+            const currentFriendId = chatSession ? chatSession.getCurrentFriendId() : null;
+            let mountedGames = [];
+            if (currentFriendId && friendSystem) {
+                const friend = friendSystem.getFriendById(currentFriendId);
+                if (friend && friend.mountedHtmlGames) {
+                    mountedGames = Array.isArray(friend.mountedHtmlGames) ? 
+                        friend.mountedHtmlGames.map(id => String(id)) : [];
+                }
+            }
+            
+            games.forEach(game => {
+                const label = document.createElement('label');
+                label.className = 'worldbook-mount-item';
+                label.style.cursor = 'pointer';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = game.id;
+                checkbox.dataset.gameId = game.id;
+                // 恢复之前的勾选状态
+                checkbox.checked = mountedGames.includes(String(game.id));
+                
+                const text = document.createElement('span');
+                text.className = 'worldbook-mount-item-text';
+                text.textContent = game.title;
+                
+                label.appendChild(checkbox);
+                label.appendChild(text);
+                
+                // 点击卡片任意位置都能切换勾选框
+                label.addEventListener('click', (e) => {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                });
+                
+                htmlGameMountList.appendChild(label);
+            });
+        }
+        
+        // 打开HTML游戏挂载弹窗
+        if (htmlGameMountBtn) {
+            htmlGameMountBtn.addEventListener('click', () => {
+                initHtmlGameMountList();
+                htmlGameMountModal.style.display = 'flex';
+            });
+        }
+        
+        // 关闭弹窗（取消）
+        if (htmlGameMountCancel) {
+            htmlGameMountCancel.addEventListener('click', () => {
+                htmlGameMountModal.style.display = 'none';
+            });
+        }
+        
+        // 保存选中的HTML游戏
+        if (htmlGameMountSave) {
+            htmlGameMountSave.addEventListener('click', () => {
+                const checkboxes = htmlGameMountList.querySelectorAll('input[type="checkbox"]');
+                const selectedGames = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                
+                // 保存到当前好友
+                const currentFriendId = chatSession ? chatSession.getCurrentFriendId() : null;
+                if (currentFriendId && friendSystem) {
+                    friendSystem.updateFriend(currentFriendId, {
+                        mountedHtmlGames: selectedGames
+                    });
+                    showCuteToast('保存成功');
+                }
+                
+                htmlGameMountModal.style.display = 'none';
+            });
+        }
+        
+        // 点击弹窗背景关闭
+        if (htmlGameMountModal) {
+            htmlGameMountModal.addEventListener('click', (e) => {
+                if (e.target === htmlGameMountModal) {
+                    htmlGameMountModal.style.display = 'none';
+                }
+            });
+        }
 
         function downloadJson(data, filename) {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -6243,12 +6574,7 @@
                 const content = contentInput ? contentInput.value.trim() : '';
 
                 if (!title) {
-                    alert('标题不能为空');
-                    return;
-                }
-
-                if (!content) {
-                    alert('内容不能为空');
+                    showCuteToast('请输入名称', 'warning');
                     return;
                 }
 
@@ -6258,6 +6584,7 @@
                     this.updateBook(this.currentEditingId, title, content);
                 }
 
+                showCuteToast('保存成功！', 'success');
                 this.showListPage();
             }
         }
@@ -6455,12 +6782,7 @@
                 const content = contentInput ? contentInput.value.trim() : '';
 
                 if (!title) {
-                    alert('标题不能为空');
-                    return;
-                }
-
-                if (!content) {
-                    alert('代码不能为空');
+                    showCuteToast('请输入名称', 'warning');
                     return;
                 }
 
@@ -6470,6 +6792,7 @@
                     this.updateGame(this.currentEditingId, title, content);
                 }
 
+                showCuteToast('保存成功！', 'success');
                 this.showListPage();
             }
         }
@@ -7461,11 +7784,38 @@
 
                 try {
                     let systemPrompt = '你是一个友好的AI助手。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
+                    
+                    // ========== 统一获取人设和背景设定 ==========
+                    let mountedContentContext = '';
                     if (this.currentFriendId) {
+                        // 1. 获取人设信息
                         const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
                         const friend = friends.find(f => f.id === this.currentFriendId);
                         const personaInfo = this.friendSystem ? this.friendSystem.getPersona(this.currentFriendId) : null;
                         const persona = personaInfo?.raw ?? friend?.persona ?? '';
+                        
+                        // 2. 获取已挂载的世界书和HTML游戏
+                        const mountedContent = window.aiGetMountedContent(this.currentFriendId);
+                        
+                        // 3. 构建背景设定上下文
+                        if (mountedContent.worldBooks.length > 0 || mountedContent.htmlGames.length > 0) {
+                            mountedContentContext = '\n\n【背景设定与资料】';
+                            if (mountedContent.worldBooks.length > 0) {
+                                mountedContentContext += '\n世界观设定：';
+                                mountedContent.worldBooks.forEach(book => {
+                                    mountedContentContext += `\n【${book.title}】${book.content}`;
+                                });
+                            }
+                            if (mountedContent.htmlGames.length > 0) {
+                                mountedContentContext += '\n\n互动游戏与体验：';
+                                mountedContent.htmlGames.forEach(game => {
+                                    mountedContentContext += `\n【${game.title}】${game.content}`;
+                                });
+                            }
+                            mountedContentContext += '\n请在回复时充分参考和利用以上背景设定，确保角色回应与设定一致，避免人物OOC。';
+                        }
+                        
+                        // 4. 构建系统提示词（人设 + 背景设定）
                         if (friend) {
                             const personaProfile = {
                                 name: friend.name,
@@ -7475,7 +7825,7 @@
                                 emotion: '用语言表达情绪，不用任何括号',
                                 memory: '牢记最近对话并连贯回应'
                             };
-                            systemPrompt = `你将扮演以下角色并自然聊天，不要像剧本：\n角色资料JSON：${JSON.stringify(personaProfile)}\n硬性规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。请记住并参考最近对话内容。`;
+                            systemPrompt = `你将扮演以下角色并自然聊天，不要像剧本：\n角色资料JSON：${JSON.stringify(personaProfile)}\n硬性规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。请记住并参考最近对话内容。${mountedContentContext}`;
                         }
                     }
 
@@ -8114,6 +8464,89 @@
             updateHeaderHeight();
         }
 
+        // ========== AI调取内容接口 ==========
+        /**
+         * AI获取已挂载内容的统一接口
+         * @param {string} type - 内容类型，可选值：'WORLD_BOOK' | 'HTML_GAME'
+         * @param {string|number} id - 内容ID
+         * @returns {object} 返回内容对象，包含id、title、content、isMounted等字段；若未找到返回null
+         */
+        window.aiGetContent = function(type, id) {
+            const typeUpper = String(type).toUpperCase();
+            const idStr = String(id);
+
+            if (typeUpper === 'WORLD_BOOK') {
+                if (!window.worldBookSystem) return null;
+                const book = window.worldBookSystem.getBook(parseInt(idStr));
+                if (!book) return null;
+                return {
+                    id: book.id,
+                    title: book.title || '',
+                    content: book.content || '',
+                    type: 'WORLD_BOOK',
+                    createdAt: book.createdAt || ''
+                };
+            } else if (typeUpper === 'HTML_GAME') {
+                if (!window.htmlGameSystem) return null;
+                const game = window.htmlGameSystem.getGame(parseInt(idStr));
+                if (!game) return null;
+                return {
+                    id: game.id,
+                    title: game.title || '',
+                    content: game.content || '',
+                    type: 'HTML_GAME',
+                    createdAt: game.createdAt || ''
+                };
+            }
+            return null;
+        };
+
+        /**
+         * AI获取当前聊天对象已挂载的所有世界书和HTML游戏
+         * @param {string|number} friendId - 好友ID
+         * @returns {object} 返回 {worldBooks: [], htmlGames: []} 的对象
+         */
+        window.aiGetMountedContent = function(friendId) {
+            const result = {
+                worldBooks: [],
+                htmlGames: []
+            };
+
+            if (!friendSystem) return result;
+            const friend = friendSystem.getFriendById(friendId);
+            if (!friend) return result;
+
+            // 获取已挂载的世界书
+            if (Array.isArray(friend.mountedWorldBooks) && window.worldBookSystem) {
+                friend.mountedWorldBooks.forEach(bookId => {
+                    const book = window.worldBookSystem.getBook(parseInt(bookId));
+                    if (book) {
+                        result.worldBooks.push({
+                            id: book.id,
+                            title: book.title || '',
+                            content: book.content || ''
+                        });
+                    }
+                });
+            }
+
+            // 获取已挂载的HTML游戏
+            if (Array.isArray(friend.mountedHtmlGames) && window.htmlGameSystem) {
+                friend.mountedHtmlGames.forEach(gameId => {
+                    const game = window.htmlGameSystem.getGame(parseInt(gameId));
+                    if (game) {
+                        result.htmlGames.push({
+                            id: game.id,
+                            title: game.title || '',
+                            content: game.content || ''
+                        });
+                    }
+                });
+            }
+
+            return result;
+        };
+
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
             friendSystem = new FriendSystem();
@@ -8121,8 +8554,8 @@
             chatSession = new ChatSession(friendSystem, apiService);
             heartVoiceSystem = new HeartVoiceSystem(friendSystem, apiService);
             profileWidget = new ProfileWidget();
-            const worldBookSystem = new WorldBookSystem();
-            const htmlGameSystem = new HtmlGameSystem();
+            window.worldBookSystem = new WorldBookSystem();
+            window.htmlGameSystem = new HtmlGameSystem();
 
             registerApps();
             renderHomeApps();
