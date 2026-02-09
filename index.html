@@ -1507,14 +1507,14 @@
             border-bottom: 1px solid #f6f2f1;
             background: #fff;
             flex-shrink: 0;
-            min-height: 50px;
+            min-height: 44px;
             padding-left: 10px;
         }
 
         #chatModal .modal-header h3 {
             margin: 0;
             color: #787785;
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 700;
             flex: 1;
             text-align: center;
@@ -5304,7 +5304,7 @@
                 const defaultConfig = {
                     apiUrl: '',
                     apiKey: '',
-                    model: 'claude-3-haiku-20240307',
+                    model: 'gpt-3.5-turbo',
                     models: []
                 };
                 const config = this.friendSystem
@@ -5431,24 +5431,6 @@
 
                 if (apiUrl.endsWith('/')) {
                     apiUrl = apiUrl.slice(0, -1);
-                }
-
-                // ========== [新增] Claude官方API检测 ==========
-                const isClaudeOfficial = apiUrl.includes('api.anthropic.com');
-                const CLAUDE_BUILTIN_MODELS = [
-                    { id: 'claude-3-haiku-20240307', name: 'claude-3-haiku-20240307' },
-                    { id: 'claude-3-sonnet-20240229', name: 'claude-3-sonnet-20240229' },
-                    { id: 'claude-3-opus-20240229', name: 'claude-3-opus-20240229' }
-                ];
-
-                // 如果是Claude官方API，直接使用内置模型列表
-                if (isClaudeOfficial) {
-                    const config = this.getConfig();
-                    config.models = CLAUDE_BUILTIN_MODELS;
-                    this.saveConfig(config);
-                    this.updateModelSelect(CLAUDE_BUILTIN_MODELS);
-                    this.showApiStatus(`已加载 ${CLAUDE_BUILTIN_MODELS.length} 个模型`, 'success');
-                    return;
                 }
 
                 fetchBtnText.textContent = '拉取中...';
@@ -7918,21 +7900,13 @@
                         ...promptHistory
                     ];
 
-                    // ========== [新增] 双渠道API请求逻辑 ==========
-                    // 检测是否为Claude官方API
-                    const isClaudeOfficial = config.apiUrl.includes('api.anthropic.com');
-                    
-                    // 构建基础请求体
+                    // 构建请求体
                     const requestBody = {
+                        model: config.model,
                         messages: messages,
                         max_tokens: 500,
-                        temperature: 0.9
-                    };
-                    
-                    // 仅当使用Claude官方API时，添加model参数和tools
-                    if (isClaudeOfficial) {
-                        requestBody.model = config.model;
-                        requestBody.tools = [
+                        temperature: 0.9,
+                        tools: [
                             {
                                 type: 'function',
                                 function: {
@@ -7950,9 +7924,9 @@
                                     }
                                 }
                             }
-                        ];
-                        requestBody.tool_choice = { type: 'function', function: { name: 'generate_response_with_heart_voice' } };
-                    }
+                        ],
+                        tool_choice: { type: 'function', function: { name: 'generate_response_with_heart_voice' } }
+                    };
 
                     const response = await fetch(`${config.apiUrl}/chat/completions`, {
                         method: 'POST',
@@ -8563,16 +8537,6 @@
             profileWidget = new ProfileWidget();
             window.worldBookSystem = new WorldBookSystem();
             window.htmlGameSystem = new HtmlGameSystem();
-
-            // ========== [新增] 初始化内置模型列表 ==========
-            const CLAUDE_BUILTIN_MODELS = [
-                { id: 'claude-3-haiku-20240307', name: 'claude-3-haiku-20240307' },
-                { id: 'claude-3-sonnet-20240229', name: 'claude-3-sonnet-20240229' },
-                { id: 'claude-3-opus-20240229', name: 'claude-3-opus-20240229' }
-            ];
-            if (apiService) {
-                apiService.updateModelSelect(CLAUDE_BUILTIN_MODELS);
-            }
 
             registerApps();
             renderHomeApps();
