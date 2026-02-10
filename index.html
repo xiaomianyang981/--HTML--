@@ -7190,6 +7190,7 @@
                 let startX = 0;
                 let startY = 0;
                 const isVoiceMessage = targetElement.classList.contains('voice-message');
+                let isMoved = false;
 
                 const clearPress = () => {
                     if (pressTimer) {
@@ -7201,6 +7202,7 @@
                 const startPress = (clientX, clientY) => {
                     startX = clientX;
                     startY = clientY;
+                    isMoved = false;
                     clearPress();
                     pressTimer = setTimeout(() => {
                         this.showMessageActionMenu(targetElement, data);
@@ -7209,11 +7211,9 @@
 
                 // 拦截 touchstart 事件：启动长按计时器，同时禁用系统菜单
                 targetElement.addEventListener('touchstart', (e) => {
-                    // 对语音消息不要阻止默认行为，允许点击事件触发
-                    if (!isVoiceMessage) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
+                    // 所有消息都阻止系统菜单
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (e.touches && e.touches[0]) {
                         startPress(e.touches[0].clientX, e.touches[0].clientY);
                     }
@@ -7223,18 +7223,29 @@
                     if (!e.touches || !e.touches[0]) return;
                     const dx = Math.abs(e.touches[0].clientX - startX);
                     const dy = Math.abs(e.touches[0].clientY - startY);
-                    if (dx > 10 || dy > 10) clearPress();
-                }, { passive: true });
-
-                // 对语音消息的 touchend 处理：如果没有触发长按，允许 click 事件处理转录切换
-                targetElement.addEventListener('touchend', (e) => {
-                    if (isVoiceMessage && pressTimer) {
-                        // 短按，允许点击事件触发（不清除 press，让 click 事件来处理）
-                        clearPress();
-                    } else {
+                    if (dx > 10 || dy > 10) {
+                        isMoved = true;
                         clearPress();
                     }
-                });
+                }, { passive: true });
+
+                // touchend 时处理短按和长按
+                targetElement.addEventListener('touchend', (e) => {
+                    const isShortPress = pressTimer !== null; // 如果 pressTimer 还在，说明没有达到 550ms
+                    clearPress();
+                    
+                    // 对于语音消息的短按，触发转录切换
+                    if (isVoiceMessage && isShortPress && !isMoved) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // 查找转录 div 并切换显示
+                        const transcriptionDiv = messageWrapper.querySelector('.transcription-text');
+                        if (transcriptionDiv) {
+                            transcriptionDiv.style.display = transcriptionDiv.style.display === 'none' ? 'block' : 'none';
+                        }
+                    }
+                }, { passive: false });
+                
                 targetElement.addEventListener('touchcancel', clearPress);
 
                 targetElement.addEventListener('mousedown', (e) => {
@@ -7472,6 +7483,7 @@
                     messageWrapper.appendChild(voiceContainer);
 
                     const transcriptionDiv = document.createElement('div');
+                    transcriptionDiv.className = 'transcription-text';
                     transcriptionDiv.style.display = 'none';
                     transcriptionDiv.style.marginTop = '8px';
                     transcriptionDiv.style.padding = '8px 12px';
@@ -7486,13 +7498,20 @@
 
                     messageWrapper.appendChild(transcriptionDiv);
 
-                    voiceMessage.addEventListener('click', () => {
+                    const clickHandler = () => {
                         if (transcriptionDiv.style.display === 'none') {
                             transcriptionDiv.style.display = 'block';
                         } else {
                             transcriptionDiv.style.display = 'none';
                         }
-                    });
+                    };
+                    
+                    voiceMessage.addEventListener('click', clickHandler);
+                    // 保存 click handlers 引用，便于多选模式下移除
+                    if (!voiceMessage._clickHandlers) {
+                        voiceMessage._clickHandlers = [];
+                    }
+                    voiceMessage._clickHandlers.push(clickHandler);
 
                     this.bindMessageActions(messageWrapper, voiceMessage, {
                         messageWrapper,
@@ -8383,9 +8402,18 @@
                         w.insertBefore(checkbox, w.firstChild);
                     }
                     
+                    // 对语音消息，移除原来的转录点击监听器
+                    const voiceMsg = w.querySelector('.voice-message');
+                    if (voiceMsg && voiceMsg._clickHandlers) {
+                        voiceMsg._clickHandlers.forEach(handler => {
+                            voiceMsg.removeEventListener('click', handler);
+                        });
+                    }
+                    
                     w.removeEventListener('click', w._selectHandler);
                     w._selectHandler = (e) => {
-                        if (!e.target.closest('.message-action-menu') && !e.target.closest('.voice-message')) {
+                        // 点击复选框或消息区域（但不包括菜单）时触发选择
+                        if (!e.target.closest('.message-action-menu')) {
                             this.toggleSelect(w, w.dataset.msgId);
                         }
                     };
@@ -8435,6 +8463,14 @@
                     w.style.display = '';
                     w.style.alignItems = '';
                     w.style.gap = '';
+                    
+                    // 恢复语音消息的转录点击功能
+                    const voiceMsg = w.querySelector('.voice-message');
+                    if (voiceMsg && voiceMsg._clickHandlers) {
+                        voiceMsg._clickHandlers.forEach(handler => {
+                            voiceMsg.addEventListener('click', handler);
+                        });
+                    }
                 });
 
                 document.getElementById('multiSelectToolbar').classList.add('hidden');
