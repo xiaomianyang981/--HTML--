@@ -695,6 +695,74 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
+        /* 消息通知横幅 */
+        .msg-notif-banner {
+            position: fixed;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            gap: 12px;
+            z-index: 10000;
+            transition: top 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .msg-notif-banner.is-visible {
+            top: 16px;
+        }
+
+        .msg-notif-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            background: #f0d6d7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .msg-notif-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .msg-notif-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .msg-notif-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        .msg-notif-text {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.3;
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         /* 聊天窗口按钮样式 */
         #backToFriendList {
             background: none;
@@ -877,10 +945,12 @@
         .message {
             margin-bottom: 15px;
             padding: 10px 15px;
-            border-radius: 18px;
+            border-radius: 12px;
             max-width: 80%;
             word-wrap: break-word;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: 15px;
+            line-height: 1.4;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             animation: messageAppear 0.3s ease-out;
             /* 禁用文本选择和系统菜单 */
             user-select: none;
@@ -913,16 +983,16 @@
 
         .message.user {
             background-color: #f0d6d7;
-            color: white;
+            color: #1a1a1a;
             margin-left: auto;
-            border-bottom-right-radius: 5px;
+            border-bottom-right-radius: 4px;
         }
 
         .message.ai {
             background-color: #debeeb;
-            color: white;
+            color: #1a1a1a;
             margin-right: auto;
-            border-bottom-left-radius: 5px;
+            border-bottom-left-radius: 4px;
         }
 
         .reply-quote {
@@ -2808,6 +2878,31 @@
             height: 0;
             display: none;
         }
+
+        /* 心声按钮脉动动画 */
+        @keyframes heartVoicePulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(240, 214, 215, 0.4);
+                background-color: rgba(240, 214, 215, 0.1);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 8px rgba(240, 214, 215, 0.2);
+                background-color: rgba(240, 214, 215, 0.25);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(240, 214, 215, 0);
+                background-color: rgba(240, 214, 215, 0.1);
+            }
+        }
+
+        #heartVoiceBtn.pulse-active {
+            animation: heartVoicePulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+            border-radius: 50% !important;
+            padding: 6px !important;
+        }
     </style>
     <style>
         .worldbook-button {
@@ -3137,6 +3232,17 @@
     <div class="cute-toast" id="cuteToast" style="display: none;">
         <div class="cute-toast-content">
             <p>等我⌯･3･⌯ಣ</p>
+        </div>
+    </div>
+
+    <!-- 消息通知横幅 -->
+    <div class="msg-notif-banner" id="msgNotifBanner">
+        <div class="msg-notif-avatar" id="msgNotifAvatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="msg-notif-body">
+            <div class="msg-notif-name" id="msgNotifName"></div>
+            <div class="msg-notif-text" id="msgNotifText"></div>
         </div>
     </div>
 
@@ -4008,6 +4114,19 @@
                     </label>
                 </div>
 
+                <div class="settings-card">
+                    <div class="settings-card-content">
+                        <div class="settings-card-title">记忆对话条数</div>
+                        <div class="settings-card-desc">角色每次回复时参考最近N条对话，数值越大角色记忆越久但响应可能变慢</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" id="memoryChatCountInput" 
+                            style="width: 60px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; text-align: center;" 
+                            min="1" max="999" value="35">
+                        <span style="font-size: 14px; color: #787785;">条</span>
+                    </div>
+                </div>
+
                 <div id="settingsDataCard" class="settings-card">
                     <div class="settings-card-content">
                         <div class="settings-card-title">数据管理</div>
@@ -4182,6 +4301,223 @@
             let profileWidget;
             let heartVoiceSystem;
 
+            /**
+             * JSON清洗与修复层
+             * 处理API返回的可能包含非JSON内容（如杂散引号、纯文本、错误标记）的响应
+             */
+            const JSONCleaningLayer = {
+                /**
+                 * 清洗原始文本，移除前缀杂余内容
+                 * @param {string} text - 原始文本
+                 * @returns {string} - 清洗后的文本
+                 */
+                sanitizeRawText(text) {
+                    if (!text) return '';
+                    
+                    // 移除文本开头的markdown代码块标记
+                    let cleaned = text.replace(/^```(?:json)?\s*\n?/, '').trim();
+                    // 移除文本末尾的markdown代码块标记
+                    cleaned = cleaned.replace(/\n?```\s*$/, '').trim();
+                    // 移除常见的前缀（如 json, JSON等）
+                    cleaned = cleaned.replace(/^["']?(?:json|JSON)["']?\s*:\s*/, '').trim();
+                    
+                    return cleaned;
+                },
+
+                /**
+                 * 提取JSON字符串（从混合文本中）
+                 * @param {string} text - 可能包含非JSON内容的文本
+                 * @returns {string|null} - 提取的JSON字符串，或null如果找不到
+                 */
+                extractJSON(text) {
+                    if (!text) return null;
+                    
+                    // 使用括号匹配来正确提取JSON对象
+                    let braceCount = 0;
+                    let startIndex = -1;
+                    let inString = false;
+                    let escaped = false;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        
+                        // 处理转义字符
+                        if (escaped) {
+                            escaped = false;
+                            continue;
+                        }
+                        
+                        if (char === '\\') {
+                            escaped = true;
+                            continue;
+                        }
+                        
+                        // 处理字符串边界
+                        if (char === '"' && !escaped) {
+                            inString = !inString;
+                            continue;
+                        }
+                        
+                        // 如果在字符串内，跳过括号计数
+                        if (inString) continue;
+                        
+                        // 计数大括号
+                        if (char === '{') {
+                            if (startIndex === -1) startIndex = i;
+                            braceCount++;
+                        } else if (char === '}') {
+                            braceCount--;
+                            // 当括号匹配完成时，提取这个JSON对象
+                            if (braceCount === 0 && startIndex !== -1) {
+                                return text.slice(startIndex, i + 1);
+                            }
+                        }
+                    }
+                    
+                    // 如果没有找到完整的JSON对象，尝试找JSON数组
+                    let bracketCount = 0;
+                    startIndex = -1;
+                    inString = false;
+                    escaped = false;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        
+                        if (escaped) {
+                            escaped = false;
+                            continue;
+                        }
+                        
+                        if (char === '\\') {
+                            escaped = true;
+                            continue;
+                        }
+                        
+                        if (char === '"' && !escaped) {
+                            inString = !inString;
+                            continue;
+                        }
+                        
+                        if (inString) continue;
+                        
+                        if (char === '[') {
+                            if (startIndex === -1) startIndex = i;
+                            bracketCount++;
+                        } else if (char === ']') {
+                            bracketCount--;
+                            if (bracketCount === 0 && startIndex !== -1) {
+                                return text.slice(startIndex, i + 1);
+                            }
+                        }
+                    }
+                    
+                    return null;
+                },
+
+                /**
+                 * 修复常见的JSON格式错误
+                 * @param {string} jsonStr - 可能有格式错误的JSON字符串
+                 * @returns {string} - 修复后的JSON字符串
+                 */
+                fixJSONErrors(jsonStr) {
+                    if (!jsonStr) return '';
+                    
+                    let fixed = jsonStr;
+                    
+                    // 第一步：移除可能混入的前缀标记（如【inner_voice】等）
+                    fixed = fixed.replace(/^[\s【]*(?:inner_voice|心声|神态|JSON|json|数据)[\s】：:]*/, '').trim();
+                    
+                    // 修复单引号为双引号（但保留中文引号）
+                    // 只替换成对的英文单引号
+                    fixed = fixed.replace(/([^\\])'([^']*)'([^\\])/g, '$1"$2"$3');
+                    fixed = fixed.replace(/^'([^']*)'/, '"$1"');
+                    
+                    // 修复未闭合的字符串（尾部的杂散引号）
+                    // 计算引号数量，如果是奇数则删除最后的引号
+                    const quoteCount = (fixed.match(/"/g) || []).length;
+                    if (quoteCount % 2 !== 0) {
+                        fixed = fixed.trimEnd();
+                        if (fixed.endsWith('"')) {
+                            fixed = fixed.slice(0, -1);
+                        } else {
+                            fixed += '"';
+                        }
+                    }
+                    
+                    // 修复末尾缺少的大括号
+                    if (fixed.trim().startsWith('{') && !fixed.trim().endsWith('}')) {
+                        fixed = fixed.trimEnd() + '}';
+                    }
+                    
+                    // 修复末尾缺少的方括号
+                    if (fixed.trim().startsWith('[') && !fixed.trim().endsWith(']')) {
+                        fixed = fixed.trimEnd() + ']';
+                    }
+                    
+                    // 修复多余的逗号（JSON末尾）
+                    fixed = fixed.replace(/,\s*([}\]])/g, '$1');
+                    
+                    // 移除控制字符和不可见字符
+                    fixed = fixed.replace(/[\x00-\x1F\x7F]/g, '');
+                    
+                    return fixed;
+                },
+
+                /**
+                 * 主清洗与修复函数
+                 * @param {string} rawText - API返回的原始文本
+                 * @returns {object|null} - 解析后的对象，或null如果失败
+                 */
+                cleanAndParse(rawText) {
+                    if (!rawText || typeof rawText !== 'string') {
+                        console.warn('[JSON清洗层] 输入无效，跳过清洗');
+                        return null;
+                    }
+
+                    try {
+                        // 步骤1: 清洗前缀杂余
+                        let cleaned = this.sanitizeRawText(rawText);
+                        
+                        // 步骤2: 提取JSON部分
+                        let jsonStr = this.extractJSON(cleaned);
+                        if (!jsonStr) {
+                            console.warn('[JSON清洗层] 未能提取JSON结构');
+                            return null;
+                        }
+                        
+                        // 步骤3: 修复常见格式错误
+                        jsonStr = this.fixJSONErrors(jsonStr);
+                        
+                        // 调试输出
+                        console.log('[JSON清洗层] 修复后的JSON（前200字）:', jsonStr.slice(0, 200));
+                        
+                        // 步骤4: 尝试解析
+                        const result = JSON.parse(jsonStr);
+                        console.log('[JSON清洗层] 成功解析JSON', { 
+                            original_length: rawText.length, 
+                            cleaned_length: jsonStr.length,
+                            keys: Object.keys(result)
+                        });
+                        return result;
+                    } catch (error) {
+                        console.error('[JSON清洗层] 最终解析失败:', error.message);
+                        console.error('[JSON清洗层] 原始文本（前300字）:', rawText.slice(0, 300));
+                        return null;
+                    }
+                },
+
+                /**
+                 * 验证并获取安全的值
+                 * @param {object} obj - 解析的对象
+                 * @param {string} key - 键名
+                 * @param {*} defaultValue - 默认值
+                 * @returns {*} - 对象中的值或默认值
+                 */
+                safeGet(obj, key, defaultValue = null) {
+                    return obj && typeof obj === 'object' && obj.hasOwnProperty(key) ? obj[key] : defaultValue;
+                }
+            };
+
             // 可爱提示框函数
             function showCuteToast(message = '等我⌯･3･⌯ಣ', type = 'default') {
                 const cuteToast = document.getElementById('cuteToast');
@@ -4202,6 +4538,58 @@
             window.alert = function (message) {
                 showCuteToast();
             };
+
+            // 消息通知横幅
+            let _notifTimer = null;
+            function showMsgNotification(friendName, content, avatarUrl, onTap) {
+                const banner = document.getElementById('msgNotifBanner');
+                if (!banner) return;
+
+                // 设置头像
+                const avatarEl = document.getElementById('msgNotifAvatar');
+                if (avatarEl) {
+                    if (avatarUrl) {
+                        avatarEl.innerHTML = '<img src="' + avatarUrl + '" alt="' + friendName + '">';
+                    } else {
+                        avatarEl.innerHTML = '<i class="fas fa-user"></i>';
+                    }
+                }
+
+                // 设置名称和内容
+                const nameEl = document.getElementById('msgNotifName');
+                const textEl = document.getElementById('msgNotifText');
+                if (nameEl) nameEl.textContent = friendName || '';
+                if (textEl) {
+                    const preview = (content || '').replace(/\s+/g, ' ').trim();
+                    textEl.textContent = preview.length > 30 ? preview.substring(0, 30) + '...' : preview;
+                }
+
+                // 清除之前的定时器
+                if (_notifTimer) clearTimeout(_notifTimer);
+
+                // 移除旧的点击事件
+                const newBanner = banner.cloneNode(true);
+                banner.parentNode.replaceChild(newBanner, banner);
+
+                // 绑定点击事件
+                if (onTap) {
+                    newBanner.addEventListener('click', () => {
+                        newBanner.classList.remove('is-visible');
+                        if (_notifTimer) clearTimeout(_notifTimer);
+                        onTap();
+                    });
+                }
+
+                // 显示横幅
+                requestAnimationFrame(() => {
+                    newBanner.classList.add('is-visible');
+                });
+
+                // 自动隐藏
+                _notifTimer = setTimeout(() => {
+                    newBanner.classList.remove('is-visible');
+                }, 4000);
+            }
 
             // 基础功能
             const statusTimeEl = document.getElementById('statusTime');
@@ -5121,10 +5509,24 @@
                 const currentFriendId = chatSession ? chatSession.getCurrentFriendId() : null;
                 const removed = friendSystem ? friendSystem.deleteFriend(currentFriendId) : null;
 
-                if (removed) {
-
-                    // 删除好友的聊天历史
+                if (removed && currentFriendId) {
+                    // 清除该好友的所有相关数据
+                    // 1. 删除好友的聊天历史
                     localStorage.removeItem(`chat_${currentFriendId}`);
+                    
+                    // 2. 删除好友的人设数据
+                    localStorage.removeItem(`persona_${currentFriendId}`);
+                    
+                    // 3. 删除好友的心声数据
+                    localStorage.removeItem(`heartvoice_${currentFriendId}`);
+                    
+                    // 4. 删除好友的其他相关配置
+                    const allKeys = Object.keys(localStorage);
+                    allKeys.forEach(key => {
+                        if (key.includes(currentFriendId)) {
+                            localStorage.removeItem(key);
+                        }
+                    });
 
                     confirmDeleteModal.style.display = 'none';
                     charSettingsModal.style.display = 'none';
@@ -5818,6 +6220,9 @@
                 });
             }
 
+            // 将 renderFriendList 暴露到全局作用域，以便在聊天时实时更新
+            window.updateFriendList = renderFriendList;
+
             // 打开与好友的聊天由 ChatSession 统一处理
 
             // 重置添加好友表单
@@ -5893,8 +6298,17 @@
                     return;
                 }
 
+                // 生成唯一ID：时间戳后4位 + 4位随机数（共8字符），检查重复
+                let friendId = '';
+                let isUnique = false;
+                while (!isUnique) {
+                    friendId = Date.now().toString().slice(-4) + Math.random().toString(36).substring(2, 6);
+                    const existingFriends = friendSystem ? friendSystem.getFriends() : [];
+                    isUnique = !existingFriends.some(f => f.id === friendId);
+                }
+
                 const newFriend = {
-                    id: Date.now().toString(),
+                    id: friendId,
                     name: name,
                     persona: persona,
                     avatar: avatar || null,
@@ -5922,7 +6336,8 @@
                         apiUrl: '',
                         apiKey: '',
                         model: '',
-                        models: []
+                        models: [],
+                        memoryChatCount: 35
                     };
                     const config = this.friendSystem
                         ? this.friendSystem.getStorage('apiConfig', defaultConfig)
@@ -6258,7 +6673,6 @@
                     this.historyModal = document.getElementById('heartVoiceHistoryModal');
                     this.historyList = document.getElementById('heartVoiceHistoryList');
                     this.closeHistoryBtn = document.getElementById('closeHeartVoiceHistoryModal');
-                    this.exportBtn = document.getElementById('exportHeartVoiceHistoryBtn');
 
                     this.deleteModal = document.getElementById('hvDeleteModal');
                     this.deleteConfirmBtn = document.getElementById('hvDeleteConfirm');
@@ -6278,12 +6692,6 @@
                         this.btn.addEventListener('click', (e) => {
                             e.stopPropagation();
                             this.togglePopup();
-                        });
-                    }
-
-                    if (this.exportBtn) {
-                        this.exportBtn.addEventListener('click', (e) => {
-                            this.exportHistory();
                         });
                     }
 
@@ -6482,20 +6890,31 @@
                                     <span class="hv-history-time">${timeStr}</span>
                                     <span class="hv-history-mood">心情 ${item.mood}%</span>
                                 </div>
-                                <div class="hv-history-content">${item.voice}</div>
+                                <div class="hv-history-content"></div>
                             </div>
                             <button class="hv-delete-btn" style="background: none; border: none; color: #f0d6d7; cursor: pointer; font-size: 14px; padding: 4px 8px; flex-shrink: 0; display: flex; align-items: center; opacity: 0.7; transition: opacity 0.2s; ${this.isMultiSelectMode ? 'display: none;' : ''}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
                     `;
-
+                        
+                        // 使用textContent安全地设置心声内容
+                        const contentDiv = el.querySelector('.hv-history-content');
+                        if (contentDiv) {
+                            contentDiv.textContent = item.voice;
+                        }
                         // 绑定复选框事件（多选模式）
                         if (this.isMultiSelectMode) {
                             const checkbox = el.querySelector('.hv-item-checkbox');
                             if (checkbox) {
                                 checkbox.addEventListener('change', (e) => {
                                     if (e.target.checked) {
+                                        // 检查是否超过5条限制
+                                        if (this.multiSelectItems.size >= 5) {
+                                            e.target.checked = false;
+                                            showCuteToast('最多只能选择5条记录');
+                                            return;
+                                        }
                                         this.multiSelectItems.set(item.time, true);
                                         el.classList.add('selected');
                                     } else {
@@ -7026,13 +7445,7 @@
                     let totalH = headerH;
                     for (const item of history) {
                         const th = this.measureTextHeight(ctx, item.voice, textW * scale, lineH * scale);
-                        let demeanorH = 0;
-                        if (item.demeanor) {
-                            ctx.font = `italic ${12 * scale}px sans-serif`;
-                            demeanorH = this.measureTextHeight(ctx, '神态：' + item.demeanor, textW * scale, (lineH - 4) * scale) / scale + 8;
-                            ctx.font = `${15 * scale}px sans-serif`;
-                        }
-                        totalH += th / scale + demeanorH + cardPad * 2 + 24 + cardGap;
+                        totalH += th / scale + cardPad * 2 + 24 + cardGap;
                     }
                     totalH += 40;
 
@@ -7323,18 +7736,15 @@
 
                 render(friendId) {
                     const data = this.getData(friendId);
+                    // 只有当有新数据时才更新，否则保留现有内容
                     if (data) {
-                        this.textEl.innerHTML = data.voice || '';
-                        if (this.demeanorEl) this.demeanorEl.innerHTML = data.demeanor || '';
+                        this.textEl.textContent = data.voice || '';
+                        if (this.demeanorEl) this.demeanorEl.textContent = data.demeanor || '';
                         const mood = data.mood !== undefined ? data.mood : 50;
                         this.moodFillEl.style.width = `${mood}%`;
-                        this.moodLabelEl.innerHTML = `${mood}%`;
-                    } else {
-                        this.textEl.innerHTML = '';
-                        if (this.demeanorEl) this.demeanorEl.innerHTML = '';
-                        this.moodFillEl.style.width = '0%';
-                        this.moodLabelEl.innerHTML = '0%';
+                        this.moodLabelEl.textContent = `${mood}%`;
                     }
+                    // 当data为空时，不清空现有内容，保持显示上次的数据
                 }
 
 
@@ -7359,11 +7769,15 @@
 
                         console.log('[心声系统] 生成心声 - 好友:', friend?.name, '人设:', persona);
 
-                        // 获取最近10条对话历史
+                        // 获取配置的记忆对话条数，用于心声生成
+                        const apiConfig = this.apiService ? this.apiService.getConfig() : {};
+                        const memoryChatCount = apiConfig.memoryChatCount || 35;
+
+                        // 获取最近N条对话历史（使用用户配置的记忆条数）
                         const chatHistory = this.friendSystem.getFriendChatHistory(friendId) || [];
                         const recentMessages = chatHistory
                             .filter(msg => !msg.isDeletedLocal && !msg.isRecalled)
-                            .slice(-10);
+                            .slice(-memoryChatCount);
 
                         // 获取时间上下文
                         const timeContext = this.getTimeContext();
@@ -7442,7 +7856,9 @@
                             return { voice: '', demeanor: '', mood: 50 };
                         }
 
-                        const recentChat = chatHistory.slice(-10).map(m => `${m.role}: ${m.content || ''}`).join('\n');
+                        // 使用配置的记忆对话条数来截取对话历史
+                        const memoryChatCount = config.memoryChatCount || 35;
+                        const recentChat = chatHistory.slice(-memoryChatCount).map(m => `${m.role}: ${m.content || ''}`).join('\n');
                         
                         const systemPrompt = `你是一个角色内心世界的模拟引擎。你的任务是根据角色的人设、外貌、气质和近期对话，生成该角色此刻的心声、神态和心情值。
 
@@ -7499,8 +7915,9 @@ ${recentChat || '（暂无对话内容）'}
                         if (typeof this.apiService.fetchFromApi === 'function') {
                             const response = await this.apiService.fetchFromApi(config.apiUrl, config.apiKey, config.model, messages, 0.8);
                             if (response && response.text) {
-                                try {
-                                    const result = JSON.parse(response.text);
+                                // 使用JSON清洗层处理API响应
+                                const result = JSONCleaningLayer.cleanAndParse(response.text);
+                                if (result) {
                                     // 验证生成的心声不是对话内容的直接复制
                                     const voice = String(result.voice || '').substring(0, 100).trim();
                                     const demeanor = String(result.demeanor || '').substring(0, 50).trim();
@@ -7511,8 +7928,8 @@ ${recentChat || '（暂无对话内容）'}
                                         demeanor: demeanor,
                                         mood: mood
                                     };
-                                } catch (e) {
-                                    console.error('[心声系统] 解析AI响应失败:', e);
+                                } else {
+                                    console.warn('[心声系统] JSON清洗失败，保持默认状态');
                                     return { voice: '', demeanor: '', mood: 50 };
                                 }
                             }
@@ -7970,6 +8387,30 @@ ${recentChat || '（暂无对话内容）'}
                     this.initImageUpload();
                 }
 
+                /**
+                 * 启动心声按钮脉动动画
+                 * 用于向用户反馈"正在处理回复"的状态
+                 */
+                startHeartVoicePulse() {
+                    const heartVoiceBtn = document.getElementById('heartVoiceBtn');
+                    if (heartVoiceBtn) {
+                        heartVoiceBtn.classList.add('pulse-active');
+                        console.log('[心声动画] 启动脉动');
+                    }
+                }
+
+                /**
+                 * 停止心声按钮脉动动画
+                 * 在API响应接收时调用
+                 */
+                stopHeartVoicePulse() {
+                    const heartVoiceBtn = document.getElementById('heartVoiceBtn');
+                    if (heartVoiceBtn) {
+                        heartVoiceBtn.classList.remove('pulse-active');
+                        console.log('[心声动画] 停止脉动');
+                    }
+                }
+
                 showChatStatus(message, type) {
                     chatStatus.textContent = message;
                     chatStatus.className = `status-message ${type}`;
@@ -8423,6 +8864,8 @@ ${recentChat || '（暂无对话内容）'}
                     if (!current) return;
                     const { messageWrapper, msgId, content, role } = current;
 
+                    console.log('[消息菜单] 触发action:', action);
+
                     if (action === 'copy') {
                         this.copyToClipboard(content || '');
                     } else if (action === 'delete') {
@@ -8543,7 +8986,15 @@ ${recentChat || '（暂无对话内容）'}
                     return changed;
                 }
 
-                addMessageToChat(content, role, isVoice = false, msgId = null, replyTo = '', replyFrom = '', imageData = '', imageName = '') {
+                addMessageToChat(content, role, isVoice = false, msgId = null, replyTo = '', replyFrom = '', imageData = '', imageName = '', targetFriendId = null) {
+                    // 只有当消息属于当前打开的好友时，才将其添加到 DOM
+                    // 这防止了用户在等待 API 响应时切换好友导致消息出现在错误窗口的问题
+                    const displayFriendId = targetFriendId || this.currentFriendId;
+                    if (displayFriendId !== this.currentFriendId) {
+                        console.log(`[消息路由] 消息不属于当前好友，已保存但不显示。目标好友: ${displayFriendId}, 当前好友: ${this.currentFriendId}`);
+                        return;
+                    }
+
                     const messageWrapper = document.createElement('div');
                     messageWrapper.style.marginBottom = '15px';
                     messageWrapper.style.display = 'flex';
@@ -8617,7 +9068,7 @@ ${recentChat || '（暂无对话内容）'}
                             const bar = document.createElement('div');
                             bar.style.width = '3px';
                             bar.style.height = Math.random() * 20 + 8 + 'px';
-                            bar.style.backgroundColor = role === 'user' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.3)';
+                            bar.style.backgroundColor = role === 'user' ? 'rgba(0, 0, 0, 0.35)' : 'rgba(0, 0, 0, 0.3)';
                             bar.style.borderRadius = '2px';
                             waveForm.appendChild(bar);
                         }
@@ -8639,10 +9090,10 @@ ${recentChat || '（暂无对话内容）'}
                         transcriptionDiv.style.display = 'none';
                         transcriptionDiv.style.marginTop = '8px';
                         transcriptionDiv.style.padding = '8px 12px';
-                        transcriptionDiv.style.backgroundColor = role === 'user' ? '#FFB6D9' : '#f0f0f0';
+                        transcriptionDiv.style.backgroundColor = role === 'user' ? '#f0d6d7' : '#f0f0f0';
                         transcriptionDiv.style.borderRadius = '8px';
-                        transcriptionDiv.style.fontSize = '12px';
-                        transcriptionDiv.style.color = role === 'user' ? 'white' : '#666';
+                        transcriptionDiv.style.fontSize = '13px';
+                        transcriptionDiv.style.color = '#1a1a1a';
                         transcriptionDiv.style.maxWidth = '220px';
                         transcriptionDiv.style.marginLeft = role === 'user' ? 'auto' : '0';
                         transcriptionDiv.style.marginRight = role === 'user' ? '0' : 'auto';
@@ -8692,6 +9143,11 @@ ${recentChat || '（暂无对话内容）'}
                     }
                     chatMessages.appendChild(messageWrapper);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // 实时更新好友列表
+                    if (this.currentFriendId && typeof window.updateFriendList === 'function') {
+                        window.updateFriendList();
+                    }
                 }
 
                 addRecalledMessageToChat(msgId = null) {
@@ -9014,6 +9470,11 @@ ${recentChat || '（暂无对话内容）'}
                     this.currentFriendId = freshFriend.id;
                     chatTitle.textContent = friend.name;
 
+                    // 清除回复预览和图片上传状态（重要：防止消息混乱）
+                    this.clearReplyPrefill();
+                    this.clearImageUpload();
+                    chatInput.value = '';
+
                     // 更新聊天头部的好友头像
                     if (freshFriend.avatar) {
                         // 移除可能存在的旧头像
@@ -9070,6 +9531,15 @@ ${recentChat || '（暂无对话内容）'}
                     const imageText = chatInput.dataset.imageText || '';
                     if (!message && !imageData) return;
 
+                    // 【重要】立即保存当前好友ID，防止后续操作改变它
+                    const targetFriendId = this.currentFriendId;
+                    if (!targetFriendId) {
+                        this.showChatStatus('未选择好友', 'error');
+                        return;
+                    }
+
+                    console.log(`[发送消息] 目标好友ID: ${targetFriendId}, 消息内容: ${message.substring(0, 30)}`);
+
                     if (window.appManager && typeof window.appManager.setStatus === 'function') {
                         window.appManager.setStatus({
                             signal: 'fa-signal',
@@ -9089,14 +9559,14 @@ ${recentChat || '（暂无对话内容）'}
                     const replyFrom = chatInput.dataset.replyFrom || '';
                     const msgId = Date.now().toString();
 
-                    this.addMessageToChat(message, 'user', isVoice, msgId, replyTo, replyFrom, imageData, imageName);
+                    this.addMessageToChat(message, 'user', isVoice, msgId, replyTo, replyFrom, imageData, imageName, targetFriendId);
                     chatInput.value = '';
                     chatInput.dataset.isVoice = 'false';
                     this.clearReplyPrefill();
                     this.clearImageUpload();
 
-                    if (this.currentFriendId) {
-                        const chatHistory = this.friendSystem ? this.friendSystem.getFriendChatHistory(this.currentFriendId) : [];
+                    if (targetFriendId) {
+                        const chatHistory = this.friendSystem ? this.friendSystem.getFriendChatHistory(targetFriendId) : [];
                         // 保存消息，标记为未回复 (isReplied: false)
                         // 添加时间戳以便心声系统判断
                         const timestamp = Date.now();
@@ -9104,12 +9574,12 @@ ${recentChat || '（暂无对话内容）'}
                         // 1. 生成心声数据
                         let heartVoiceData = null;
                         if (typeof heartVoiceSystem !== 'undefined' && heartVoiceSystem) {
-                            heartVoiceData = await heartVoiceSystem.generateHeartVoice(this.currentFriendId);
+                            heartVoiceData = await heartVoiceSystem.generateHeartVoice(targetFriendId);
                             console.log('[心声系统] 发送消息时生成心声:', heartVoiceData);
 
                             // 4. 保存心声数据到本地存储
                             if (heartVoiceData) {
-                                const oldData = heartVoiceSystem.getData(this.currentFriendId) || {};
+                                const oldData = heartVoiceSystem.getData(targetFriendId) || {};
                                 const oldHistory = Array.isArray(oldData.history) ? oldData.history : [];
                                 const newData = {
                                     lastUpdate: timestamp,
@@ -9124,11 +9594,11 @@ ${recentChat || '（暂无对话内容）'}
                                         mood: heartVoiceData.mood_value ?? 50
                                     }].slice(-15)
                                 };
-                                heartVoiceSystem.saveData(this.currentFriendId, newData);
+                                heartVoiceSystem.saveData(targetFriendId, newData);
 
                                 // 5. 更新心声面板显示
                                 if (document.querySelector('.heart-voice-popup.is-open')) {
-                                    heartVoiceSystem.render(this.currentFriendId);
+                                    heartVoiceSystem.render(targetFriendId);
                                 }
                             }
                         }
@@ -9156,7 +9626,8 @@ ${recentChat || '（暂无对话内容）'}
 
                         chatHistory.push(messageWithHeartVoice);
                         if (this.friendSystem) {
-                            this.friendSystem.saveFriendChatHistory(this.currentFriendId, chatHistory);
+                            this.friendSystem.saveFriendChatHistory(targetFriendId, chatHistory);
+                            console.log(`[发送消息] 消息已保存到好友 ${targetFriendId} - 历史记录共 ${chatHistory.length} 条`);
                         }
                     }
                 }
@@ -9165,25 +9636,34 @@ ${recentChat || '（暂无对话内容）'}
                     if (this.isProcessing) return;
                     this.isProcessing = true;
 
-                    const loadingId = 'loading-' + Date.now();
-                    this.addLoadingMessage(loadingId);
+                    // 在函数开始处捕获 targetFriendId，防止 async 操作中 currentFriendId 被改变
+                    const targetFriendId = this.currentFriendId;
+                    if (!targetFriendId) {
+                        this.isProcessing = false;
+                        return;
+                    }
+
+                    console.log(`[AI回复] 开始调用 - 目标好友ID: ${targetFriendId}`);
+
+                    // 启动心声按钮脉动动画（等待API回复）
+                    this.startHeartVoicePulse();
 
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
 
                     try {
-                        let systemPrompt = '你是一个友好的AI助手。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
+                        let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
 
                         // ========== 统一获取人设和背景设定 ==========
                         let mountedContentContext = '';
-                        if (this.currentFriendId) {
+                        if (targetFriendId) {
                             // 1. 获取人设信息
                             const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
-                            const friend = friends.find(f => f.id === this.currentFriendId);
-                            const personaInfo = this.friendSystem ? this.friendSystem.getPersona(this.currentFriendId) : null;
+                            const friend = friends.find(f => f.id === targetFriendId);
+                            const personaInfo = this.friendSystem ? this.friendSystem.getPersona(targetFriendId) : null;
                             const persona = personaInfo?.raw ?? friend?.persona ?? '';
 
                             // 2. 获取已挂载的世界书和HTML游戏
-                            const mountedContent = window.aiGetMountedContent(this.currentFriendId);
+                            const mountedContent = window.aiGetMountedContent(targetFriendId);
 
                             // 3. 构建背景设定上下文
                             if (mountedContent.worldBooks.length > 0 || mountedContent.htmlGames.length > 0) {
@@ -9217,8 +9697,8 @@ ${recentChat || '（暂无对话内容）'}
                             }
                         }
 
-                        const chatHistory = this.currentFriendId && this.friendSystem
-                            ? this.friendSystem.getFriendChatHistory(this.currentFriendId)
+                        const chatHistory = targetFriendId && this.friendSystem
+                            ? this.friendSystem.getFriendChatHistory(targetFriendId)
                             : [];
                         const hasImageInput = chatHistory.some(msg => msg && msg.imageData);
                         if (hasImageInput) {
@@ -9239,9 +9719,13 @@ ${recentChat || '（暂无对话内容）'}
 
                         // 即使没有未回复消息，只要用户点击了，也允许触发（例如继续生成）
 
+                        // 获取配置的记忆对话条数
+                        const apiConfig = this.apiService ? this.apiService.getConfig() : {};
+                        const memoryChatCount = apiConfig.memoryChatCount || 35;
+
                         const promptHistory = chatHistory
                             .filter(msg => !msg.isDeletedLocal && !msg.isRecalled)
-                            .slice(-20)
+                            .slice(-memoryChatCount)
                             .map(msg => {
                                 const normalizedRole = (msg.role === 'ai' || msg.role === 'assistant')
                                     ? 'assistant'
@@ -9284,8 +9768,8 @@ ${recentChat || '（暂无对话内容）'}
 
                         // 获取最新的心声数据嵌入到系统提示
                         let heartVoiceContext = '';
-                        if (typeof heartVoiceSystem !== 'undefined' && heartVoiceSystem && this.currentFriendId) {
-                            const hvData = heartVoiceSystem.getData(this.currentFriendId);
+                        if (typeof heartVoiceSystem !== 'undefined' && heartVoiceSystem && targetFriendId) {
+                            const hvData = heartVoiceSystem.getData(targetFriendId);
                             if (hvData && hvData.voice) {
                                 heartVoiceContext = `\n【角色前续状态】\n前一个时刻的心声：${hvData.voice}\n前一个时刻的神态：${hvData.demeanor}\n前一个时刻的心情值：${hvData.mood}\n\n请在此基础上，根据新的对话内容，自然地推进角色的内心状态与外在表现。`;
                             }
@@ -9381,15 +9865,19 @@ ${recentChat || '（暂无对话内容）'}
                         }
 
                         const data = await response.json();
+                        
+                        // 停止心声按钮脉动动画（API响应成功）
+                        this.stopHeartVoicePulse();
+                        
                         const messagePayload = data.choices[0]?.message || {};
 
                         let heartVoiceData = null;
                         let rawAiResponse = messagePayload.content || '';
 
                         // 一体化JSON格式解析（严格验证结构）
-                        try {
-                            const jsonContent = JSON.parse(rawAiResponse);
-                            
+                        // 使用JSON清洗层处理API响应
+                        const jsonContent = JSONCleaningLayer.cleanAndParse(rawAiResponse);
+                        if (jsonContent) {
                             // 验证JSON结构的完整性
                             if (jsonContent.reply && jsonContent.inner_voice) {
                                 // 验证inner_voice包含所有必需字段
@@ -9410,27 +9898,45 @@ ${recentChat || '（暂无对话内容）'}
                                 } else {
                                     // JSON结构不完整，不使用此数据
                                     console.warn('[一体化生成] JSON结构不完整，缺少必需字段');
+                                    // 尝试从JSON中提取任何回复字段
+                                    rawAiResponse = jsonContent.reply || '';
                                 }
                             } else {
-                                // 缺少reply或inner_voice
+                                // 缺少reply或inner_voice，尝试提取纯文本回复
                                 console.warn('[一体化生成] JSON缺少reply或inner_voice字段');
+                                rawAiResponse = jsonContent.reply || '';
                             }
-                        } catch (jsonError) {
-                            // 如果不是JSON格式，不进行降级处理
-                            console.log('[一体化生成] 响应不是JSON格式，保留上次心声状态');
+                        } else {
+                            // JSON清洗失败，检查是否是纯文本响应
+                            console.log('[一体化生成] JSON解析失败，检查是否为纯文本响应');
+                            // 检查原始响应是否包含JSON标记
+                            if (rawAiResponse.includes('{') || rawAiResponse.includes('【')) {
+                                // 可能是混合格式，尝试提取纯文本部分
+                                const plainText = rawAiResponse
+                                    .replace(/\{[\s\S]*?\}/g, '') // 移除JSON对象
+                                    .replace(/【[\s\S]*?】/g, '') // 移除标记
+                                    .replace(/^\s*["']?\s*/g, '') // 移除前缀空格和引号
+                                    .trim();
+                                if (plainText && plainText.length >= 10) {
+                                    rawAiResponse = plainText;
+                                    console.log('[一体化生成] 提取纯文本部分作为回复');
+                                } else {
+                                    // 如果提取后内容太短，使用降级回复
+                                    rawAiResponse = '⌯・3・⌯ っ';
+                                    console.warn('[一体化生成] 无法从响应中提取有效内容');
+                                }
+                            }
                         }
 
-                        if (!rawAiResponse) {
+                        if (!rawAiResponse || rawAiResponse.length < 2) {
                             this.removeLoadingMessage(loadingId);
                             return;
                         }
                         const aiResponse = this.sanitizeAiResponse(rawAiResponse);
 
-                        this.removeLoadingMessage(loadingId);
-
                         const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
-                        const currentFriend = friends.find(f => f.id === this.currentFriendId);
-                        const currentPersona = this.friendSystem ? (this.friendSystem.getPersona(this.currentFriendId)?.raw ?? currentFriend?.persona ?? '') : '';
+                        const currentFriend = friends.find(f => f.id === targetFriendId);
+                        const currentPersona = this.friendSystem ? (this.friendSystem.getPersona(targetFriendId)?.raw ?? currentFriend?.persona ?? '') : '';
                         
                         // 一体化生成：心声数据已由API直接返回，无需降级处理
                         const aiMessages = this.generateAIMessages(aiResponse, currentPersona || '');
@@ -9441,9 +9947,24 @@ ${recentChat || '（暂无对话内容）'}
                         }));
                         const extraImagePayloads = [];
 
+                        // 显示消息通知横幅
+                        if (aiMessagePayloads.length > 0 && currentFriend) {
+                            const firstMsg = aiMessagePayloads[0];
+                            const notifText = firstMsg.isVoice ? '[语音]' : firstMsg.content;
+                            const friendForNotif = currentFriend;
+                            showMsgNotification(
+                                friendForNotif.name,
+                                notifText,
+                                friendForNotif.avatar || '',
+                                () => {
+                                    if (chatSession) chatSession.openChatWithFriend(friendForNotif);
+                                }
+                            );
+                        }
+
                         for (const aiMsg of aiMessagePayloads) {
-                            this.addMessageToChat(aiMsg.content, 'ai', aiMsg.isVoice, aiMsg.id);
-                            if (this.currentFriendId) {
+                            this.addMessageToChat(aiMsg.content, 'ai', aiMsg.isVoice, aiMsg.id, '', '', '', '', targetFriendId);
+                            if (targetFriendId) {
                                 chatHistory.push({ role: 'assistant', content: aiMsg.content, isVoice: aiMsg.isVoice, id: aiMsg.id });
                             }
                             await new Promise(resolve => setTimeout(resolve, 600));
@@ -9451,13 +9972,13 @@ ${recentChat || '（暂无对话内容）'}
 
                         // 一体化心声存储与刷新（一次API调用同时生成）
                         // 成功才保存，只渲染有效的
-                        if (heartVoiceData && heartVoiceSystem && this.currentFriendId) {
+                        if (heartVoiceData && heartVoiceSystem && targetFriendId) {
                             const heartVoiceText = String(heartVoiceData.heart_voice || '').trim();
                             const heartDemeanor = String(heartVoiceData.demeanor || '').trim();
                             const moodValue = Number(heartVoiceData.mood_value);
 
                             console.log('[一体化生成] 心声数据检验:', {
-                                friendId: this.currentFriendId,
+                                friendId: targetFriendId,
                                 hasVoice: !!heartVoiceText,
                                 voiceLen: heartVoiceText.length,
                                 hasDemeanor: !!heartDemeanor,
@@ -9474,7 +9995,7 @@ ${recentChat || '（暂无对话内容）'}
                             const isValidDemeanor = !heartDemeanor || heartDemeanor.length >= 4;
 
                             if (isValidVoice && isValidMood && isValidDemeanor) {
-                                const oldData = heartVoiceSystem.getData(this.currentFriendId) || {};
+                                const oldData = heartVoiceSystem.getData(targetFriendId) || {};
                                 const oldHistory = Array.isArray(oldData.history) ? oldData.history : [];
                                 const newData = {
                                     lastUpdate: Date.now(),
@@ -9489,12 +10010,12 @@ ${recentChat || '（暂无对话内容）'}
                                         mood: Math.max(0, Math.min(100, Math.round(moodValue)))
                                     }].slice(-15)
                                 };
-                                heartVoiceSystem.saveData(this.currentFriendId, newData);
+                                heartVoiceSystem.saveData(targetFriendId, newData);
                                 console.log('[一体化生成] 心声已保存（通过有效性检验）');
 
                                 // 心声面板打开时立即刷新
                                 if (document.querySelector('.heart-voice-popup.is-open')) {
-                                    heartVoiceSystem.render(this.currentFriendId);
+                                    heartVoiceSystem.render(targetFriendId);
                                 }
                             } else {
                                 console.log('[一体化生成] 心声未保存（未通过有效性检验）', {
@@ -9521,8 +10042,8 @@ ${recentChat || '（暂无对话内容）'}
                                     : '';
                                 const imageText = this.ensureConcreteImageDesc(imageDecision.description, aiResponse);
                                 const imageType = shouldTriggerImage ? '图片' : '描述图';
-                                this.addMessageToChat(imageText, 'ai', false, imageId, '', '', imageData, imageType);
-                                if (this.currentFriendId) {
+                                this.addMessageToChat(imageText, 'ai', false, imageId, '', '', imageData, imageType, targetFriendId);
+                                if (targetFriendId) {
                                     const imagePayload = {
                                         role: 'assistant',
                                         content: imageText,
@@ -9536,13 +10057,15 @@ ${recentChat || '（暂无对话内容）'}
                                     chatHistory.push(imagePayload);
                                     extraImagePayloads.push(imagePayload);
                                 }
-                                this.markImageShareSent(this.currentFriendId);
+                                this.markImageShareSent(targetFriendId);
                             }
                         }
 
-                        if (this.currentFriendId && this.friendSystem) {
+                        if (targetFriendId && this.friendSystem) {
                             // 更新真实历史记录
-                            const realHistory = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+                            const realHistory = this.friendSystem.getFriendChatHistory(targetFriendId);
+
+                            console.log(`[AI回复] 保存到好友 ${targetFriendId} - AI消息数: ${aiMessagePayloads.length}, 图片数: ${extraImagePayloads.length}`);
 
                             // 1. 标记已回复
                             pendingMessages.forEach(pm => {
@@ -9560,12 +10083,13 @@ ${recentChat || '（暂无对话内容）'}
                                 });
                             }
 
-                            this.friendSystem.saveFriendChatHistory(this.currentFriendId, realHistory);
+                            this.friendSystem.saveFriendChatHistory(targetFriendId, realHistory);
                         }
 
                         // 心声已由本次API返回，避免二次请求
                     } catch (error) {
                         console.error('发送消息失败:', error);
+                        this.stopHeartVoicePulse();  // 错误时也停止脉动
                         this.removeLoadingMessage(loadingId);
                         showCuteToast(`调用API时遇到问题: ${error.message || error}`);
                         // 不生成备用心声，保持之前的心声显示
@@ -9906,6 +10430,43 @@ ${recentChat || '（暂无对话内容）'}
                 updateHeaderHeight();
             }
 
+            // ========== 记忆对话条数配置 ==========
+            function initMemoryChatCount() {
+                const memoryChatCountInput = document.getElementById('memoryChatCountInput');
+                if (!memoryChatCountInput) return;
+
+                // 获取保存的配置
+                const config = apiService ? apiService.getConfig() : {};
+                const savedCount = config.memoryChatCount || 35;
+                
+                // 设置输入框的值
+                memoryChatCountInput.value = savedCount;
+
+                // 监听输入框变化，自动保存
+                memoryChatCountInput.addEventListener('change', (e) => {
+                    const value = Math.max(1, Math.min(999, parseInt(e.target.value) || 35));
+                    memoryChatCountInput.value = value;
+
+                    // 保存到配置
+                    if (apiService) {
+                        const currentConfig = apiService.getConfig();
+                        currentConfig.memoryChatCount = value;
+                        apiService.saveConfig(currentConfig);
+                        console.log(`[记忆配置] 已保存对话条数: ${value}`);
+                    }
+                });
+
+                // 输入时也实时验证
+                memoryChatCountInput.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    if (value && parseInt(value) < 1) {
+                        memoryChatCountInput.value = '1';
+                    } else if (value && parseInt(value) > 999) {
+                        memoryChatCountInput.value = '999';
+                    }
+                });
+            }
+
             // ========== AI调取内容接口 ==========
             /**
              * AI获取已挂载内容的统一接口
@@ -10064,6 +10625,9 @@ ${recentChat || '（暂无对话内容）'}
 
                 // 初始化隐藏状态栏功能
                 initHideStatusBar();
+
+                // 初始化记忆对话条数配置
+                initMemoryChatCount();
 
                 // 为所有图标添加悬停效果
                 const allIcons = document.querySelectorAll('.app-icon, .dock-icon, .left-icon, .app-item');
