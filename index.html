@@ -1519,11 +1519,10 @@
             flex: 1;
             text-align: center;
             letter-spacing: 0;
-            height: 30px;
-            line-height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 30px;
         }
 
         .friend-list-nav {
@@ -2841,15 +2840,15 @@
 
             <!-- 导航栏 -->
             <div class="modal-header" style="position: relative;">
-                <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <h3 id="chatTitle" style="margin: 0; color: #787785; font-size: 18px; font-weight: 700; position: absolute; left: 50%; transform: translateX(-50%); top: 50%; transform: translate(-50%, -50%);">季燃</h3>
-                <div style="display: flex; gap: 8px; margin-left: auto;">
-                    <button id="heartVoiceBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" aria-label="心声">
+                <h3 id="chatTitle" style="margin: 0; color: #787785; font-size: 18px; font-weight: 600; flex: 1; text-align: center; display: flex; align-items: center; justify-content: center;">季燃</h3>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button id="heartVoiceBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;" aria-label="心声">
                         <i class="fas fa-heart"></i>
                     </button>
-                    <button id="charSettingsBtn" style="background: none; border: none; font-size: 20px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                    <button id="charSettingsBtn" style="background: none; border: none; font-size: 20px; color: #787785; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
