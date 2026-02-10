@@ -1142,7 +1142,153 @@
             opacity: 0.45;
             pointer-events: none;
         }
-        
+
+        /* ========== 多选模式样式 ========== */
+        .multi-select-header {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .multi-select-header .multi-select-count {
+            flex: 1;
+            text-align: center;
+            color: #787785;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .multi-select-header .multi-select-cancel-btn {
+            background: none;
+            border: none;
+            color: #787785;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .multi-select-header .multi-select-cancel-btn:active {
+            background-color: #f6f2f1;
+        }
+        .multi-select-footer {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 12px 20px;
+            background-color: #FFFFFF;
+            border-top: 1px solid #f6f2f1;
+            flex-shrink: 0;
+        }
+        .multi-select-delete-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #f6f2f1;
+            color: #d32f2f;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(120, 119, 133, 0.1);
+        }
+        .multi-select-delete-btn:active {
+            transform: scale(0.93);
+            background-color: #efe8e6;
+        }
+        .multi-select-checkbox {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #d0cdd5;
+            background-color: #FFFFFF;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            align-self: center;
+        }
+        .multi-select-checkbox.is-checked {
+            border-color: #f0d6d7;
+            background-color: #f0d6d7;
+        }
+        .multi-select-checkbox.is-checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 12px;
+            color: #FFFFFF;
+        }
+        body.multi-select-active #chatMessages > div[data-msg-id] {
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 8px;
+            cursor: pointer;
+        }
+        body.multi-select-active #chatMessages > div[data-msg-id] .multi-select-checkbox {
+            display: flex;
+        }
+        .multi-select-confirm-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            z-index: 2001;
+            background-color: rgba(0, 0, 0, 0.3);
+            justify-content: center;
+            align-items: center;
+        }
+        .multi-select-confirm-box {
+            background-color: white;
+            border-radius: 30px;
+            padding: 20px 25px;
+            width: 75%;
+            max-width: 260px;
+            box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2);
+            text-align: center;
+        }
+        .multi-select-confirm-box h3 {
+            margin: 0 0 10px 0;
+            color: #787785;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .multi-select-confirm-box p {
+            margin: 0 0 15px 0;
+            color: #787785;
+            font-size: 13px;
+        }
+        .multi-select-confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .multi-select-confirm-actions button {
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            min-width: 70px;
+            transition: all 0.2s ease;
+        }
+        #multiSelectConfirmYes {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+        }
+        #multiSelectConfirmNo {
+            background-color: white;
+            color: #787785;
+            border: 1px solid #f6f2f1;
+        }
+
         .chat-input-area {
             display: flex;
             gap: 8px;
@@ -2890,6 +3036,12 @@
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
+                <!-- 多选模式顶部栏 -->
+                <div id="multiSelectHeader" class="multi-select-header">
+                    <div style="width: 32px;"></div>
+                    <span id="multiSelectCount" class="multi-select-count">已选中 0 条</span>
+                    <button id="multiSelectCancelBtn" class="multi-select-cancel-btn" type="button">取消</button>
+                </div>
             </div>
             
             <div id="apiWarning" class="api-warning" style="display: none; background-color: #f6f2f1; border-bottom: 1px solid #debb7b; padding: 12px 20px; color: #debb7b; font-size: 13px; text-align: center;">
@@ -2988,7 +3140,13 @@
                     </div>
                 </div>
             </div>
-            
+            <!-- 多选模式底部栏 -->
+            <div id="multiSelectFooter" class="multi-select-footer">
+                <button id="multiSelectDeleteBtn" class="multi-select-delete-btn" type="button">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+
             <div id="chatStatus" class="status-message" style="margin: 0; border-radius: 0;"></div>
         </div>
     </div>
@@ -3012,6 +3170,22 @@
                 <i class="fas fa-reply"></i>
                 <span>引用</span>
             </button>
+            <button class="message-action-item" id="messageActionMultiSelect" type="button">
+                <i class="fas fa-check-double"></i>
+                <span>多选</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 多选确认删除弹窗 -->
+    <div id="multiSelectConfirmOverlay" class="multi-select-confirm-overlay">
+        <div class="multi-select-confirm-box">
+            <h3>确认批量删除？</h3>
+            <p id="multiSelectConfirmText">将删除已选中的 0 条消息，删除后无法恢复</p>
+            <div class="multi-select-confirm-actions">
+                <button id="multiSelectConfirmYes" type="button">确认删除</button>
+                <button id="multiSelectConfirmNo" type="button">取消</button>
+            </div>
         </div>
     </div>
 
@@ -4235,6 +4409,9 @@
         });
         
         backToFriendList.addEventListener('click', () => {
+            if (chatSession && chatSession.multiSelect && chatSession.multiSelect.active) {
+                chatSession.exitMultiSelectMode();
+            }
             chatModal.style.display = 'none';
             chatStatus.style.display = 'none';
             if (heartVoiceSystem) heartVoiceSystem.closePopup();
@@ -6856,7 +7033,13 @@
                     replyBtn: messageActionReply,
                     current: null
                 };
+                this.multiSelect = {
+                    active: false,
+                    selectedIds: new Set(),
+                    selectedWrappers: new Map()
+                };
                 this.initMessageActionMenu();
+                this.initMultiSelect();
                 this.initReplyPreview();
                 this.initImageUpload();
             }
@@ -6886,6 +7069,183 @@
                 if (deleteBtn) deleteBtn.addEventListener('click', () => this.handleMessageAction('delete'));
                 if (recallBtn) recallBtn.addEventListener('click', () => this.handleMessageAction('recall'));
                 if (replyBtn) replyBtn.addEventListener('click', () => this.handleMessageAction('reply'));
+                
+                // 多选按钮事件监听
+                const multiSelectBtn = document.getElementById('messageActionMultiSelect');
+                if (multiSelectBtn) {
+                    multiSelectBtn.addEventListener('click', () => this.handleMessageAction('multiSelect'));
+                }
+            }
+
+            initMultiSelect() {
+                const cancelBtn = document.getElementById('multiSelectCancelBtn');
+                const deleteBtn = document.getElementById('multiSelectDeleteBtn');
+                const confirmYes = document.getElementById('multiSelectConfirmYes');
+                const confirmNo = document.getElementById('multiSelectConfirmNo');
+
+                if (cancelBtn) cancelBtn.addEventListener('click', () => this.exitMultiSelectMode());
+
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', () => {
+                        if (this.multiSelect.selectedIds.size === 0) {
+                            showCuteToast('请先选中要删除的消息');
+                            return;
+                        }
+                        const overlay = document.getElementById('multiSelectConfirmOverlay');
+                        const text = document.getElementById('multiSelectConfirmText');
+                        if (text) text.textContent = `将删除已选中的 ${this.multiSelect.selectedIds.size} 条消息，删除后无法恢复`;
+                        if (overlay) overlay.style.display = 'flex';
+                    });
+                }
+
+                if (confirmYes) {
+                    confirmYes.addEventListener('click', () => {
+                        this.executeMultiSelectDelete();
+                        const overlay = document.getElementById('multiSelectConfirmOverlay');
+                        if (overlay) overlay.style.display = 'none';
+                    });
+                }
+
+                if (confirmNo) {
+                    confirmNo.addEventListener('click', () => {
+                        const overlay = document.getElementById('multiSelectConfirmOverlay');
+                        if (overlay) overlay.style.display = 'none';
+                    });
+                }
+            }
+
+            enterMultiSelectMode() {
+                this.multiSelect.active = true;
+                this.multiSelect.selectedIds.clear();
+                this.multiSelect.selectedWrappers.clear();
+                document.body.classList.add('multi-select-active');
+
+                // 事件委托：捕获阶段拦截 chatMessages 内所有点击
+                this._multiSelectClickHandler = (e) => {
+                    const wrapper = e.target.closest('div[data-msg-id]');
+                    if (!wrapper) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    this.toggleMultiSelectMessage(wrapper);
+                };
+                chatMessages.addEventListener('click', this._multiSelectClickHandler, true);
+
+                const modalHeader = document.querySelector('#chatModal .modal-header');
+                if (modalHeader) {
+                    Array.from(modalHeader.children).forEach(child => {
+                        if (child.id !== 'multiSelectHeader') {
+                            child.dataset.msOrigDisplay = child.style.display || '';
+                            child.style.display = 'none';
+                        }
+                    });
+                }
+                const msHeader = document.getElementById('multiSelectHeader');
+                if (msHeader) msHeader.style.display = 'flex';
+
+                const inputAreaWrap = document.getElementById('chatInputAreaWrap');
+                const inputArea = inputAreaWrap ? inputAreaWrap.parentElement : null;
+                if (inputArea) {
+                    inputArea.dataset.msOrigDisplay = inputArea.style.display || '';
+                    inputArea.style.display = 'none';
+                }
+                const msFooter = document.getElementById('multiSelectFooter');
+                if (msFooter) msFooter.style.display = 'flex';
+
+                this.updateMultiSelectCount();
+
+                const allMsgWrappers = chatMessages.querySelectorAll('div[data-msg-id]');
+                allMsgWrappers.forEach(wrapper => this.ensureMultiSelectCheckbox(wrapper));
+            }
+
+            exitMultiSelectMode() {
+                this.multiSelect.active = false;
+                this.multiSelect.selectedIds.clear();
+                this.multiSelect.selectedWrappers.clear();
+                document.body.classList.remove('multi-select-active');
+
+                // 移除事件委托
+                if (this._multiSelectClickHandler) {
+                    chatMessages.removeEventListener('click', this._multiSelectClickHandler, true);
+                    this._multiSelectClickHandler = null;
+                }
+
+                const modalHeader = document.querySelector('#chatModal .modal-header');
+                if (modalHeader) {
+                    Array.from(modalHeader.children).forEach(child => {
+                        if (child.id !== 'multiSelectHeader') {
+                            child.style.display = child.dataset.msOrigDisplay || '';
+                            delete child.dataset.msOrigDisplay;
+                        }
+                    });
+                }
+                const msHeader = document.getElementById('multiSelectHeader');
+                if (msHeader) msHeader.style.display = 'none';
+
+                const inputAreaWrap = document.getElementById('chatInputAreaWrap');
+                const inputArea = inputAreaWrap ? inputAreaWrap.parentElement : null;
+                if (inputArea) {
+                    inputArea.style.display = inputArea.dataset.msOrigDisplay || '';
+                    delete inputArea.dataset.msOrigDisplay;
+                }
+                const msFooter = document.getElementById('multiSelectFooter');
+                if (msFooter) msFooter.style.display = 'none';
+
+                const allCheckboxes = chatMessages.querySelectorAll('.multi-select-checkbox');
+                allCheckboxes.forEach(cb => cb.classList.remove('is-checked'));
+
+                const overlay = document.getElementById('multiSelectConfirmOverlay');
+                if (overlay) overlay.style.display = 'none';
+            }
+
+            ensureMultiSelectCheckbox(messageWrapper) {
+                if (messageWrapper.querySelector('.multi-select-checkbox')) return;
+                const checkbox = document.createElement('div');
+                checkbox.className = 'multi-select-checkbox';
+                messageWrapper.insertBefore(checkbox, messageWrapper.firstChild);
+            }
+
+            toggleMultiSelectMessage(messageWrapper) {
+                if (!this.multiSelect.active) return;
+                const msgId = messageWrapper.dataset.msgId;
+                if (!msgId) return;
+
+                const checkbox = messageWrapper.querySelector('.multi-select-checkbox');
+
+                if (this.multiSelect.selectedIds.has(msgId)) {
+                    this.multiSelect.selectedIds.delete(msgId);
+                    this.multiSelect.selectedWrappers.delete(msgId);
+                    if (checkbox) checkbox.classList.remove('is-checked');
+                } else {
+                    this.multiSelect.selectedIds.add(msgId);
+                    this.multiSelect.selectedWrappers.set(msgId, messageWrapper);
+                    if (checkbox) checkbox.classList.add('is-checked');
+                }
+                this.updateMultiSelectCount();
+            }
+
+            updateMultiSelectCount() {
+                const countEl = document.getElementById('multiSelectCount');
+                if (countEl) countEl.textContent = `已选中 ${this.multiSelect.selectedIds.size} 条`;
+            }
+
+            executeMultiSelectDelete() {
+                if (!this.currentFriendId || !this.friendSystem) {
+                    this.exitMultiSelectMode();
+                    return;
+                }
+
+                const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+
+                this.multiSelect.selectedWrappers.forEach((wrapper, msgId) => {
+                    if (wrapper && wrapper.parentNode) wrapper.remove();
+                    const target = history.find(m => m.id === msgId);
+                    if (target) target.isDeletedLocal = true;
+                });
+
+                this.friendSystem.saveFriendChatHistory(this.currentFriendId, history);
+                this.exitMultiSelectMode();
+                showCuteToast('删除成功');
             }
 
             initReplyPreview() {
@@ -7065,6 +7425,7 @@
                 };
 
                 const startPress = (clientX, clientY) => {
+                    if (this.multiSelect.active) return;
                     startX = clientX;
                     startY = clientY;
                     isLongPress = false;
@@ -7125,8 +7486,10 @@
                 targetElement.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    if (this.multiSelect.active) return;
                     this.showMessageActionMenu(targetElement, data);
                 });
+
             }
 
             handleMessageAction(action) {
@@ -7142,6 +7505,14 @@
                     if (role === 'user') this.recallMessage(messageWrapper, msgId);
                 } else if (action === 'reply') {
                     this.setReplyPrefill(content || '', role);
+                } else if (action === 'multiSelect') {
+                    this.hideMessageActionMenu();
+                    this.enterMultiSelectMode();
+                    if (messageWrapper) {
+                        this.ensureMultiSelectCheckbox(messageWrapper);
+                        requestAnimationFrame(() => this.toggleMultiSelectMessage(messageWrapper));
+                    }
+                    return;
                 }
 
                 this.hideMessageActionMenu();
@@ -7390,6 +7761,9 @@
                     }
                 }
 
+                if (this.multiSelect && this.multiSelect.active) {
+                    this.ensureMultiSelectCheckbox(messageWrapper);
+                }
                 chatMessages.appendChild(messageWrapper);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
