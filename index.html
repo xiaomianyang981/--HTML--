@@ -2236,14 +2236,48 @@
             margin-right: 4px;
         }
 
-        /* 心声历史列表样式 */
+        /* 心声历史页面底纹 */
+        #heartVoiceHistoryList {
+            background: repeating-linear-gradient(
+                135deg,
+                transparent,
+                transparent 20px,
+                rgba(222, 190, 235, 0.03) 20px,
+                rgba(222, 190, 235, 0.03) 40px
+            );
+            padding-top: 8px;
+            padding-bottom: 16px;
+        }
+        /* 心声历史标题：艺术字体 */
+        .hv-history-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #debeeb 0%, #f0d6d7 50%, #debb7b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 14px 0 0;
+            letter-spacing: 1px;
+        }
+        /* 标题下划线 */
+        .hv-history-title-line {
+            width: 60px;
+            height: 1px;
+            margin: 6px auto 15px;
+            background: linear-gradient(90deg, #debeeb, #f0d6d7);
+            border-radius: 1px;
+        }
+        /* 心声历史卡片：玻璃外观 */
         .hv-history-item {
             padding: 16px 18px;
             margin: 0 16px 10px;
-            background: #f6f2f1;
-            border-radius: 16px;
-            box-shadow: none;
-            border: 1px solid #f6f2f1;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.15) 0%, rgba(200, 220, 240, 0.1) 100%), rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(200, 170, 210, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -2255,7 +2289,8 @@
         }
         .hv-history-item.selected {
             border-color: #f0d6d7;
-            background-color: #FFFFFF;
+            background: linear-gradient(135deg, rgba(240, 214, 215, 0.25) 0%, rgba(222, 190, 235, 0.15) 100%), #fff;
+            box-shadow: 0 4px 16px rgba(240, 214, 215, 0.25);
         }
         .hv-history-item.selected::after {
             content: '✓';
@@ -2268,7 +2303,6 @@
         }
         .hv-history-item:active {
             transform: scale(0.97);
-            background-color: #f6f2f1;
         }
         .hv-history-header {
             display: flex;
@@ -2277,22 +2311,23 @@
         }
         .hv-history-time {
             font-size: 12px;
-            color: #787785;
+            color: #a09caa;
             font-weight: 500;
         }
         .hv-history-mood {
             font-size: 11px;
             color: #debeeb;
-            background: rgba(222, 190, 235, 0.15);
+            background: linear-gradient(135deg, rgba(222, 190, 235, 0.18), rgba(240, 214, 215, 0.18));
             padding: 3px 10px;
             border-radius: 10px;
             font-weight: 600;
+            border: 1px solid rgba(222, 190, 235, 0.2);
         }
         .hv-history-content {
             font-size: 14px;
-            color: #787785;
-            line-height: 1.6;
-            letter-spacing: 0.01em;
+            color: #5c5b66;
+            line-height: 1.7;
+            letter-spacing: 0.02em;
         }
 
         /* 移动端全屏适配 (PWA/Add to Home Screen) */
@@ -3263,7 +3298,7 @@
     <div class="modal" id="heartVoiceHistoryModal">
         <div class="modal-content" style="height: 80vh; display: flex; flex-direction: column;">
             <div class="modal-header">
-                <h3>心声历史</h3>
+                <h3 id="heartVoiceHistoryTitle">心声历史</h3>
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <button id="exportHeartVoiceHistoryBtn" style="background: none; border: none; color: #debeeb; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 4px;">
                         <i class="fas fa-image"></i> 导出
@@ -5970,10 +6005,15 @@
 
                 // 关闭小弹窗
                 if (this.popup) this.popup.classList.remove('is-open');
-                
+
+                // 动态设置弹窗标题为「xxの心声」
+                const friend = this.friendSystem ? this.friendSystem.getFriendById(friendId) : null;
+                const titleEl = document.getElementById('heartVoiceHistoryTitle');
+                if (titleEl) titleEl.textContent = `${friend?.name || ''}の心声`;
+
+                this.selectedItems.clear();
                 this.renderHistory(friendId);
                 if (this.historyModal) this.historyModal.style.display = 'flex';
-                this.selectedItems.clear();
             }
 
             renderHistory(friendId) {
@@ -5982,12 +6022,15 @@
 
                 const data = this.getData(friendId);
                 const history = (data && data.history) ? data.history : [];
-                
-                // 按时间倒序
                 const sorted = [...history].reverse();
 
+                // 列表顶部插入艺术标题
+                const friend = this.friendSystem ? this.friendSystem.getFriendById(friendId) : null;
+                const titleHtml = `<div class="hv-history-title">${friend?.name || ''}の心声</div><div class="hv-history-title-line"></div>`;
+                this.historyList.insertAdjacentHTML('beforeend', titleHtml);
+
                 if (sorted.length === 0) {
-                    this.historyList.innerHTML = '<div class="page-hint" style="margin-bottom: 0; color: #999; font-size: 14px; min-height: 200px; display: flex; align-items: center;\">暂无历史心声</div>';
+                    this.historyList.insertAdjacentHTML('beforeend', '<div class="page-hint" style="margin-bottom: 0; color: #a09caa; font-size: 14px; min-height: 200px; display: flex; align-items: center; justify-content: center;">暂无历史心声</div>');
                     return;
                 }
 
@@ -6097,155 +6140,227 @@
                 }
             }
 
+            /* 导出心声历史为高清相册图片 */
             async exportHistory() {
                 if (!chatSession) return;
                 const friendId = chatSession.getCurrentFriendId();
                 const data = this.getData(friendId);
                 if (!data || !data.history || data.history.length === 0) {
-                    alert('暂无历史记录可导出');
+                    showCuteToast('暂无历史记录可导出');
                     return;
                 }
 
-                // 如果有选中项，只导出选中的；否则导出全部
+                // 筛选：有选中项则导出选中，否则导出全部
                 let history = [...data.history].reverse();
                 if (this.selectedItems.size > 0) {
                     history = history.filter(item => this.selectedItems.has(item.time));
                 }
-                
                 if (history.length === 0) return;
+
+                const friend = this.friendSystem ? this.friendSystem.getFriendById(friendId) : null;
+                const friendName = friend?.name || '未知角色';
+                const friendAvatar = friend?.avatar || null;
+
+                // 2x 设备像素比，输出高清图
+                const scale = 2;
+                const w = 450;
+                const pad = 28;
+                const lineH = 26;
+                const cardGap = 14;
+                const headerH = 150;
+                const cardPad = 16;
+                const cardRadius = 16;
 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const width = 450; // 图片宽度
-                const padding = 24;
-                const lineHeight = 24;
-                const headerHeight = 120; // 留给顶部图标的空间
-                
-                // 1. 预计算高度
-                ctx.font = '15px sans-serif';
-                let totalHeight = headerHeight + padding;
-                
-                for (const item of history) {
-                    const textHeight = this.measureTextHeight(ctx, item.voice, width - padding * 2 - 24, lineHeight);
-                    totalHeight += textHeight + 50; // 文本高度 + 上下内边距 + 间距
-                }
-                totalHeight += 40; // 底部留白
-                
-                canvas.width = width;
-                canvas.height = totalHeight;
-                
-                // 2. 绘制背景
-                ctx.fillStyle = '#fff5f8'; // 浅粉色背景
-                ctx.fillRect(0, 0, width, canvas.height);
-                
-                // 3. 绘制顶部信息 (头像 + 名字)
-                const friend = this.friendSystem.getFriendById(friendId);
-                const friendName = friend ? friend.name : '未知角色';
-                const friendAvatar = friend ? friend.avatar : null;
 
-                const imgSize = 80;
-                const centerX = width / 2;
-                const centerY = 20 + imgSize / 2;
-                
-                // 尝试加载头像
+                // 预计算卡片文本高度
+                ctx.font = `${15 * scale}px sans-serif`;
+                const textW = w - pad * 2 - cardPad * 2;
+                let totalH = headerH;
+                for (const item of history) {
+                    const th = this.measureTextHeight(ctx, item.voice, textW * scale, lineH * scale);
+                    totalH += th / scale + cardPad * 2 + 24 + cardGap;
+                }
+                totalH += 40;
+
+                canvas.width = w * scale;
+                canvas.height = totalH * scale;
+                ctx.scale(scale, scale);
+
+                // 绘制渐变背景 + 斜线底纹
+                const bgGrad = ctx.createLinearGradient(0, 0, w, totalH);
+                bgGrad.addColorStop(0, '#fef6f8');
+                bgGrad.addColorStop(0.5, '#f8f0fa');
+                bgGrad.addColorStop(1, '#fef6f8');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, w, totalH);
+                ctx.strokeStyle = 'rgba(222, 190, 235, 0.06)';
+                ctx.lineWidth = 0.5;
+                for (let i = -totalH; i < w + totalH; i += 28) {
+                    ctx.beginPath();
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i + totalH, totalH);
+                    ctx.stroke();
+                }
+
+                // 辅助：绘制圆角矩形路径
+                const roundRect = (x, y, rw, rh, r) => {
+                    ctx.beginPath();
+                    ctx.moveTo(x + r, y);
+                    ctx.lineTo(x + rw - r, y);
+                    ctx.quadraticCurveTo(x + rw, y, x + rw, y + r);
+                    ctx.lineTo(x + rw, y + rh - r);
+                    ctx.quadraticCurveTo(x + rw, y + rh, x + rw - r, y + rh);
+                    ctx.lineTo(x + r, y + rh);
+                    ctx.quadraticCurveTo(x, y + rh, x, y + rh - r);
+                    ctx.lineTo(x, y + r);
+                    ctx.quadraticCurveTo(x, y, x + r, y);
+                    ctx.closePath();
+                };
+
+                // 绘制头像（圆形裁剪）
+                const imgSize = 72;
+                const cx = w / 2, cy = 24 + imgSize / 2;
                 let avatarImg = null;
                 if (friendAvatar) {
                     try {
                         const img = new Image();
-                        img.crossOrigin = "Anonymous"; // 尝试跨域加载
+                        img.crossOrigin = 'Anonymous';
                         img.src = friendAvatar;
-                        await new Promise((resolve, reject) => {
-                            img.onload = resolve;
-                            img.onerror = resolve; // 失败也继续，使用兜底
-                            if (img.complete) resolve();
-                        });
+                        await new Promise(r => { img.onload = r; img.onerror = r; if (img.complete) r(); });
                         if (img.naturalWidth > 0) avatarImg = img;
-                    } catch (e) {
-                        console.warn('头像加载失败', e);
-                    }
+                    } catch (_) {}
                 }
-
                 ctx.save();
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, imgSize / 2, 0, Math.PI * 2);
+                ctx.arc(cx, cy, imgSize / 2, 0, Math.PI * 2);
                 ctx.closePath();
-                ctx.clip(); // 裁剪为圆形
-
-                // 绘制头像背景 (防止透明图或加载失败)
-                ctx.fillStyle = '#FFD1E6';
-                ctx.fillRect(centerX - imgSize/2, centerY - imgSize/2, imgSize, imgSize);
-
+                ctx.clip();
+                ctx.fillStyle = '#f0d6d7';
+                ctx.fillRect(cx - imgSize / 2, cy - imgSize / 2, imgSize, imgSize);
                 if (avatarImg) {
-                    ctx.drawImage(avatarImg, centerX - imgSize/2, centerY - imgSize/2, imgSize, imgSize);
+                    ctx.drawImage(avatarImg, cx - imgSize / 2, cy - imgSize / 2, imgSize, imgSize);
                 } else {
-                    // 兜底图标：显示名字首字或爱心
-                    ctx.fillStyle = '#FF6B9D';
-                    ctx.font = 'bold 36px sans-serif';
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 32px sans-serif';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(friendName.substring(0, 1) || '♥', centerX, centerY + 2);
+                    ctx.fillText(friendName[0] || '♥', cx, cy);
                 }
                 ctx.restore();
-                
-                // 绘制标题
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 18px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(`${friendName}的心声`, width / 2, 110);
+                // 头像外圈光晕
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, imgSize / 2 + 2, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(240, 214, 215, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
 
-                // 4. 绘制列表项
-                let currentY = headerHeight + 10;
+                // 绘制艺术标题「xxの心声」
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'alphabetic';
+                ctx.font = 'bold 18px sans-serif';
+                ctx.fillStyle = '#787785';
+                ctx.fillText(`${friendName}の心声`, w / 2, cy + imgSize / 2 + 28);
+                // 标题渐变下划线
+                const ulW = 50;
+                const ulGrad = ctx.createLinearGradient(w / 2 - ulW / 2, 0, w / 2 + ulW / 2, 0);
+                ulGrad.addColorStop(0, '#debeeb');
+                ulGrad.addColorStop(1, '#f0d6d7');
+                ctx.fillStyle = ulGrad;
+                ctx.fillRect(w / 2 - ulW / 2, cy + imgSize / 2 + 33, ulW, 1.5);
+
+                // 绘制卡片列表
+                let curY = headerH;
                 ctx.textAlign = 'left';
+                ctx.textBaseline = 'alphabetic';
 
                 for (const item of history) {
-                    const textWidth = width - padding * 2 - 24;
-                    const textHeight = this.measureTextHeight(ctx, item.voice, textWidth, lineHeight);
-                    const boxHeight = textHeight + 40;
-
-                    // 卡片背景
-                    ctx.fillStyle = '#ffffff';
-                    ctx.shadowColor = "rgba(0,0,0,0.05)";
-                    ctx.shadowBlur = 10;
-                    ctx.shadowOffsetY = 4;
-                    // 圆角矩形模拟
-                    ctx.fillRect(padding, currentY, width - padding * 2, boxHeight);
-                    ctx.shadowColor = "transparent";
-
-                    // 时间与心情
-                    ctx.fillStyle = '#999';
-                    ctx.font = '12px sans-serif';
-                    const date = new Date(item.time);
-                    const timeStr = `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-                    ctx.fillText(timeStr, padding + 12, currentY + 24);
-
-                    ctx.fillStyle = '#FF6B9D';
-                    ctx.textAlign = 'right';
-                    ctx.fillText(`心情 ${item.mood}%`, width - padding - 12, currentY + 24);
-
-                    // 内容
-                    ctx.textAlign = 'left';
-                    ctx.fillStyle = '#444';
                     ctx.font = '15px sans-serif';
-                    this.wrapText(ctx, item.voice, padding + 12, currentY + 48, textWidth, lineHeight);
+                    const th = this.measureTextHeight(ctx, item.voice, textW, lineH);
+                    const boxH = th + cardPad * 2 + 24;
 
-                    // 装饰性边框
-                    ctx.strokeStyle = 'rgba(255, 107, 157, 0.1)';
+                    // 卡片阴影
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(200, 170, 210, 0.15)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetY = 4;
+                    // 卡片玻璃渐变背景
+                    roundRect(pad, curY, w - pad * 2, boxH, cardRadius);
+                    const cardGrd = ctx.createLinearGradient(pad, curY, w - pad, curY + boxH);
+                    cardGrd.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
+                    cardGrd.addColorStop(1, 'rgba(254, 246, 248, 0.92)');
+                    ctx.fillStyle = cardGrd;
+                    ctx.fill();
+                    ctx.restore();
+                    // 卡片边框
+                    roundRect(pad, curY, w - pad * 2, boxH, cardRadius);
+                    ctx.strokeStyle = 'rgba(222, 190, 235, 0.2)';
                     ctx.lineWidth = 1;
-                    ctx.strokeRect(padding, currentY, width - padding * 2, boxHeight);
+                    ctx.stroke();
 
-                    currentY += boxHeight + 12;
+                    // 时间
+                    const date = new Date(item.time);
+                    const ts = `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+                    ctx.font = '12px sans-serif';
+                    ctx.fillStyle = '#a09caa';
+                    ctx.fillText(ts, pad + cardPad, curY + cardPad + 12);
+
+                    // 心情标签
+                    const moodStr = `心情 ${item.mood}%`;
+                    ctx.font = '600 11px sans-serif';
+                    const moodW = ctx.measureText(moodStr).width + 16;
+                    const moodX = w - pad - cardPad - moodW;
+                    roundRect(moodX, curY + cardPad, moodW, 20, 10);
+                    ctx.fillStyle = 'rgba(222, 190, 235, 0.15)';
+                    ctx.fill();
+                    ctx.fillStyle = '#debeeb';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(moodStr, moodX + moodW / 2, curY + cardPad + 14);
+
+                    // 心声文本
+                    ctx.textAlign = 'left';
+                    ctx.fillStyle = '#5c5b66';
+                    ctx.font = '15px sans-serif';
+                    this.wrapText(ctx, item.voice, pad + cardPad, curY + cardPad + 36, textW, lineH);
+
+                    curY += boxH + cardGap;
                 }
 
-                // 5. 导出下载
-                try {
+                // 导出：先预览确认再保存
+                const dataUrl = canvas.toDataURL('image/png');
+                this.showExportPreview(dataUrl, friendId);
+            }
+
+            /* 显示导出预览弹窗，用户确认后保存 */
+            showExportPreview(dataUrl, friendId) {
+                let overlay = document.getElementById('hvExportPreviewOverlay');
+                if (overlay) overlay.remove();
+
+                overlay = document.createElement('div');
+                overlay.id = 'hvExportPreviewOverlay';
+                overlay.style.cssText = 'position:fixed;inset:0;z-index:2300;background:rgba(0,0,0,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
+                overlay.innerHTML = `
+                    <img src="${dataUrl}" style="max-width:90%;max-height:65vh;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.25);object-fit:contain;margin-bottom:20px;" />
+                    <div style="display:flex;gap:12px;">
+                        <button id="hvExportSave" style="padding:12px 32px;background:linear-gradient(135deg,#debeeb,#f0d6d7);color:#fff;border:none;border-radius:25px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 16px rgba(222,190,235,0.3);">保存图片</button>
+                        <button id="hvExportCancel" style="padding:12px 32px;background:rgba(255,255,255,0.9);color:#787785;border:1px solid #f6f2f1;border-radius:25px;font-weight:600;font-size:14px;cursor:pointer;">取消</button>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+
+                overlay.querySelector('#hvExportSave').addEventListener('click', () => {
                     const link = document.createElement('a');
                     link.download = `heart_voice_${friendId}_${Date.now()}.png`;
-                    link.href = canvas.toDataURL('image/png');
+                    link.href = dataUrl;
                     link.click();
-                } catch (e) {
-                    alert('导出图片失败，可能是浏览器安全限制或图片跨域问题。');
-                    console.error(e);
-                }
+                    overlay.remove();
+                    showCuteToast('保存成功');
+                });
+                overlay.querySelector('#hvExportCancel').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
             }
 
             // 辅助方法：计算文本高度
@@ -6301,15 +6416,6 @@
                 }
             }
 
-            async generateIfNeeded(friendId) {
-                // 心声已与聊天API合并，不再单独请求
-                return;
-            }
-
-            async generate(friendId) {
-                // 心声已与聊天API合并，不再单独请求
-                return;
-            }
 
             /**
              * 生成心声数据 - 基于人设和对话分析
