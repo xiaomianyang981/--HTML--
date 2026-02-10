@@ -7191,29 +7191,33 @@
                 let startY = 0;
                 const isVoiceMessage = targetElement.classList.contains('voice-message');
                 let isMoved = false;
+                let pressStarted = false;
 
                 const clearPress = () => {
                     if (pressTimer) {
                         clearTimeout(pressTimer);
                         pressTimer = null;
                     }
+                    pressStarted = false;
                 };
 
                 const startPress = (clientX, clientY) => {
                     startX = clientX;
                     startY = clientY;
                     isMoved = false;
+                    pressStarted = true;
                     clearPress();
                     pressTimer = setTimeout(() => {
                         this.showMessageActionMenu(targetElement, data);
                     }, 550);
                 };
 
-                // 拦截 touchstart 事件：启动长按计时器，同时禁用系统菜单
+                // touchstart：只对非语音消息阻止默认行为
                 targetElement.addEventListener('touchstart', (e) => {
-                    // 所有消息都阻止系统菜单
-                    e.preventDefault();
-                    e.stopPropagation();
+                    if (!isVoiceMessage) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                     if (e.touches && e.touches[0]) {
                         startPress(e.touches[0].clientX, e.touches[0].clientY);
                     }
@@ -7229,20 +7233,20 @@
                     }
                 }, { passive: true });
 
-                // touchend 时处理短按和长按
+                // touchend：处理短按和长按
                 targetElement.addEventListener('touchend', (e) => {
-                    const isShortPress = pressTimer !== null; // 如果 pressTimer 还在，说明没有达到 550ms
-                    clearPress();
+                    const isShortPress = pressStarted && pressTimer !== null && !isMoved;
                     
-                    // 对于语音消息的短按，触发转录切换
-                    if (isVoiceMessage && isShortPress && !isMoved) {
+                    if (isVoiceMessage && isShortPress) {
+                        // 语音消息短按：不阻止，让 click 事件正常触发
+                        clearPress();
+                    } else if (!isVoiceMessage && isShortPress) {
+                        // 其他消息短按：阻止防止系统菜单
                         e.preventDefault();
                         e.stopPropagation();
-                        // 查找转录 div 并切换显示
-                        const transcriptionDiv = messageWrapper.querySelector('.transcription-text');
-                        if (transcriptionDiv) {
-                            transcriptionDiv.style.display = transcriptionDiv.style.display === 'none' ? 'block' : 'none';
-                        }
+                        clearPress();
+                    } else {
+                        clearPress();
                     }
                 }, { passive: false });
                 
@@ -7255,16 +7259,16 @@
                 targetElement.addEventListener('mouseup', clearPress);
                 targetElement.addEventListener('mouseleave', clearPress);
 
-                // 拦截右键菜单（desktop）和长按菜单（mobile）：完全禁用系统菜单
+                // 拦截右键菜单（desktop）和长按菜单（mobile）
                 targetElement.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     this.showMessageActionMenu(targetElement, data);
                 });
 
-                // 额外保险：禁用右键拖选（右键菜单前奏）
+                // 禁用右键拖选
                 targetElement.addEventListener('mousedown', (e) => {
-                    if (e.button === 2) { // 右键（button=2）
+                    if (e.button === 2) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
