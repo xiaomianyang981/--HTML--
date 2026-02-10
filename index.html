@@ -7189,6 +7189,7 @@
                 let pressTimer = null;
                 let startX = 0;
                 let startY = 0;
+                const isVoiceMessage = targetElement.classList.contains('voice-message');
 
                 const clearPress = () => {
                     if (pressTimer) {
@@ -7208,9 +7209,11 @@
 
                 // 拦截 touchstart 事件：启动长按计时器，同时禁用系统菜单
                 targetElement.addEventListener('touchstart', (e) => {
-                    // 阻止系统默认长按菜单和文本选择
-                    e.preventDefault();
-                    e.stopPropagation();
+                    // 对语音消息不要阻止默认行为，允许点击事件触发
+                    if (!isVoiceMessage) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                     if (e.touches && e.touches[0]) {
                         startPress(e.touches[0].clientX, e.touches[0].clientY);
                     }
@@ -7223,7 +7226,15 @@
                     if (dx > 10 || dy > 10) clearPress();
                 }, { passive: true });
 
-                targetElement.addEventListener('touchend', clearPress);
+                // 对语音消息的 touchend 处理：如果没有触发长按，允许 click 事件处理转录切换
+                targetElement.addEventListener('touchend', (e) => {
+                    if (isVoiceMessage && pressTimer) {
+                        // 短按，允许点击事件触发（不清除 press，让 click 事件来处理）
+                        clearPress();
+                    } else {
+                        clearPress();
+                    }
+                });
                 targetElement.addEventListener('touchcancel', clearPress);
 
                 targetElement.addEventListener('mousedown', (e) => {
