@@ -1502,21 +1502,28 @@
         #chatModal .modal-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
+            gap: 0;
             padding-right: 16px;
             border-bottom: 1px solid #f6f2f1;
             background: #fff;
             flex-shrink: 0;
             min-height: 50px;
+            padding-left: 0;
+            position: relative;
+        }
+        
+        #chatModal .modal-header #backToFriendList {
+            flex-shrink: 0;
             padding-left: 10px;
         }
-
+        
         #chatModal .modal-header h3 {
+            flex: 1;
             margin: 0;
             color: #787785;
             font-size: 15px;
             font-weight: 600;
-            flex: 1;
             text-align: center;
             letter-spacing: 0;
             display: flex;
@@ -1524,6 +1531,13 @@
             justify-content: center;
             min-height: 30px;
         }
+        
+        #chatModal .modal-header > div {
+            flex-shrink: 0;
+            padding-right: 0;
+        }
+
+
 
         .friend-list-nav {
             display: flex;
@@ -2840,11 +2854,10 @@
 
             <!-- 导航栏 -->
             <div class="modal-header" style="position: relative;">
-                <div style="width: 30px; min-height: 30px;"></div>
-                <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center; position: absolute; left: 10px;">
+                <button id="backToFriendList" style="background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <h3 id="chatTitle" style="margin: 0; color: #787785; font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center;">芋圆</h3>
+                <h3 id="chatTitle" style="margin: 0; color: #787785; font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-align: center;">芋圆</h3>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <button id="heartVoiceBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;" aria-label="心声">
                         <i class="fas fa-heart"></i>
