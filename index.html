@@ -946,12 +946,16 @@
             margin-bottom: 15px;
             padding: 10px 15px;
             border-radius: 12px;
-            max-width: 80%;
+            max-width: 70%;
             word-wrap: break-word;
+            word-break: break-word;
             font-size: 15px;
-            line-height: 1.4;
+            line-height: 1.5;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             animation: messageAppear 0.3s ease-out;
+            height: auto;
+            min-height: auto;
+            overflow: visible;
             /* 禁用文本选择和系统菜单 */
             user-select: none;
             -webkit-user-select: none;
@@ -1034,9 +1038,9 @@
 
         .reply-preview-text {
             flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            overflow: visible;
+            word-break: break-word;
         }
 
         .reply-preview-close {
@@ -4122,7 +4126,7 @@
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input type="number" id="memoryChatCountInput" 
                             style="width: 60px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; text-align: center;" 
-                            min="1" max="999" value="35">
+                            min="1" max="999" value="50">
                         <span style="font-size: 14px; color: #787785;">条</span>
                     </div>
                 </div>
@@ -6337,7 +6341,7 @@
                         apiKey: '',
                         model: '',
                         models: [],
-                        memoryChatCount: 35
+                        memoryChatCount: 50
                     };
                     const config = this.friendSystem
                         ? this.friendSystem.getStorage('apiConfig', defaultConfig)
@@ -7771,7 +7775,7 @@
 
                         // 获取配置的记忆对话条数，用于心声生成
                         const apiConfig = this.apiService ? this.apiService.getConfig() : {};
-                        const memoryChatCount = apiConfig.memoryChatCount || 35;
+                        const memoryChatCount = apiConfig.memoryChatCount || 50;
 
                         // 获取最近N条对话历史（使用用户配置的记忆条数）
                         const chatHistory = this.friendSystem.getFriendChatHistory(friendId) || [];
@@ -7857,7 +7861,7 @@
                         }
 
                         // 使用配置的记忆对话条数来截取对话历史
-                        const memoryChatCount = config.memoryChatCount || 35;
+                        const memoryChatCount = config.memoryChatCount || 50;
                         const recentChat = chatHistory.slice(-memoryChatCount).map(m => `${m.role}: ${m.content || ''}`).join('\n');
                         
                         const systemPrompt = `你是一个角色内心世界的模拟引擎。你的任务是根据角色的人设、外貌、气质和近期对话，生成该角色此刻的心声、神态和心情值。
@@ -9164,6 +9168,36 @@ ${recentChat || '（暂无对话内容）'}
                     chatMessages.appendChild(messageWrapper);
                 }
 
+                // ========== 人设冲突检测：计算文本相似度 ==========
+                calculateTextSimilarity(text1, text2) {
+                    if (!text1 || !text2) return 0;
+                    
+                    // 标准化文本（小写、去标点、分词）
+                    const normalize = (str) => {
+                        return str.toLowerCase()
+                            .replace(/[^\w\u4e00-\u9fff]/g, '')  // 去掉非汉字和字母
+                            .split('')
+                            .filter(c => c.trim());
+                    };
+                    
+                    const arr1 = normalize(text1);
+                    const arr2 = normalize(text2);
+                    
+                    if (arr1.length === 0 || arr2.length === 0) return 0;
+                    
+                    // 计算相同词汇的比例
+                    let matches = 0;
+                    for (let char of arr1) {
+                        if (arr2.includes(char)) {
+                            matches++;
+                            arr2.splice(arr2.indexOf(char), 1);
+                        }
+                    }
+                    
+                    const similarity = (2 * matches) / (arr1.length + arr2.length + matches);
+                    return Math.round(similarity * 100) / 100;  // 返回0-1之间的值
+                }
+
                 sanitizeAiResponse(text) {
                     if (!text) return '';
                     const withoutParentheses = text
@@ -9301,77 +9335,8 @@ ${recentChat || '（暂无对话内容）'}
                     if (friendId) this.setSharedState(`imgShareLastAt_${friendId}`, now);
                 }
 
-                async decideAiImageShare(aiResponse, persona, chatHistory, friendId, config, forceTrigger = false) {
-                    // 单次点击仅调用一次API：图片分享决策不再额外请求
+                async decideAiImageShare() {
                     return null;
-
-                    // 修改此处：自动发送图片的触发概率 (0.0 - 1.0)，数值越小越难触发
-                    const TRIGGER_PROBABILITY = 0.05;
-
-                    if (!forceTrigger) {
-                        if (this.isImageShareOnCooldown(friendId)) return null;
-                        if (Math.random() > TRIGGER_PROBABILITY) return null;
-                    }
-
-                    const recent = (chatHistory || [])
-                        .filter(msg => !msg.isDeletedLocal && !msg.isRecalled)
-                        .slice(-8)
-                        .map(msg => {
-                            const role = (msg.role === 'ai' || msg.role === 'assistant') ? 'assistant' : 'user';
-                            const content = msg.imageText ? `[图片文字]${msg.imageText}` : msg.content;
-                            return `${role}:${content || ''}`;
-                        })
-                        .join('\n');
-
-                    const basePrompt = forceTrigger
-                        ? `你是视觉描述生成器。角色在对话中明确表示要发送图片（如“发给你看看”、“这是照片”）。\n请根据人设和对话上下文，生成这张图片的具体画面描述。`
-                        : `你是对话理解引擎。目标：判断此刻是否自然适合由角色主动分享一张“文字图片”，并生成图片文字描述。`;
-
-                    const decisionPrompt = `${basePrompt}\n\n核心约束（至关重要）：\n- **描述必须是纯粹的视觉画面描写**（镜头、光影、主体、动作）。\n- **绝对禁止**包含任何对话内容、语音、心理活动或“发给你”、“你看”之类的文字。\n- **画面必须生动具体**：强调光影（如逆光、暖黄灯光）、色彩对比和材质细节（如发丝、水珠、衣褶）。\n- 描述风格需贴合人设（如高冷角色的照片可能构图简洁，活泼角色可能色彩鲜艳）。\n- 描述结构参考：景别（特写/中景）+ 主体（人/物）+ 动态/状态 + 环境光影 + 氛围细节。\n\n输出JSON（不要多余文字）：\n{\n  "shouldShare": true/false,\n  "description": "纯画面描述，不含对话。例：特写：一只修长的手拿着冰美式，背景是模糊的落地窗，阳光洒在袖口上",\n  "reason": "简短理由",\n  "mood": "简短情绪",\n  "confidence": 0-1\n}\n\n人设：${persona || '无'}\n最近对话：\n${recent}\nAI回复：${aiResponse}`;
-
-                    try {
-                        const response = await fetch(`${config.apiUrl}/chat/completions`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${config.apiKey}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                model: config.model,
-                                messages: [
-                                    { role: 'system', content: '你是严格输出JSON的决策器，只能输出JSON。' },
-                                    { role: 'user', content: decisionPrompt }
-                                ],
-                                max_tokens: 220,
-                                temperature: 0.4
-                            })
-                        });
-
-                        if (!response.ok) return null;
-                        const data = await response.json();
-                        const raw = data.choices[0]?.message?.content || '';
-                        const jsonMatch = raw.match(/\{[\s\S]*\}/);
-                        if (!jsonMatch) return null;
-                        const decision = JSON.parse(jsonMatch[0]);
-                        if (!decision || !decision.shouldShare) return null;
-
-                        const desc = String(decision.description || '').trim();
-                        if (!desc) return null;
-                        const enhancedDesc = this.ensureConcreteImageDesc(desc, aiResponse || '');
-
-                        const history = this.getImageShareHistory(friendId);
-                        const normalizedDesc = enhancedDesc.toLowerCase();
-                        const recentHistory = history.slice(-3).map(item => String(item || '').toLowerCase());
-                        if (recentHistory.includes(normalizedDesc)) return null;
-
-                        history.push(enhancedDesc);
-                        if (history.length > 20) history.splice(0, history.length - 20);
-                        this.saveImageShareHistory(friendId, history);
-
-                        return { description: enhancedDesc };
-                    } catch (e) {
-                        return null;
-                    }
                 }
 
                 ensureConcreteImageDesc(desc, aiResponse = '') {
@@ -9403,49 +9368,6 @@ ${recentChat || '（暂无对话内容）'}
                     const scene = scenes[seed % scenes.length];
                     const detail = details[seed % details.length];
                     return `特写：${subject}${action}，${scene}，${detail}`;
-                }
-
-                buildFallbackHeartVoice(aiResponse = '', persona = '') {
-                    // 降级逻辑：当AI未返回心声时，触发独立的心声生成
-                    // 注意：不能直接复制AI回复内容
-                    
-                    // 触发独立的心声生成（非阻塞方式）
-                    if (this.currentFriendId && typeof heartVoiceSystem !== 'undefined' && heartVoiceSystem) {
-                        heartVoiceSystem.generateHeartVoice(this.currentFriendId)
-                            .then(result => {
-                                if (result && heartVoiceSystem && this.currentFriendId) {
-                                    const oldData = heartVoiceSystem.getData(this.currentFriendId) || {};
-                                    const oldHistory = Array.isArray(oldData.history) ? oldData.history : [];
-                                    const newData = {
-                                        lastUpdate: Date.now(),
-                                        voice: result.voice || '（思考中...）',
-                                        demeanor: result.demeanor || '',
-                                        mood: result.mood || 50,
-                                        history: [...oldHistory, {
-                                            time: Date.now(),
-                                            voice: result.voice || '',
-                                            demeanor: result.demeanor || '',
-                                            mood: result.mood || 50
-                                        }].slice(-15)
-                                    };
-                                    heartVoiceSystem.saveData(this.currentFriendId, newData);
-                                    // 心声面板打开时更新显示
-                                    if (document.querySelector('.heart-voice-popup.is-open')) {
-                                        heartVoiceSystem.render(this.currentFriendId);
-                                    }
-                                }
-                            })
-                            .catch(err => console.error('[心声系统] 降级生成失败:', err));
-                    }
-                    
-                    // 返回空的占位符，让心声由异步生成逻辑填充
-                    return {
-                        reply: String(aiResponse || '').replace(/\s+/g, ' ').trim(),
-                        heart_voice: '',
-                        status: '',
-                        mood_value: 50,
-                        demeanor: ''
-                    };
                 }
 
                 addLoadingMessage(id) {
@@ -9567,44 +9489,10 @@ ${recentChat || '（暂无对话内容）'}
 
                     if (targetFriendId) {
                         const chatHistory = this.friendSystem ? this.friendSystem.getFriendChatHistory(targetFriendId) : [];
-                        // 保存消息，标记为未回复 (isReplied: false)
-                        // 添加时间戳以便心声系统判断
                         const timestamp = Date.now();
 
-                        // 1. 生成心声数据
-                        let heartVoiceData = null;
-                        if (typeof heartVoiceSystem !== 'undefined' && heartVoiceSystem) {
-                            heartVoiceData = await heartVoiceSystem.generateHeartVoice(targetFriendId);
-                            console.log('[心声系统] 发送消息时生成心声:', heartVoiceData);
-
-                            // 4. 保存心声数据到本地存储
-                            if (heartVoiceData) {
-                                const oldData = heartVoiceSystem.getData(targetFriendId) || {};
-                                const oldHistory = Array.isArray(oldData.history) ? oldData.history : [];
-                                const newData = {
-                                    lastUpdate: timestamp,
-                                    voice: heartVoiceData.heart_voice || '',
-                                    status: heartVoiceData.status || '',
-                                    demeanor: heartVoiceData.demeanor || '',
-                                    mood: heartVoiceData.mood_value ?? 50,
-                                    history: [...oldHistory, {
-                                        time: timestamp,
-                                        voice: heartVoiceData.heart_voice || '',
-                                        demeanor: heartVoiceData.demeanor || '',
-                                        mood: heartVoiceData.mood_value ?? 50
-                                    }].slice(-15)
-                                };
-                                heartVoiceSystem.saveData(targetFriendId, newData);
-
-                                // 5. 更新心声面板显示
-                                if (document.querySelector('.heart-voice-popup.is-open')) {
-                                    heartVoiceSystem.render(targetFriendId);
-                                }
-                            }
-                        }
-
-                        // 2. 将心声数据嵌入用户消息
-                        const messageWithHeartVoice = {
+                        // 保存用户消息，心声由 triggerAI 一体化生成，不在此处额外调用API
+                        const userMessage = {
                             role: 'user',
                             content: message,
                             isVoice: isVoice,
@@ -9615,16 +9503,10 @@ ${recentChat || '（暂无对话内容）'}
                             replyFrom: replyFrom || '',
                             imageData: imageData || '',
                             imageName: imageName || '',
-                            imageText: imageText || '',
-                            // 嵌入心声数据
-                            heartVoice: heartVoiceData ? {
-                                voice: heartVoiceData.heart_voice,
-                                status: heartVoiceData.status,
-                                mood: heartVoiceData.mood_value
-                            } : null
+                            imageText: imageText || ''
                         };
 
-                        chatHistory.push(messageWithHeartVoice);
+                        chatHistory.push(userMessage);
                         if (this.friendSystem) {
                             this.friendSystem.saveFriendChatHistory(targetFriendId, chatHistory);
                             console.log(`[发送消息] 消息已保存到好友 ${targetFriendId} - 历史记录共 ${chatHistory.length} 条`);
@@ -9649,12 +9531,20 @@ ${recentChat || '（暂无对话内容）'}
                     this.startHeartVoicePulse();
 
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
+                    const loadingId = 'loading-' + Date.now();
+                    this.addLoadingMessage(loadingId);
 
                     try {
                         let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
 
                         // ========== 统一获取人设和背景设定 ==========
-                        let mountedContentContext = '';
+                        let mountedContentContext = '';  // 精简版，仅用于开头提示
+                        let hasMountedWorldBooks = false;
+                        let worldBookTitles = [];  // 用于最后的验证清单
+                        let worldBooksFullContent = '';  // 完整世界书内容，仅在最后验证清单使用
+                        let characterName = '';     // 用于最后的验证清单
+                        let personaProfile = null;  // 用于最后的验证清单
+                        
                         if (targetFriendId) {
                             // 1. 获取人设信息
                             const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
@@ -9665,30 +9555,29 @@ ${recentChat || '（暂无对话内容）'}
                             // 2. 获取已挂载的世界书和HTML游戏
                             const mountedContent = window.aiGetMountedContent(targetFriendId);
 
-                            // 3. 构建背景设定上下文
-                            if (mountedContent.worldBooks.length > 0 || mountedContent.htmlGames.length > 0) {
-                                mountedContentContext = '\n\n【背景设定与资料】';
-                                if (mountedContent.worldBooks.length > 0) {
-                                    mountedContentContext += '\n世界观设定：';
-                                    mountedContent.worldBooks.forEach(book => {
-                                        mountedContentContext += `\n【${book.title}】${book.content}`;
-                                    });
-                                }
-                                if (mountedContent.htmlGames.length > 0) {
-                                    mountedContentContext += '\n\n互动游戏与体验：';
-                                    mountedContent.htmlGames.forEach(game => {
-                                        mountedContentContext += `\n【${game.title}】${game.content}`;
-                                    });
-                                }
-                                mountedContentContext += '\n请在回复时充分参考和利用以上背景设定，确保角色回应与设定一致，避免人物OOC。';
+                            // 3. 构建背景设定信息（分为开头简版和最后完整版）
+                            if (mountedContent.worldBooks.length > 0) {
+                                hasMountedWorldBooks = true;
+                                worldBookTitles = mountedContent.worldBooks.map(b => b.title);
+                                
+                                // 只在开头做简洁提示，不列举详细内容（节省tokens）
+                                mountedContentContext = `\n\n【已挂载的世界书约束】你将遵守以下已挂载的世界书设定：【${worldBookTitles.join('】【')}】。详细内容将在生成回复前给出。`;
+                                
+                                // 保存完整内容，仅在最后验证清单中使用
+                                worldBooksFullContent = '\n\n【回复前必读：已挂载的世界书约束详情】\n';
+                                mountedContent.worldBooks.forEach(book => {
+                                    worldBooksFullContent += `\n【${book.title}】\n${book.content}`;
+                                });
+                                worldBooksFullContent += '\n\n⚠️ 硬性约束：你的回复必须完全遵守上述所有世界书设定，包括人物身份、地点、时间背景、社会规则、禁止事项等。';
                             }
 
-                            // 4. 构建系统提示词（人设 + 背景设定）
+                            // 4. 构建系统提示词（人设 + 简洁背景提示）
                             if (friend) {
-                                const personaProfile = {
+                                characterName = friend.name;
+                                personaProfile = {
                                     name: friend.name,
                                     persona: persona,
-                                    goals: '以真实自然的聊天风格交流，体现角色背景与性格',
+                                    goals: '以真实自然的聊天风格交流，体现角色背景与性格，严格遵守所有世界书约束',
                                     style: '像真实人类聊天，不做旁白或动作说明',
                                     emotion: '用语言表达情绪，不用任何括号',
                                     memory: '牢记最近对话并连贯回应'
@@ -9721,8 +9610,11 @@ ${recentChat || '（暂无对话内容）'}
 
                         // 获取配置的记忆对话条数
                         const apiConfig = this.apiService ? this.apiService.getConfig() : {};
-                        const memoryChatCount = apiConfig.memoryChatCount || 35;
+                        const memoryChatCount = apiConfig.memoryChatCount || 50;
 
+                        // ========== 上下文读取规则 ==========
+                        // 根据配置的记忆条数读取对话历史，生成自然连贯的上下文
+                        // 这确保了AI能够理解对话背景并做出符合上下文的回应
                         const promptHistory = chatHistory
                             .filter(msg => !msg.isDeletedLocal && !msg.isRecalled)
                             .slice(-memoryChatCount)
@@ -9766,6 +9658,17 @@ ${recentChat || '（暂无对话内容）'}
                             promptHistory.push({ role: 'user', content: '继续' });
                         }
 
+                        // ========== 间隔式人设注入 ==========
+                        // 当对话条数达到50条时，在中间位置注入人设摘要，防止长对话人设漂移
+                        if (promptHistory.length >= 50) {
+                            const injectionIndex = Math.floor(promptHistory.length / 2);
+                            const personaReminder = {
+                                role: 'system',
+                                content: `【人设检查点 - 第${promptHistory.length}条对话】你的基础性格是：${personaProfile?.persona?.substring(0, 100) || '见前文'}\n${worldBookTitles.length > 0 ? '世界书约束：【' + worldBookTitles.join('】【') + '】\n' : ''}注意：你应该基于对话历史中的关系发展自然演变，不要机械回到初始状态。只要行为变化有对话依据就合理，但不能无理由地OOC。`
+                            };
+                            promptHistory.splice(injectionIndex, 0, personaReminder);
+                        }
+
                         // 获取最新的心声数据嵌入到系统提示
                         let heartVoiceContext = '';
                         if (typeof heartVoiceSystem !== 'undefined' && heartVoiceSystem && targetFriendId) {
@@ -9775,7 +9678,16 @@ ${recentChat || '（暂无对话内容）'}
                             }
                         }
 
-                        const enhancedSystemPrompt = systemPrompt + heartVoiceContext + `
+                        // 动态生成最终验证清单中的具体信息
+                        let finalVerificationContent = '';
+                        if (hasMountedWorldBooks && worldBookTitles.length > 0) {
+                            finalVerificationContent += `\n  特别关注的世界书约束：【${worldBookTitles.join('】【')}】`;
+                        }
+                        if (characterName) {
+                            finalVerificationContent += `\n  我扮演的角色：${characterName}`;
+                        }
+
+                        const enhancedSystemPrompt = systemPrompt + heartVoiceContext + worldBooksFullContent + `
 
 【JSON 输出格式（必须严格遵守）】
 请按以下格式输出你的每次回复：
@@ -9792,8 +9704,10 @@ ${recentChat || '（暂无对话内容）'}
 
 1. 回复（reply）：
    - 必须符合角色设定与对话上下文
+   - 必须严格遵守所有挂载的世界书约束和禁止规则
    - 自然流畅，避免生硬或不符合人设的表达
    - 完全按角色性格和当前心理状态回应
+   - 内容必须完整，不允许截断或省略
 
 2. 心声（inner_voice.心声）：
    - 必须为角色内心独白，反映其未直接表达的想法、感受或联想
@@ -9815,16 +9729,17 @@ ${recentChat || '（暂无对话内容）'}
 
 【生成基础】
 
-所有内容必须严格基于本次请求中提供的以下全部信息生成，并区分信息层级：
-1. 【角色公开身份】：角色在本次对话中主动呈现出的性格、身份与知识边界。
-2. 【角色完整设定】：角色的全部真实背景、经历、秘密与情感（包含所有隐藏信息）。
-3. 【对话上下文】：当前及历史的完整对话记录。
-4. 【角色前续状态】：角色在此对话前的心理与情绪状态。
+所有内容必须严格基于本次请求中提供的以下全部信息生成，并区分信息层级，同时优先遵守世界书约束：
+1. 【世界书约束】：所有挂载的世界书设定（最高优先级）
+2. 【角色公开身份】：角色在本次对话中主动呈现出的性格、身份与知识边界
+3. 【角色完整设定】：角色的全部真实背景、经历、秘密与情感（包含所有隐藏信息）
+4. 【对话上下文】：当前及历史的完整对话记录（使用配置的记忆条数）
+5. 【角色前续状态】：角色在此对话前的心理与情绪状态
 
 【生成逻辑】
 
-- 回复 (reply)：必须基于【角色公开身份】与【对话上下文】生成，符合角色此刻对外表现的形象。
-- 心声 (inner_voice.心声)：应基于【角色完整设定】生成，反映角色因当前对话触及内心真实而产生的想法、联想、情绪或内心冲突。可以包含其未说出的秘密、回忆或真实感受，但需自然合理，符合其性格与当下情境。
+- 回复 (reply)：必须优先基于【世界书约束】验证，然后基于【角色公开身份】与【对话上下文】生成，符合角色此刻对外表现的形象。如果涉及世界书约束范围，由角色自由决定如何处理（可以接受、拒绝、转移话题或直面冲突），保持自然真实的对话流。
+- 心声 (inner_voice.心声)：应基于【角色完整设定】生成，反映角色因当前对话触及内心真实而产生的想法、联想、情绪或内心冲突。可以包含其未说出的秘密、回忆或真实感受，但需自然合理，符合其性格与当下情境，同时不违反世界书设定。
 - 神态 (inner_voice.神态)：基于【角色完整设定】与当前心声，描述从对话接收方视角可观察到的、自然的外在表现（包括可能的掩饰性动作或微妙情绪流露）。
 - 心情值 (inner_voice.心情值)：基于【角色完整设定】在此刻的真实情绪强度，给出0-100的整数。
 
@@ -9833,7 +9748,34 @@ ${recentChat || '（暂无对话内容）'}
 ✓ 必须输出完整、合法的 JSON 对象
 ✓ 无额外文本、说明或注释
 ✓ 如果无法按此格式生成，则不输出此格式，前端将保留上一次有效数据
-✓ 所有字段都必须有内容（不返回null或空字符串）`;
+✓ 所有字段都必须有内容（不返回null或空字符串）
+
+【最终验证清单 - 生成回复前必须逐项检查】
+
+在输出最终JSON前，你必须逐项检查以下内容（这是最关键的验证，优先级最高）：${finalVerificationContent}
+
+📋 世界书约束验证（如有挂载）：
+  □ 我的回复是否完全遵守了所有挂载的世界书设定？
+  □ 我的回复是否涉及了世界书中明确禁止的内容或行为？
+  □ 如果对话可能违反世界书，我是否已经按角色自然反应来处理，而不是生硬地拒绝？
+  
+📋 人设一致性验证：
+  □ 我的回复是否符合${characterName || '所扮演角色'}的完整性格设定？
+  □ 我的语气、词汇、逻辑是否与该角色一致，没有OOC（Out of Character）？
+  □ 我是否在虚构或超越了角色的身份边界？
+
+📋 冲突重复检测（70%相似度阈值）：
+  □ 我的回复是否在重复前一条消息的意思、表达或逻辑？
+  □ 是否使用了不同的词汇、表达方式或论述角度来推进对话？
+  □ 如果前面已经说过相似的内容，这次是否有新的信息、观点或情感深度？
+
+📋 内容完整性验证：
+  □ 我的"reply"字段是否内容完整，没有中途被截断？
+  □ 我的"心声"是否有内容且不超过140字？
+  □ 我的"神态"是否完整描述了角色此刻的外在表现？
+  □ 我的"心情值"是否是0-100之间的整数？
+
+⚠️ 如果以上任何一项无法确认或答案为"否"，你必须重新生成回复，而不是继续输出。`;
 
                         const messages = [
                             { role: 'system', content: enhancedSystemPrompt },
@@ -9934,6 +9876,20 @@ ${recentChat || '（暂无对话内容）'}
                         }
                         const aiResponse = this.sanitizeAiResponse(rawAiResponse);
 
+                        // ========== 冲突检测：计算当前回复与前一条的相似度 ==========
+                        if (window._previousAIContent) {
+                            const similarity = this.calculateTextSimilarity(aiResponse, window._previousAIContent);
+                            console.log(`[冲突检测] 相似度: ${(similarity * 100).toFixed(1)}% (阈值70%)`);
+
+                            if (similarity > 0.7) {
+                                console.warn(`⚠️ 警告：当前回复与前一条的相似度${(similarity * 100).toFixed(1)}%，超过70%的重复阈值`);
+                                console.log('前一条回复:', window._previousAIContent.substring(0, 100));
+                                console.log('当前回复:', aiResponse.substring(0, 100));
+                            }
+                        }
+                        // 保存当前回复，供下次比对
+                        window._previousAIContent = aiResponse;
+
                         const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
                         const currentFriend = friends.find(f => f.id === targetFriendId);
                         const currentPersona = this.friendSystem ? (this.friendSystem.getPersona(targetFriendId)?.raw ?? currentFriend?.persona ?? '') : '';
@@ -9947,27 +9903,28 @@ ${recentChat || '（暂无对话内容）'}
                         }));
                         const extraImagePayloads = [];
 
-                        // 显示消息通知横幅
-                        if (aiMessagePayloads.length > 0 && currentFriend) {
-                            const firstMsg = aiMessagePayloads[0];
-                            const notifText = firstMsg.isVoice ? '[语音]' : firstMsg.content;
-                            const friendForNotif = currentFriend;
-                            showMsgNotification(
-                                friendForNotif.name,
-                                notifText,
-                                friendForNotif.avatar || '',
-                                () => {
-                                    if (chatSession) chatSession.openChatWithFriend(friendForNotif);
-                                }
-                            );
-                        }
+                        this.removeLoadingMessage(loadingId);
 
                         for (const aiMsg of aiMessagePayloads) {
+                            // 每条消息都弹出通知横幅
+                            if (currentFriend) {
+                                const notifText = aiMsg.isVoice ? '[语音]' : aiMsg.content;
+                                const friendForNotif = currentFriend;
+                                showMsgNotification(
+                                    friendForNotif.name,
+                                    notifText,
+                                    friendForNotif.avatar || '',
+                                    () => {
+                                        if (chatSession) chatSession.openChatWithFriend(friendForNotif);
+                                    }
+                                );
+                            }
+
                             this.addMessageToChat(aiMsg.content, 'ai', aiMsg.isVoice, aiMsg.id, '', '', '', '', targetFriendId);
                             if (targetFriendId) {
                                 chatHistory.push({ role: 'assistant', content: aiMsg.content, isVoice: aiMsg.isVoice, id: aiMsg.id });
                             }
-                            await new Promise(resolve => setTimeout(resolve, 600));
+                            await new Promise(resolve => setTimeout(resolve, 900));
                         }
 
                         // 一体化心声存储与刷新（一次API调用同时生成）
@@ -10437,7 +10394,7 @@ ${recentChat || '（暂无对话内容）'}
 
                 // 获取保存的配置
                 const config = apiService ? apiService.getConfig() : {};
-                const savedCount = config.memoryChatCount || 35;
+                const savedCount = config.memoryChatCount || 50;
                 
                 // 设置输入框的值
                 memoryChatCountInput.value = savedCount;
