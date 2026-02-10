@@ -828,6 +828,12 @@
             padding: 15px;
             margin-bottom: 15px;
             background-color: #FFFFFF;
+            /* 禁用系统长按菜单和文本选择 */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none;
         }
         
         .message {
@@ -838,6 +844,12 @@
             word-wrap: break-word;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             animation: messageAppear 0.3s ease-out;
+            /* 禁用文本选择和系统菜单 */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none;
         }
         
         @keyframes messageAppear {
@@ -851,6 +863,15 @@
             }
         }
         
+        /* 禁用消息容器的文本选择和系统菜单 */
+        .message.user,
+        .message.ai {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
         .message.user {
             background-color: #f0d6d7;
             color: white;
@@ -875,6 +896,10 @@
             margin-bottom: 6px;
             border-left: 3px solid rgba(0, 0, 0, 0.12);
             word-break: break-word;
+            /* 禁用长按菜单 */
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         .reply-quote.user {
@@ -1116,6 +1141,128 @@
         .message-action-item.is-disabled {
             opacity: 0.45;
             pointer-events: none;
+        }
+
+        /* 多选模式样式 */
+        .chat-messages.multi-select-mode {
+            background-color: #f8f8f8;
+        }
+
+        .message-wrapper.selected {
+            background-color: rgba(200, 150, 255, 0.15);
+            border-left: 3px solid #9966ff;
+            padding-left: 12px;
+        }
+
+        .message-select-checkbox {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .message-select-checkbox input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .message-select-checkbox::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D0D0D8;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .message-select-checkbox input:checked + ::before,
+        .message-select-checkbox.checked::before {
+            background: #9966ff;
+            border-color: #9966ff;
+        }
+
+        .message-select-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            left: 4px;
+            top: 2px;
+        }
+
+        .multi-select-toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            height: 60px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .multi-select-toolbar.hidden {
+            display: none;
+        }
+
+        .multi-select-info {
+            color: #787785;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .multi-select-delete-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #FF6B6B;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+
+        .multi-select-delete-btn:active {
+            transform: scale(0.95);
+            background: #FF5252;
+        }
+
+        .multi-select-close-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            border: none;
+            color: #787785;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+
+        .multi-select-close-btn:active {
+            transform: scale(0.95);
+            background: #D0D0D8;
         }
         
         .chat-input-area {
@@ -1757,28 +1904,26 @@
         /* 世界书挂载按钮样式 */
         .wb-mount-btn {
             width: 100%;
-            padding: 18px 20px;
+            padding: 14px 16px;
             border: none;
-            border-radius: 24px;
-            background: linear-gradient(135deg, rgba(240, 214, 215, 0.3) 0%, rgba(200, 220, 240, 0.2) 100%), rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            font-size: 16px;
+            border-radius: 16px;
+            background: #f6f2f1;
+            font-size: 14px;
             font-weight: 600;
-            color: #666;
+            color: #787785;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.15);
+            box-shadow: 0 2px 8px rgba(120, 119, 133, 0.05);
         }
 
         .wb-mount-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(200, 170, 210, 0.25);
+            background: #ede5e3;
+            box-shadow: 0 4px 12px rgba(120, 119, 133, 0.1);
         }
 
         .wb-mount-btn:active {
-            transform: translateY(0);
+            background: #e3d9d5;
+            transform: scale(0.98);
         }
 
         /* 世界书卡片列表项样式 */
@@ -2826,8 +2971,8 @@
                 
                 <div class="form-group">
                     <label for="friendPersona">人设</label>
-                    <textarea id="friendPersona" class="form-control" placeholder="示例：温柔但有点毒舌的学姐，喜欢猫和甜食，遇事会先嘴硬后关心人。" rows="3" style="resize: vertical;" minlength="10" maxlength="1000"></textarea>
-                    <div class="input-hint">必填，10-1000字，描述性格、背景或说话风格</div>
+                    <textarea id="friendPersona" class="form-control" placeholder="示例：温柔但有点毒舌的学姐，喜欢猫和甜食，遇事会先嘴硬后关心人。" rows="3" style="resize: vertical;" minlength="0" maxlength="5000"></textarea>
+                    <div class="input-hint">0-5000字，描述性格、背景或说话风格</div>
                 </div>
                 
                 <div id="addFriendStatus" class="status-message"></div>
@@ -2968,6 +3113,19 @@
             
             <div id="chatStatus" class="status-message" style="margin: 0; border-radius: 0;"></div>
         </div>
+
+        <!-- 多选模式工具栏 -->
+        <div id="multiSelectToolbar" class="multi-select-toolbar hidden">
+            <span class="multi-select-info">已选择 <span id="multiSelectCountDisplay">0</span> 条消息</span>
+            <div style="display: flex; gap: 12px;">
+                <button id="multiSelectClose" class="multi-select-close-btn" aria-label="取消多选" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button id="multiSelectDeleteBtn" class="multi-select-delete-btn" aria-label="删除选中消息" type="button">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- 消息长按操作菜单 -->
@@ -2989,6 +3147,21 @@
                 <i class="fas fa-reply"></i>
                 <span>引用</span>
             </button>
+            <button class="message-action-item" id="messageActionMultiSelect" type="button">
+                <i class="fas fa-check-square"></i>
+                <span>多选</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 多选删除确认弹窗 -->
+    <div class="modal" id="multiSelectDeleteModal" style="z-index: 2002; display: none; background-color: rgba(0, 0, 0, 0.3);">
+        <div style="background-color: white; border-radius: 30px; padding: 20px 25px; width: 75%; max-width: 240px; box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2); text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #787785; font-size: 14px;">确认删除选中的<span id="multiSelectCount">0</span>条消息吗？</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button id="multiSelectDeleteCancel" style="flex: 1; padding: 10px 16px; border: 1px solid #D0D0D8; background: white; color: #787785; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 500;">取消</button>
+                <button id="multiSelectDeleteConfirm" style="flex: 1; padding: 10px 16px; border: none; background: #FF6B6B; color: white; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 500;">删除</button>
+            </div>
         </div>
     </div>
 
@@ -3542,7 +3715,7 @@
             </div>
 
             <!-- 世界书卡片列表 -->
-            <div id="worldbookMountList" style="max-height: 260px; overflow-y: auto; margin-bottom: 20px; padding: 8px 0;">
+            <div id="worldbookMountList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; padding: 8px 0;">
                 <!-- 卡片将动态插入 -->
             </div>
 
@@ -3563,7 +3736,7 @@
             </div>
 
             <!-- HTML游戏卡片列表 -->
-            <div id="htmlGameMountList" style="max-height: 260px; overflow-y: auto; margin-bottom: 20px; padding: 8px 0;">
+            <div id="htmlGameMountList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; padding: 8px 0;">
                 <!-- 卡片将动态插入 -->
             </div>
 
@@ -5286,13 +5459,13 @@
                 return;
             }
             
-            if (persona.length < 10) {
-                showAddFriendStatus('人设至少10字', 'error');
+            if (persona.length < 0) {
+                showAddFriendStatus('请输入人设', 'error');
                 return;
             }
             
-            if (persona.length > 1000) {
-                showAddFriendStatus('人设最多1000字', 'error');
+            if (persona.length > 5000) {
+                showAddFriendStatus('人设最多5000字', 'error');
                 return;
             }
             
@@ -6824,6 +6997,9 @@
                 this.apiService = apiServiceInstance;
                 this.currentFriendId = null;
                 this.isProcessing = false;
+                // 多选模式状态
+                this.multiSelectMode = false;
+                this.selectedMessages = new Set();
                 this.actionMenu = {
                     overlay: messageActionOverlay,
                     menu: messageActionMenu,
@@ -6831,11 +7007,13 @@
                     deleteBtn: messageActionDelete,
                     recallBtn: messageActionRecall,
                     replyBtn: messageActionReply,
+                    multiSelectBtn: document.getElementById('messageActionMultiSelect'),
                     current: null
                 };
                 this.initMessageActionMenu();
                 this.initReplyPreview();
                 this.initImageUpload();
+                this.initMultiSelectMode();
             }
 
             showChatStatus(message, type) {
@@ -6863,6 +7041,11 @@
                 if (deleteBtn) deleteBtn.addEventListener('click', () => this.handleMessageAction('delete'));
                 if (recallBtn) recallBtn.addEventListener('click', () => this.handleMessageAction('recall'));
                 if (replyBtn) replyBtn.addEventListener('click', () => this.handleMessageAction('reply'));
+                
+                const multiSelectBtn = this.actionMenu.multiSelectBtn;
+                if (multiSelectBtn) {
+                    multiSelectBtn.addEventListener('click', () => this.handleMessageAction('multiSelect'));
+                }
             }
 
             initReplyPreview() {
@@ -7048,11 +7231,15 @@
                     }, 550);
                 };
 
+                // 拦截 touchstart 事件：启动长按计时器，同时禁用系统菜单
                 targetElement.addEventListener('touchstart', (e) => {
+                    // 阻止系统默认长按菜单和文本选择
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (e.touches && e.touches[0]) {
                         startPress(e.touches[0].clientX, e.touches[0].clientY);
                     }
-                }, { passive: true });
+                }, { passive: false });
 
                 targetElement.addEventListener('touchmove', (e) => {
                     if (!e.touches || !e.touches[0]) return;
@@ -7071,9 +7258,19 @@
                 targetElement.addEventListener('mouseup', clearPress);
                 targetElement.addEventListener('mouseleave', clearPress);
 
+                // 拦截右键菜单（desktop）和长按菜单（mobile）：完全禁用系统菜单
                 targetElement.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     this.showMessageActionMenu(targetElement, data);
+                });
+
+                // 额外保险：禁用右键拖选（右键菜单前奏）
+                targetElement.addEventListener('mousedown', (e) => {
+                    if (e.button === 2) { // 右键（button=2）
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                 });
             }
 
@@ -7090,6 +7287,8 @@
                     if (role === 'user') this.recallMessage(messageWrapper, msgId);
                 } else if (action === 'reply') {
                     this.setReplyPrefill(content || '', role);
+                } else if (action === 'multiSelect') {
+                    this.enterMultiSelectMode(messageWrapper, msgId);
                 }
 
                 this.hideMessageActionMenu();
@@ -7754,7 +7953,7 @@
                                     time: timestamp,
                                     voice: heartVoiceData.heart_voice || '（沉默）',
                                     mood: heartVoiceData.mood_value ?? 50
-                                }]
+                                }].slice(-15)
                             };
                             heartVoiceSystem.saveData(this.currentFriendId, newData);
                             
@@ -7929,6 +8128,42 @@
                         { role: 'system', content: enhancedSystemPrompt },
                         ...promptHistory
                     ];
+                    
+                    // 随机决定是否生成心声：1-4轮对话中随机触发
+                    // 对话轮数 = promptHistory.length 除以2（用户+AI各一条）
+                    const conversationRound = Math.ceil(promptHistory.length / 2);
+                    const shouldGenerateHeartVoice = Math.random() < (1 / (3 - Math.min(conversationRound, 4) + 1));
+                    
+                    const requestBody = {
+                        model: config.model,
+                        messages: messages,
+                        max_tokens: 500,
+                        temperature: 0.9
+                    };
+                    
+                    // 仅在触发时才添加 tools 和 tool_choice
+                    if (shouldGenerateHeartVoice) {
+                        requestBody.tools = [
+                            {
+                                type: 'function',
+                                function: {
+                                    name: 'generate_response_with_heart_voice',
+                                    description: '生成回复内容以及角色的心声数据。心声分析规则：分析最近5条对话的主题和情绪，结合好友人设的性格关键词，参考当前时间段，基于上次心情值在±10范围内变化，对话活跃度影响心情变化。',
+                                    parameters: {
+                                        type: 'object',
+                                        properties: {
+                                            reply: { type: 'string', description: '对用户的回复内容，要符合角色人设和当前心理状态' },
+                                            heart_voice: { type: 'string', description: '角色的内心想法/内心独白，不是直接回复对话内容，要符合人设性格，40字以内。例如傲娇角色："才不是因为开心呢...只是天气不错"' },
+                                            status: { type: 'string', description: '颜文字 + 渺小外观描述。例如："(´･ω･`) 轻轻晃着腿" 或 "(*´▽`*) 眼睛亮晶晶的"' },
+                                            mood_value: { type: 'integer', description: '0-100的整数，需要基于对话内容和上次心情在±10范围内合理变化，体现情绪变化的连贯性' }
+                                        },
+                                        required: ['reply', 'heart_voice', 'status', 'mood_value']
+                                    }
+                                }
+                            }
+                        ];
+                        requestBody.tool_choice = { type: 'function', function: { name: 'generate_response_with_heart_voice' } };
+                    }
 
                     const response = await fetch(`${config.apiUrl}/chat/completions`, {
                         method: 'POST',
@@ -7936,36 +8171,13 @@
                             'Authorization': `Bearer ${config.apiKey}`,
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            model: config.model,
-                            messages: messages,
-                            max_tokens: 500,
-                            temperature: 0.9,
-                            tools: [
-                                {
-                                    type: 'function',
-                                    function: {
-                                        name: 'generate_response_with_heart_voice',
-                                        description: '生成回复内容以及角色的心声数据。心声分析规则：分析最近5条对话的主题和情绪，结合好友人设的性格关键词，参考当前时间段，基于上次心情值在±10范围内变化，对话活跃度影响心情变化。',
-                                        parameters: {
-                                            type: 'object',
-                                            properties: {
-                                                reply: { type: 'string', description: '对用户的回复内容，要符合角色人设和当前心理状态' },
-                                                heart_voice: { type: 'string', description: '角色的内心想法/内心独白，不是直接回复对话内容，要符合人设性格，40字以内。例如傲娇角色："才不是因为开心呢...只是天气不错"' },
-                                                status: { type: 'string', description: '颜文字 + 渺小外观描述。例如："(´･ω･`) 轻轻晃着腿" 或 "(*´▽`*) 眼睛亮晶晶的"' },
-                                                mood_value: { type: 'integer', description: '0-100的整数，需要基于对话内容和上次心情在±10范围内合理变化，体现情绪变化的连贯性' }
-                                            },
-                                            required: ['reply', 'heart_voice', 'status', 'mood_value']
-                                        }
-                                    }
-                                }
-                            ],
-                            tool_choice: { type: 'function', function: { name: 'generate_response_with_heart_voice' } }
-                        })
+                        body: JSON.stringify(requestBody)
                     });
 
                     if (!response.ok) {
-                        throw new Error(`API请求失败: ${response.status}`);
+                        let errDetail = '';
+                        try { errDetail = (await response.text()).slice(0, 300); } catch (_) {}
+                        throw new Error(`请求失败:${response.status}${errDetail ? ' ' + errDetail : ''}`);
                     }
 
                     const data = await response.json();
@@ -7992,7 +8204,10 @@
                         }
                     }
                     
-                    if (!rawAiResponse) rawAiResponse = '抱歉，我暂时无法回答这个问题。';
+                    if (!rawAiResponse) {
+                        this.removeLoadingMessage(loadingId);
+                        return;
+                    }
                     const aiResponse = this.sanitizeAiResponse(rawAiResponse);
 
                     this.removeLoadingMessage(loadingId);
@@ -8043,7 +8258,7 @@
                                     time: Date.now(),
                                     voice: heartVoiceText || '（沉默）',
                                     mood: Number.isFinite(moodValue) ? Math.max(0, Math.min(100, Math.round(moodValue))) : 50
-                                }]
+                                }].slice(-15)
                             };
                         heartVoiceSystem.saveData(this.currentFriendId, newData);
                         console.log('[心声系统] 心声数据已保存:', newData);
@@ -8118,35 +8333,8 @@
                 } catch (error) {
                     console.error('发送消息失败:', error);
                     this.removeLoadingMessage(loadingId);
-
-                    const errorElement = document.createElement('div');
-                    errorElement.className = 'message ai';
-                    let errorMsg = error.message;
-                    let friendlyMsg = '抱歉，出错了';
-
-                    if (error.message.includes('Failed to fetch')) {
-                        errorMsg = '网络连接失败，请检查API地址是否正确';
-                        friendlyMsg = '网络连接失败，请检查网络';
-                    } else if (error.message.includes('401')) {
-                        errorMsg = 'API密钥错误或已过期，请检查API配置';
-                        friendlyMsg = 'API密钥不对，请重新配置';
-                    } else if (error.message.includes('429')) {
-                        errorMsg = 'API请求过于频繁，请稍候再试';
-                        friendlyMsg = '请求过于频繁，请稍候再试';
-                    } else if (error.message.includes('API请求失败')) {
-                        errorMsg = '调用API失败，请检查配置是否正确';
-                        friendlyMsg = 'API调用失败，请检查配置';
-                    } else if (error.message.includes('500')) {
-                        friendlyMsg = '服务器错误，请稍候再试';
-                    } else if (error.message.includes('503')) {
-                        friendlyMsg = '服务暂时不可用，请稍候再试';
-                    }
-
-                    errorElement.textContent = friendlyMsg;
-                    chatMessages.appendChild(errorElement);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                    this.showChatStatus(`错误：${errorMsg}`, 'error');
+                    showCuteToast(`调用API时遇到问题: ${error.message || error}`);
+                    // 不生成备用心声，保持之前的心声显示
                 } finally {
                     this.isProcessing = false;
                 }
@@ -8158,6 +8346,205 @@
 
             setCurrentFriendId(id) {
                 this.currentFriendId = id || null;
+            }
+
+            /* ===== 多选删除功能 ===== */
+
+            initMultiSelectMode() {
+                const toolbar = document.getElementById('multiSelectToolbar');
+                const closeBtn = document.getElementById('multiSelectClose');
+                const deleteBtn = document.getElementById('multiSelectDeleteBtn');
+                const deleteModal = document.getElementById('multiSelectDeleteModal');
+                const deleteConfirm = document.getElementById('multiSelectDeleteConfirm');
+                const deleteCancel = document.getElementById('multiSelectDeleteCancel');
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.exitMultiSelectMode());
+                }
+
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', () => {
+                        if (this.selectedMessages.size > 0 && deleteModal) {
+                            document.getElementById('multiSelectCount').textContent = this.selectedMessages.size;
+                            deleteModal.style.display = 'flex';
+                        }
+                    });
+                }
+
+                if (deleteConfirm) {
+                    deleteConfirm.addEventListener('click', () => this.performBatchDelete());
+                }
+
+                if (deleteCancel) {
+                    deleteCancel.addEventListener('click', () => {
+                        const deleteModal = document.getElementById('multiSelectDeleteModal');
+                        if (deleteModal) deleteModal.style.display = 'none';
+                    });
+                }
+
+                if (deleteModal) {
+                    deleteModal.addEventListener('click', (e) => {
+                        if (e.target === deleteModal) {
+                            deleteModal.style.display = 'none';
+                        }
+                    });
+                }
+            }
+
+            enterMultiSelectMode(messageWrapper, msgId) {
+                if (!messageWrapper) return;
+                
+                this.multiSelectMode = true;
+                const toolbar = document.getElementById('multiSelectToolbar');
+                if (toolbar) {
+                    toolbar.classList.remove('hidden');
+                }
+
+                // 添加复选框到消息
+                if (!messageWrapper.querySelector('.message-select-checkbox')) {
+                    const checkbox = document.createElement('div');
+                    checkbox.className = 'message-select-checkbox';
+                    checkbox.innerHTML = '<input type="checkbox">';
+                    messageWrapper.style.display = 'flex';
+                    messageWrapper.style.alignItems = 'flex-start';
+                    messageWrapper.style.gap = '8px';
+                    messageWrapper.insertBefore(checkbox, messageWrapper.firstChild);
+                }
+
+                // 选中当前消息
+                this.toggleMessageSelection(messageWrapper, msgId, true);
+
+                // 为所有消息容器添加多选事件
+                this.attachMultiSelectToAllMessages();
+            }
+
+            exitMultiSelectMode() {
+                this.multiSelectMode = false;
+                this.selectedMessages.clear();
+
+                const toolbar = document.getElementById('multiSelectToolbar');
+                if (toolbar) {
+                    toolbar.classList.add('hidden');
+                }
+
+                // 移除所有复选框和选中样式
+                const allWrappers = chatMessages.querySelectorAll('[data-msg-id]');
+                allWrappers.forEach(wrapper => {
+                    const checkbox = wrapper.querySelector('.message-select-checkbox');
+                    if (checkbox) checkbox.remove();
+                    wrapper.classList.remove('selected');
+                    wrapper.style.display = '';
+                    wrapper.style.alignItems = '';
+                    wrapper.style.gap = '';
+                });
+
+                const messagesContainer = chatMessages;
+                if (messagesContainer) {
+                    messagesContainer.classList.remove('multi-select-mode');
+                }
+            }
+
+            attachMultiSelectToAllMessages() {
+                const allWrappers = chatMessages.querySelectorAll('[data-msg-id]');
+                allWrappers.forEach(wrapper => {
+                    // 如果没有复选框，则添加
+                    if (!wrapper.querySelector('.message-select-checkbox')) {
+                        const checkbox = document.createElement('div');
+                        checkbox.className = 'message-select-checkbox';
+                        checkbox.innerHTML = '<input type="checkbox">';
+                        wrapper.style.display = 'flex';
+                        wrapper.style.alignItems = 'flex-start';
+                        wrapper.style.gap = '8px';
+                        wrapper.insertBefore(checkbox, wrapper.firstChild);
+                    }
+
+                    // 移除旧的点击事件监听（避免重复）
+                    wrapper.removeEventListener('click', wrapper._multiSelectClickHandler);
+
+                    // 添加点击事件
+                    wrapper._multiSelectClickHandler = (e) => {
+                        if (this.multiSelectMode && !e.target.closest('.message-action-menu')) {
+                            const msgId = wrapper.dataset.msgId;
+                            this.toggleMessageSelection(wrapper, msgId);
+                        }
+                    };
+                    wrapper.addEventListener('click', wrapper._multiSelectClickHandler);
+                });
+
+                chatMessages.classList.add('multi-select-mode');
+            }
+
+            toggleMessageSelection(wrapper, msgId, force = null) {
+                const isSelected = force !== null ? force : !this.selectedMessages.has(msgId);
+
+                if (isSelected) {
+                    this.selectedMessages.add(msgId);
+                    wrapper.classList.add('selected');
+                    const checkbox = wrapper.querySelector('.message-select-checkbox');
+                    if (checkbox) {
+                        checkbox.classList.add('checked');
+                        const input = checkbox.querySelector('input');
+                        if (input) input.checked = true;
+                    }
+                } else {
+                    this.selectedMessages.delete(msgId);
+                    wrapper.classList.remove('selected');
+                    const checkbox = wrapper.querySelector('.message-select-checkbox');
+                    if (checkbox) {
+                        checkbox.classList.remove('checked');
+                        const input = checkbox.querySelector('input');
+                        if (input) input.checked = false;
+                    }
+                }
+
+                // 更新工具栏显示数量
+                this.updateMultiSelectCount();
+
+                // 如果无选中项，退出多选模式
+                if (this.selectedMessages.size === 0) {
+                    this.exitMultiSelectMode();
+                }
+            }
+
+            updateMultiSelectCount() {
+                const countDisplay = document.getElementById('multiSelectCountDisplay');
+                if (countDisplay) {
+                    countDisplay.textContent = this.selectedMessages.size;
+                }
+            }
+
+            performBatchDelete() {
+                if (this.selectedMessages.size === 0) return;
+
+                // 从DOM中删除消息
+                const allWrappers = chatMessages.querySelectorAll('[data-msg-id]');
+                allWrappers.forEach(wrapper => {
+                    const msgId = wrapper.dataset.msgId;
+                    if (this.selectedMessages.has(msgId)) {
+                        wrapper.style.opacity = '0';
+                        wrapper.style.transform = 'translateY(10px)';
+                        setTimeout(() => wrapper.remove(), 200);
+                    }
+                });
+
+                // 从数据库（localStorage）中删除消息
+                if (this.currentFriendId && this.friendSystem) {
+                    const chatHistory = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+                    const updatedHistory = chatHistory.filter(msg => !this.selectedMessages.has(msg.id));
+                    this.friendSystem.saveFriendChatHistory(this.currentFriendId, updatedHistory);
+                }
+
+                // 关闭确认弹窗
+                const deleteModal = document.getElementById('multiSelectDeleteModal');
+                if (deleteModal) {
+                    deleteModal.style.display = 'none';
+                }
+
+                // 显示成功提示
+                showCuteToast(`已删除 ${this.selectedMessages.size} 条消息`, 'success');
+
+                // 退出多选模式
+                this.exitMultiSelectMode();
             }
         }
         
