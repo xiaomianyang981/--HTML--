@@ -1142,103 +1142,6 @@
             opacity: 0.45;
             pointer-events: none;
         }
-
-        /* 多选模式 - 精简版 */
-        .message-wrapper.selected {
-            background-color: rgba(200, 150, 255, 0.15);
-            border-left: 3px solid #9966ff;
-            padding-left: 12px;
-        }
-
-        .message-select-checkbox {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            flex-shrink: 0;
-            border: 2px solid #D0D0D8;
-            border-radius: 4px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .message-select-checkbox.checked {
-            background: #9966ff;
-            border-color: #9966ff;
-            color: white;
-        }
-
-        .message-select-checkbox.checked::after {
-            content: '✓';
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .message-select-checkbox input {
-            display: none;
-        }
-
-        .multi-select-toolbar {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 390px;
-            height: 60px;
-            background: white;
-            border-top: 1px solid #E0E0E0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            box-sizing: border-box;
-            z-index: 100;
-        }
-
-        .multi-select-toolbar.hidden {
-            display: none;
-        }
-
-        .multi-select-info {
-            color: #787785;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .multi-select-delete-btn,
-        .multi-select-close-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.15s ease;
-        }
-
-        .multi-select-delete-btn {
-            background: #FF6B6B;
-            color: white;
-        }
-
-        .multi-select-delete-btn:active {
-            transform: scale(0.95);
-        }
-
-        .multi-select-close-btn {
-            background: #E0E0E0;
-            color: #787785;
-        }
-
-        .multi-select-close-btn:active {
-            transform: scale(0.95);
-        }
         
         .chat-input-area {
             display: flex;
@@ -1344,6 +1247,108 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+        }
+
+        /* 批量删除工具栏样式 */
+        .batch-delete-toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 1100;
+            box-shadow: 0 -2px 12px rgba(255, 107, 107, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100%);
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .batch-count {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .batch-delete-btn,
+        .batch-cancel-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .batch-delete-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .batch-cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* 消息选中状态样式 */
+        .message-wrapper.selected,
+        [data-msg-id].selected {
+            background-color: rgba(255, 107, 107, 0.15);
+            border-left: 4px solid #ff6b6b;
+            transition: all 0.2s ease;
+        }
+
+        .message-wrapper.multiselect-mode,
+        [data-msg-id].multiselect-mode {
+            position: relative;
+        }
+
+        .message-wrapper.multiselect-mode::before,
+        [data-msg-id].multiselect-mode::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            margin-right: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .message-wrapper.multiselect-mode.selected::before,
+        [data-msg-id].multiselect-mode.selected::before {
+            border-color: #ff6b6b;
+            background: #ff6b6b;
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         .chat-send-btn:hover {
@@ -3088,19 +3093,6 @@
             
             <div id="chatStatus" class="status-message" style="margin: 0; border-radius: 0;"></div>
         </div>
-
-        <!-- 多选模式工具栏 -->
-        <div id="multiSelectToolbar" class="multi-select-toolbar hidden">
-            <span class="multi-select-info">已选择 <span id="multiSelectCountDisplay">0</span> 条消息</span>
-            <div style="display: flex; gap: 12px;">
-                <button id="multiSelectClose" class="multi-select-close-btn" aria-label="取消多选" type="button">
-                    <i class="fas fa-times"></i>
-                </button>
-                <button id="multiSelectDeleteBtn" class="multi-select-delete-btn" aria-label="删除选中消息" type="button">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- 消息长按操作菜单 -->
@@ -3129,13 +3121,26 @@
         </div>
     </div>
 
-    <!-- 多选删除确认弹窗 -->
-    <div class="modal" id="multiSelectDeleteModal" style="z-index: 2002; display: none; background-color: rgba(0, 0, 0, 0.3);">
-        <div style="background-color: white; border-radius: 30px; padding: 20px 25px; width: 75%; max-width: 240px; box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2); text-align: center;">
-            <p style="margin: 0 0 20px 0; color: #787785; font-size: 14px;">确认删除选中的<span id="multiSelectCount">0</span>条消息吗？</p>
+    <!-- 批量删除工具栏 -->
+    <div id="batchDeleteToolbar" class="batch-delete-toolbar" style="display: none;">
+        <span id="batchDeleteCount" class="batch-count">已选择 0 条</span>
+        <button id="batchDeleteBtn" type="button" class="batch-delete-btn" title="删除所选消息">
+            <i class="fas fa-trash"></i>
+        </button>
+        <button id="batchCancelBtn" type="button" class="batch-cancel-btn" title="取消多选">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- 批量删除确认弹窗 -->
+    <div id="batchDeleteConfirmModal" class="modal" style="display: none; z-index: 2200;">
+        <div style="background-color: white; border-radius: 24px; padding: 24px; width: 70%; max-width: 280px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); text-align: center; animation: fade-in-scale 0.2s ease-out;">
+            <p style="margin: 0 0 24px 0; font-size: 16px; color: #333; font-weight: 500;">
+                确定要删除 <span id="batchConfirmCount">0</span> 条消息吗？
+            </p>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button id="multiSelectDeleteCancel" style="flex: 1; padding: 10px 16px; border: 1px solid #D0D0D8; background: white; color: #787785; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 500;">取消</button>
-                <button id="multiSelectDeleteConfirm" style="flex: 1; padding: 10px 16px; border: none; background: #FF6B6B; color: white; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 500;">删除</button>
+                <button id="batchConfirmYes" type="button" style="padding: 8px 20px; border: none; background: #ff6b6b; color: white; border-radius: 8px; cursor: pointer; font-weight: 500;">删除</button>
+                <button id="batchConfirmNo" type="button" style="padding: 8px 20px; border: 1px solid #ddd; background: white; color: #333; border-radius: 8px; cursor: pointer; font-weight: 500;">取消</button>
             </div>
         </div>
     </div>
@@ -4010,6 +4015,7 @@
         const messageActionDelete = document.getElementById('messageActionDelete');
         const messageActionRecall = document.getElementById('messageActionRecall');
         const messageActionReply = document.getElementById('messageActionReply');
+        const messageActionMultiSelect = document.getElementById('messageActionMultiSelect');
         
         const triggerAiBtn = document.getElementById('triggerAiBtn');
         // 关闭按钮
@@ -6972,9 +6978,8 @@
                 this.apiService = apiServiceInstance;
                 this.currentFriendId = null;
                 this.isProcessing = false;
-                // 多选模式状态 - 改用数组而非Set，更简洁
-                this.multiSelectMode = false;
-                this.selectedMessages = [];
+                this.isMultiSelectMode = false;
+                this.selectedMessages = new Set();
                 this.actionMenu = {
                     overlay: messageActionOverlay,
                     menu: messageActionMenu,
@@ -6982,13 +6987,23 @@
                     deleteBtn: messageActionDelete,
                     recallBtn: messageActionRecall,
                     replyBtn: messageActionReply,
-                    multiSelectBtn: document.getElementById('messageActionMultiSelect'),
+                    multiSelectBtn: messageActionMultiSelect,
                     current: null
+                };
+                this.batchDeleteUI = {
+                    toolbar: document.getElementById('batchDeleteToolbar'),
+                    countSpan: document.getElementById('batchDeleteCount'),
+                    deleteBtn: document.getElementById('batchDeleteBtn'),
+                    cancelBtn: document.getElementById('batchCancelBtn'),
+                    confirmModal: document.getElementById('batchDeleteConfirmModal'),
+                    confirmCount: document.getElementById('batchConfirmCount'),
+                    confirmYes: document.getElementById('batchConfirmYes'),
+                    confirmNo: document.getElementById('batchConfirmNo')
                 };
                 this.initMessageActionMenu();
                 this.initReplyPreview();
                 this.initImageUpload();
-                this.initMultiSelectMode();
+                this.initBatchDelete();
             }
 
             showChatStatus(message, type) {
@@ -7004,7 +7019,7 @@
             }
 
             initMessageActionMenu() {
-                const { overlay, menu, copyBtn, deleteBtn, recallBtn, replyBtn } = this.actionMenu;
+                const { overlay, menu, copyBtn, deleteBtn, recallBtn, replyBtn, multiSelectBtn } = this.actionMenu;
                 if (!overlay || !menu) return;
 
                 overlay.addEventListener('click', (e) => {
@@ -7016,11 +7031,7 @@
                 if (deleteBtn) deleteBtn.addEventListener('click', () => this.handleMessageAction('delete'));
                 if (recallBtn) recallBtn.addEventListener('click', () => this.handleMessageAction('recall'));
                 if (replyBtn) replyBtn.addEventListener('click', () => this.handleMessageAction('reply'));
-                
-                const multiSelectBtn = this.actionMenu.multiSelectBtn;
-                if (multiSelectBtn) {
-                    multiSelectBtn.addEventListener('click', () => this.handleMessageAction('multiSelect'));
-                }
+                if (multiSelectBtn) multiSelectBtn.addEventListener('click', () => this.handleMessageAction('multiselect'));
             }
 
             initReplyPreview() {
@@ -7189,35 +7200,34 @@
                 let pressTimer = null;
                 let startX = 0;
                 let startY = 0;
-                const isVoiceMessage = targetElement.classList.contains('voice-message');
-                let isMoved = false;
-                let pressStarted = false;
 
                 const clearPress = () => {
                     if (pressTimer) {
                         clearTimeout(pressTimer);
                         pressTimer = null;
                     }
-                    pressStarted = false;
                 };
 
                 const startPress = (clientX, clientY) => {
                     startX = clientX;
                     startY = clientY;
-                    isMoved = false;
-                    pressStarted = true;
                     clearPress();
                     pressTimer = setTimeout(() => {
                         this.showMessageActionMenu(targetElement, data);
                     }, 550);
                 };
 
-                // touchstart：只对非语音消息阻止默认行为
+                // 拦截 touchstart 事件：启动长按计时器，同时禁用系统菜单
                 targetElement.addEventListener('touchstart', (e) => {
-                    if (!isVoiceMessage) {
+                    // 如果在多选模式，不启动长按菜单计时器
+                    if (this.isMultiSelectMode) {
                         e.preventDefault();
                         e.stopPropagation();
+                        return;
                     }
+                    // 阻止系统默认长按菜单和文本选择
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (e.touches && e.touches[0]) {
                         startPress(e.touches[0].clientX, e.touches[0].clientY);
                     }
@@ -7227,29 +7237,10 @@
                     if (!e.touches || !e.touches[0]) return;
                     const dx = Math.abs(e.touches[0].clientX - startX);
                     const dy = Math.abs(e.touches[0].clientY - startY);
-                    if (dx > 10 || dy > 10) {
-                        isMoved = true;
-                        clearPress();
-                    }
+                    if (dx > 10 || dy > 10) clearPress();
                 }, { passive: true });
 
-                // touchend：处理短按和长按
-                targetElement.addEventListener('touchend', (e) => {
-                    const isShortPress = pressStarted && pressTimer !== null && !isMoved;
-                    
-                    if (isVoiceMessage && isShortPress) {
-                        // 语音消息短按：不阻止，让 click 事件正常触发
-                        clearPress();
-                    } else if (!isVoiceMessage && isShortPress) {
-                        // 其他消息短按：阻止防止系统菜单
-                        e.preventDefault();
-                        e.stopPropagation();
-                        clearPress();
-                    } else {
-                        clearPress();
-                    }
-                }, { passive: false });
-                
+                targetElement.addEventListener('touchend', clearPress);
                 targetElement.addEventListener('touchcancel', clearPress);
 
                 targetElement.addEventListener('mousedown', (e) => {
@@ -7259,17 +7250,25 @@
                 targetElement.addEventListener('mouseup', clearPress);
                 targetElement.addEventListener('mouseleave', clearPress);
 
-                // 拦截右键菜单（desktop）和长按菜单（mobile）
+                // 拦截右键菜单（desktop）和长按菜单（mobile）：完全禁用系统菜单
                 targetElement.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     this.showMessageActionMenu(targetElement, data);
                 });
 
-                // 禁用右键拖选
+                // 额外保险：禁用右键拖选（右键菜单前奏）
                 targetElement.addEventListener('mousedown', (e) => {
-                    if (e.button === 2) {
+                    if (e.button === 2) { // 右键（button=2）
                         e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
+
+                // 多选模式下的点击事件
+                messageWrapper.addEventListener('click', (e) => {
+                    if (this.isMultiSelectMode) {
+                        this.toggleMessageSelection(messageWrapper);
                         e.stopPropagation();
                     }
                 });
@@ -7288,7 +7287,7 @@
                     if (role === 'user') this.recallMessage(messageWrapper, msgId);
                 } else if (action === 'reply') {
                     this.setReplyPrefill(content || '', role);
-                } else if (action === 'multiSelect') {
+                } else if (action === 'multiselect') {
                     this.enterMultiSelectMode(messageWrapper, msgId);
                 }
 
@@ -7396,6 +7395,7 @@
 
             addMessageToChat(content, role, isVoice = false, msgId = null, replyTo = '', replyFrom = '', imageData = '', imageName = '') {
                 const messageWrapper = document.createElement('div');
+                messageWrapper.className = 'message-wrapper';
                 messageWrapper.style.marginBottom = '15px';
                 messageWrapper.style.display = 'flex';
                 messageWrapper.style.flexDirection = 'column';
@@ -7487,7 +7487,6 @@
                     messageWrapper.appendChild(voiceContainer);
 
                     const transcriptionDiv = document.createElement('div');
-                    transcriptionDiv.className = 'transcription-text';
                     transcriptionDiv.style.display = 'none';
                     transcriptionDiv.style.marginTop = '8px';
                     transcriptionDiv.style.padding = '8px 12px';
@@ -7502,20 +7501,13 @@
 
                     messageWrapper.appendChild(transcriptionDiv);
 
-                    const clickHandler = () => {
+                    voiceMessage.addEventListener('click', () => {
                         if (transcriptionDiv.style.display === 'none') {
                             transcriptionDiv.style.display = 'block';
                         } else {
                             transcriptionDiv.style.display = 'none';
                         }
-                    };
-                    
-                    voiceMessage.addEventListener('click', clickHandler);
-                    // 保存 click handlers 引用，便于多选模式下移除
-                    if (!voiceMessage._clickHandlers) {
-                        voiceMessage._clickHandlers = [];
-                    }
-                    voiceMessage._clickHandlers.push(clickHandler);
+                    });
 
                     this.bindMessageActions(messageWrapper, voiceMessage, {
                         messageWrapper,
@@ -7552,8 +7544,8 @@
 
             addRecalledMessageToChat(msgId = null) {
                 const messageWrapper = document.createElement('div');
+                messageWrapper.className = 'message-wrapper message-recalled-wrapper';
                 messageWrapper.style.marginBottom = '15px';
-                messageWrapper.classList.add('message-recalled-wrapper');
                 if (msgId) messageWrapper.dataset.msgId = msgId;
 
                 const recalled = document.createElement('div');
@@ -8349,158 +8341,133 @@
                 }
             }
 
+            initBatchDelete() {
+                const { deleteBtn, cancelBtn, confirmYes, confirmNo } = this.batchDeleteUI;
+                if (deleteBtn) deleteBtn.addEventListener('click', () => this.showBatchDeleteConfirm());
+                if (cancelBtn) cancelBtn.addEventListener('click', () => this.exitMultiSelectMode());
+                if (confirmYes) confirmYes.addEventListener('click', () => this.performBatchDelete());
+                if (confirmNo) confirmNo.addEventListener('click', () => this.hideBatchDeleteConfirm());
+            }
+
+            enterMultiSelectMode(messageWrapper, initialMsgId) {
+                this.isMultiSelectMode = true;
+                this.selectedMessages.clear();
+                
+                // 标记初始选中的消息
+                if (messageWrapper && initialMsgId) {
+                    messageWrapper.classList.add('selected');
+                    this.selectedMessages.add(initialMsgId);
+                }
+
+                // 为所有消息添加多选模式样式和点击事件
+                const allMessages = chatMessages.querySelectorAll('[data-msg-id]');
+                allMessages.forEach(msg => {
+                    msg.classList.add('multiselect-mode');
+                    if (msg === messageWrapper) return;
+                    // 添加点击事件监听
+                    msg.addEventListener('click', (e) => {
+                        // 只在点击消息本身时触发，不要在点击内部元素时触发
+                        if (e.target.closest('[data-msg-id]') === msg) {
+                            this.toggleMessageSelection(msg);
+                        }
+                    }, { once: false });
+                });
+
+                this.updateBatchDeleteToolbar();
+                if (this.batchDeleteUI.toolbar) {
+                    this.batchDeleteUI.toolbar.style.display = 'flex';
+                }
+            }
+
+            exitMultiSelectMode() {
+                this.isMultiSelectMode = false;
+                this.selectedMessages.clear();
+
+                const allMessages = chatMessages.querySelectorAll('[data-msg-id]');
+                allMessages.forEach(msg => {
+                    msg.classList.remove('multiselect-mode', 'selected');
+                });
+
+                if (this.batchDeleteUI.toolbar) {
+                    this.batchDeleteUI.toolbar.style.display = 'none';
+                }
+            }
+
+            toggleMessageSelection(messageWrapper) {
+                if (!this.isMultiSelectMode || !messageWrapper) return;
+                
+                const msgId = messageWrapper.dataset.msgId;
+                if (!msgId) return;
+
+                if (messageWrapper.classList.contains('selected')) {
+                    messageWrapper.classList.remove('selected');
+                    this.selectedMessages.delete(msgId);
+                } else {
+                    messageWrapper.classList.add('selected');
+                    this.selectedMessages.add(msgId);
+                }
+
+                this.updateBatchDeleteToolbar();
+            }
+
+            updateBatchDeleteToolbar() {
+                const count = this.selectedMessages.size;
+                if (this.batchDeleteUI.countSpan) {
+                    this.batchDeleteUI.countSpan.textContent = `已选择 ${count} 条`;
+                }
+            }
+
+            showBatchDeleteConfirm() {
+                const count = this.selectedMessages.size;
+                if (count === 0) return;
+
+                if (this.batchDeleteUI.confirmCount) {
+                    this.batchDeleteUI.confirmCount.textContent = count;
+                }
+                if (this.batchDeleteUI.confirmModal) {
+                    this.batchDeleteUI.confirmModal.style.display = 'flex';
+                }
+            }
+
+            hideBatchDeleteConfirm() {
+                if (this.batchDeleteUI.confirmModal) {
+                    this.batchDeleteUI.confirmModal.style.display = 'none';
+                }
+            }
+
+            performBatchDelete() {
+                if (this.selectedMessages.size === 0) return;
+
+                const msgIds = Array.from(this.selectedMessages);
+                const allMessages = chatMessages.querySelectorAll('[data-msg-id]');
+
+                // 从UI中移除消息
+                allMessages.forEach(msg => {
+                    if (msgIds.includes(msg.dataset.msgId)) {
+                        msg.remove();
+                    }
+                });
+
+                // 从数据库中删除消息
+                if (this.currentFriendId && this.friendSystem) {
+                    const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+                    const updatedHistory = history.filter(m => !msgIds.includes(m.id));
+                    this.friendSystem.saveFriendChatHistory(this.currentFriendId, updatedHistory);
+                }
+
+                // 关闭多选模式和确认窗口
+                this.hideBatchDeleteConfirm();
+                this.exitMultiSelectMode();
+                
+                showCuteToast(`已删除 ${msgIds.length} 条消息`, 'success');
+            }
+
             getCurrentFriendId() {
                 return this.currentFriendId;
             }
 
             setCurrentFriendId(id) {
                 this.currentFriendId = id || null;
-            }
-
-            /* ===== 多选删除功能 ===== */
-
-            initMultiSelectMode() {
-                const toolbar = document.getElementById('multiSelectToolbar');
-                const closeBtn = document.getElementById('multiSelectClose');
-                const deleteBtn = document.getElementById('multiSelectDeleteBtn');
-                const deleteModal = document.getElementById('multiSelectDeleteModal');
-                const deleteConfirm = document.getElementById('multiSelectDeleteConfirm');
-                const deleteCancel = document.getElementById('multiSelectDeleteCancel');
-
-                closeBtn?.addEventListener('click', () => this.exitMultiSelectMode());
-
-                deleteBtn?.addEventListener('click', () => {
-                    if (this.selectedMessages.length > 0) {
-                        document.getElementById('multiSelectCount').textContent = this.selectedMessages.length;
-                        deleteModal.style.display = 'flex';
-                    }
-                });
-
-                deleteConfirm?.addEventListener('click', () => {
-                    this.deleteBatchMessages();
-                    deleteModal.style.display = 'none';
-                });
-
-                deleteCancel?.addEventListener('click', () => {
-                    deleteModal.style.display = 'none';
-                });
-
-                deleteModal?.addEventListener('click', (e) => {
-                    if (e.target === deleteModal) deleteModal.style.display = 'none';
-                });
-            }
-
-            enterMultiSelectMode(wrapper, msgId) {
-                if (!wrapper) return;
-                this.multiSelectMode = true;
-                
-                // 为所有消息添加复选框和事件
-                chatMessages.querySelectorAll('[data-msg-id]').forEach(w => {
-                    if (!w.querySelector('.message-select-checkbox')) {
-                        const checkbox = document.createElement('div');
-                        checkbox.className = 'message-select-checkbox';
-                        checkbox.innerHTML = '<input type="checkbox">';
-                        w.style.display = 'flex';
-                        w.style.alignItems = 'flex-start';
-                        w.style.gap = '8px';
-                        w.insertBefore(checkbox, w.firstChild);
-                    }
-                    
-                    // 对语音消息，移除原来的转录点击监听器
-                    const voiceMsg = w.querySelector('.voice-message');
-                    if (voiceMsg && voiceMsg._clickHandlers) {
-                        voiceMsg._clickHandlers.forEach(handler => {
-                            voiceMsg.removeEventListener('click', handler);
-                        });
-                    }
-                    
-                    w.removeEventListener('click', w._selectHandler);
-                    w._selectHandler = (e) => {
-                        // 点击复选框或消息区域（但不包括菜单）时触发选择
-                        if (!e.target.closest('.message-action-menu')) {
-                            this.toggleSelect(w, w.dataset.msgId);
-                        }
-                    };
-                    w.addEventListener('click', w._selectHandler);
-                });
-
-                this.toggleSelect(wrapper, msgId, true);
-                document.getElementById('multiSelectToolbar').classList.remove('hidden');
-            }
-
-            toggleSelect(wrapper, msgId, force = null) {
-                const idx = this.selectedMessages.indexOf(msgId);
-                const isSelected = force !== null ? force : idx === -1;
-
-                if (isSelected && idx === -1) {
-                    this.selectedMessages.push(msgId);
-                } else if (!isSelected && idx !== -1) {
-                    this.selectedMessages.splice(idx, 1);
-                }
-
-                const checkbox = wrapper.querySelector('.message-select-checkbox');
-                if (isSelected) {
-                    wrapper.classList.add('selected');
-                    checkbox?.classList.add('checked');
-                    checkbox?.querySelector('input')?.setAttribute('checked', '');
-                } else {
-                    wrapper.classList.remove('selected');
-                    checkbox?.classList.remove('checked');
-                    checkbox?.querySelector('input')?.removeAttribute('checked');
-                }
-
-                document.getElementById('multiSelectCountDisplay').textContent = this.selectedMessages.length;
-
-                if (this.selectedMessages.length === 0) {
-                    this.exitMultiSelectMode();
-                }
-            }
-
-            exitMultiSelectMode() {
-                this.multiSelectMode = false;
-                this.selectedMessages = [];
-
-                chatMessages.querySelectorAll('[data-msg-id]').forEach(w => {
-                    w.removeEventListener('click', w._selectHandler);
-                    w.querySelector('.message-select-checkbox')?.remove();
-                    w.classList.remove('selected');
-                    w.style.display = '';
-                    w.style.alignItems = '';
-                    w.style.gap = '';
-                    
-                    // 恢复语音消息的转录点击功能
-                    const voiceMsg = w.querySelector('.voice-message');
-                    if (voiceMsg && voiceMsg._clickHandlers) {
-                        voiceMsg._clickHandlers.forEach(handler => {
-                            voiceMsg.addEventListener('click', handler);
-                        });
-                    }
-                });
-
-                document.getElementById('multiSelectToolbar').classList.add('hidden');
-            }
-
-            deleteBatchMessages() {
-                if (this.selectedMessages.length === 0) return;
-
-                // 删除 DOM
-                chatMessages.querySelectorAll('[data-msg-id]').forEach(w => {
-                    if (this.selectedMessages.includes(w.dataset.msgId)) {
-                        w.style.opacity = '0';
-                        w.style.transform = 'translateY(10px)';
-                        setTimeout(() => w.remove(), 200);
-                    }
-                });
-
-                // 删除数据
-                if (this.currentFriendId && this.friendSystem) {
-                    const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
-                    const updated = history.filter(msg => !this.selectedMessages.includes(msg.id));
-                    this.friendSystem.saveFriendChatHistory(this.currentFriendId, updated);
-                }
-
-                showCuteToast(`已删除 ${this.selectedMessages.length} 条消息`, 'success');
-                this.exitMultiSelectMode();
             }
         }
         
