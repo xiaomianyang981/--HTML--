@@ -986,14 +986,15 @@
         }
 
         .message.user {
-            background-color: #f0d6d7;
+            background-color: #f3ecf2 !important;
             color: #1a1a1a;
             margin-left: auto;
             border-bottom-right-radius: 4px;
         }
 
-        .message.ai {
-            background-color: #debeeb;
+        .message.ai,
+        .message.assistant {
+            background-color: #e6eeee !important;
             color: #1a1a1a;
             margin-right: auto;
             border-bottom-left-radius: 4px;
@@ -9061,6 +9062,9 @@ ${recentChat || '（暂无对话内容）'}
                         voiceMessage.style.gap = '8px';
                         voiceMessage.style.cursor = 'pointer';
                         voiceMessage.style.maxWidth = '200px';
+                        voiceMessage.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
+                        voiceMessage.style.padding = '10px 15px';
+                        voiceMessage.style.borderRadius = '12px';
 
                         const waveForm = document.createElement('div');
                         waveForm.style.display = 'flex';
@@ -9094,7 +9098,7 @@ ${recentChat || '（暂无对话内容）'}
                         transcriptionDiv.style.display = 'none';
                         transcriptionDiv.style.marginTop = '8px';
                         transcriptionDiv.style.padding = '8px 12px';
-                        transcriptionDiv.style.backgroundColor = role === 'user' ? '#f0d6d7' : '#f0f0f0';
+                        transcriptionDiv.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
                         transcriptionDiv.style.borderRadius = '8px';
                         transcriptionDiv.style.fontSize = '13px';
                         transcriptionDiv.style.color = '#1a1a1a';
@@ -9125,6 +9129,7 @@ ${recentChat || '（暂无对话内容）'}
                         if (!isImageDesc) {
                             const messageElement = document.createElement('div');
                             messageElement.className = `message ${role}`;
+                            messageElement.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
                             messageElement.textContent = content;
                             messageWrapper.appendChild(messageElement);
                             actionTarget = messageElement;
@@ -9427,9 +9432,11 @@ ${recentChat || '（暂无对话内容）'}
                             this.addRecalledMessageToChat(msg.id);
                             return;
                         }
+                        // 将 'assistant' 角色转换为 'ai' 以匹配CSS样式
+                        const role = msg.role === 'assistant' ? 'ai' : msg.role;
                         this.addMessageToChat(
                             msg.content,
-                            msg.role,
+                            role,
                             !!msg.isVoice,
                             msg.id,
                             msg.replyTo || '',
@@ -9531,8 +9538,6 @@ ${recentChat || '（暂无对话内容）'}
                     this.startHeartVoicePulse();
 
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
-                    const loadingId = 'loading-' + Date.now();
-                    this.addLoadingMessage(loadingId);
 
                     try {
                         let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
@@ -9871,7 +9876,6 @@ ${recentChat || '（暂无对话内容）'}
                         }
 
                         if (!rawAiResponse || rawAiResponse.length < 2) {
-                            this.removeLoadingMessage(loadingId);
                             return;
                         }
                         const aiResponse = this.sanitizeAiResponse(rawAiResponse);
@@ -9903,21 +9907,25 @@ ${recentChat || '（暂无对话内容）'}
                         }));
                         const extraImagePayloads = [];
 
-                        this.removeLoadingMessage(loadingId);
-
                         for (const aiMsg of aiMessagePayloads) {
-                            // 每条消息都弹出通知横幅
+                            // 只在不是当前聊天页面时才弹出通知横幅
                             if (currentFriend) {
-                                const notifText = aiMsg.isVoice ? '[语音]' : aiMsg.content;
-                                const friendForNotif = currentFriend;
-                                showMsgNotification(
-                                    friendForNotif.name,
-                                    notifText,
-                                    friendForNotif.avatar || '',
-                                    () => {
-                                        if (chatSession) chatSession.openChatWithFriend(friendForNotif);
-                                    }
-                                );
+                                // 检查是否在当前好友的聊天页面
+                                const isChatActive = chatModal && chatModal.style.display !== 'none' && this.currentFriendId === targetFriendId;
+                                
+                                // 如果不在当前聊天页面，才显示通知
+                                if (!isChatActive) {
+                                    const notifText = aiMsg.isVoice ? '[语音]' : aiMsg.content;
+                                    const friendForNotif = currentFriend;
+                                    showMsgNotification(
+                                        friendForNotif.name,
+                                        notifText,
+                                        friendForNotif.avatar || '',
+                                        () => {
+                                            if (chatSession) chatSession.openChatWithFriend(friendForNotif);
+                                        }
+                                    );
+                                }
                             }
 
                             this.addMessageToChat(aiMsg.content, 'ai', aiMsg.isVoice, aiMsg.id, '', '', '', '', targetFriendId);
@@ -10047,7 +10055,6 @@ ${recentChat || '（暂无对话内容）'}
                     } catch (error) {
                         console.error('发送消息失败:', error);
                         this.stopHeartVoicePulse();  // 错误时也停止脉动
-                        this.removeLoadingMessage(loadingId);
                         showCuteToast(`调用API时遇到问题: ${error.message || error}`);
                         // 不生成备用心声，保持之前的心声显示
                     } finally {
