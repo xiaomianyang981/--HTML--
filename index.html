@@ -927,12 +927,12 @@
 
         /* 聊天界面样式 */
         .chat-messages {
-            height: 300px;
+            flex: 1;
             overflow-y: auto;
-            border: 1px solid #f6f2f1;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            overflow-x: hidden;
+            border: none;
+            border-radius: 0;
+            padding: 15px 12px;
             background-color: #FFFFFF;
             /* 禁用系统长按菜单和文本选择 */
             user-select: none;
@@ -940,6 +940,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             -webkit-touch-callout: none;
+            transition: max-height 0.2s ease;
         }
 
         .message {
@@ -10537,78 +10538,119 @@ ${recentChat || '（暂无对话内容）'}
                     friendSystem.init();
                 }
 
-                // ========== 虚拟键盘自动滚动功能 ==========
-                // 当虚拟键盘弹出时，自动滚动聊天内容，确保输入框可见且能看到最新消息
+                // ========== 虚拟键盘自适应功能 ==========
+                // 当虚拟键盘弹出时，输入框跟随键盘上移，聊天消息列表自动压缩
+                const chatModal = document.getElementById('chatModal');
+                const chatModalContent = chatModal ? chatModal.querySelector('.modal-content') : null;
+                const inputAreaWrap = document.getElementById('chatInputAreaWrap');
+                
                 let initialViewportHeight = window.innerHeight;
-                let isKeyboardOpen = false;
+                let keyboardHeight = 0;
 
-                // 监听输入框焦点事件
                 if (chatInput) {
                     chatInput.addEventListener('focus', () => {
-                        isKeyboardOpen = true;
-                        // 延迟执行，等待键盘完全弹出
-                        setTimeout(() => {
-                            if (chatMessages) {
-                                // 滚动到最新消息
-                                chatMessages.scrollTop = chatMessages.scrollHeight;
-                            }
-                            // 确保输入框及其所在的容器可见
-                            const inputContainer = document.getElementById('chatInputAreaWrap');
-                            if (inputContainer) {
-                                inputContainer.scrollIntoView({ behavior: 'auto', block: 'end' });
-                            }
-                            chatInput.scrollIntoView({ behavior: 'auto', block: 'nearest' });
-                        }, 100);
+                        // 标记键盘正在打开
+                        if (chatModalContent) {
+                            chatModalContent.dataset.keyboardActive = 'true';
+                        }
                     });
 
                     chatInput.addEventListener('blur', () => {
-                        isKeyboardOpen = false;
-                        // 键盘收起后恢复原样
+                        // 标记键盘关闭
+                        if (chatModalContent) {
+                            chatModalContent.dataset.keyboardActive = 'false';
+                        }
+                        // 恢复正常布局
                         setTimeout(() => {
-                            initialViewportHeight = window.innerHeight;
-                        }, 300);
+                            if (chatMessages) {
+                                chatMessages.style.maxHeight = '';
+                            }
+                            if (inputAreaWrap) {
+                                inputAreaWrap.style.transform = '';
+                            }
+                        }, 100);
                     });
                 }
 
-                // 监听窗口大小变化（键盘弹出/收起会改变viewport高度）
+                // 监听窗口 resize 事件，动态检测键盘高度
                 window.addEventListener('resize', () => {
                     const currentHeight = window.innerHeight;
+                    const heightDifference = initialViewportHeight - currentHeight;
 
-                    // 如果高度变小且输入框有焦点，说明键盘弹出
-                    if (currentHeight < initialViewportHeight && document.activeElement === chatInput) {
-                        if (chatMessages) {
-                            setTimeout(() => {
-                                chatMessages.scrollTop = chatMessages.scrollHeight;
-                            }, 100);
-                        }
-                        // 确保输入框在键盘打开时也可见
-                        const inputContainer = document.getElementById('chatInputAreaWrap');
-                        if (inputContainer) {
-                            setTimeout(() => {
-                                inputContainer.scrollIntoView({ behavior: 'auto', block: 'end' });
-                            }, 100);
+                    // 如果高度变小，说明键盘弹出
+                    if (heightDifference > 100 && chatModalContent && chatModalContent.dataset.keyboardActive === 'true') {
+                        keyboardHeight = heightDifference;
+                        
+                        // 计算 modal-content 的边界
+                        const modalRect = chatModalContent.getBoundingClientRect();
+                        const modalTop = modalRect.top;
+                        const modalHeight = modalRect.height;
+                        const modalBottom = modalTop + modalHeight;
+
+                        // 计算可用高度（排除键盘高度）
+                        const availableHeight = window.innerHeight - keyboardHeight;
+
+                        // 如果 modal 底部超出可用高度，需要调整
+                        if (modalBottom > availableHeight) {
+                            const excessHeight = modalBottom - availableHeight;
+                            
+                            // 调整消息列表的最大高度，给输入框腾出空间
+                            if (chatMessages) {
+                                const currentMaxHeight = chatMessages.clientHeight;
+                                chatMessages.style.maxHeight = (currentMaxHeight - excessHeight) + 'px';
+                                // 自动滚动到最新消息
+                                setTimeout(() => {
+                                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                                }, 50);
+                            }
                         }
                     }
-                    // 如果高度恢复且输入框失去焦点，说明键盘收起
-                    else if (currentHeight > initialViewportHeight && !isKeyboardOpen) {
+                    // 如果高度恢复，说明键盘收起
+                    else if (heightDifference <= 100 && initialViewportHeight === currentHeight + keyboardHeight) {
                         initialViewportHeight = currentHeight;
+                        keyboardHeight = 0;
                     }
-                });
+                }, true);
 
-                // 使用visualViewport API支持（适用于现代移动浏览器）
+                // 监听 visualViewport（更精确的键盘检测）
                 if (window.visualViewport) {
                     window.visualViewport.addEventListener('resize', () => {
-                        if (isKeyboardOpen && document.activeElement === chatInput) {
-                            const inputContainer = document.getElementById('chatInputAreaWrap');
-                            if (inputContainer) {
+                        const vvHeight = window.visualViewport.height;
+                        const windowHeight = window.innerHeight;
+                        const heightDifference = windowHeight - vvHeight;
+
+                        if (heightDifference > 100 && document.activeElement === chatInput) {
+                            // 键盘打开，调整布局
+                            if (chatMessages) {
+                                const topBar = chatModalContent ? chatModalContent.querySelector('.status-bar') : null;
+                                const header = chatModalContent ? chatModalContent.querySelector('.modal-header') : null;
+                                const footer = chatModalContent ? chatModalContent.querySelector('.multi-select-footer') : null;
+                                
+                                let usedHeight = 0;
+                                if (topBar) usedHeight += topBar.offsetHeight;
+                                if (header) usedHeight += header.offsetHeight;
+                                if (footer) usedHeight += footer.offsetHeight;
+                                if (inputAreaWrap) usedHeight += inputAreaWrap.offsetHeight;
+
+                                const msgMaxHeight = (vvHeight - 100) - usedHeight;
+                                if (msgMaxHeight > 0) {
+                                    chatMessages.style.maxHeight = msgMaxHeight + 'px';
+                                }
+                                
+                                // 滚动到最新消息
                                 setTimeout(() => {
-                                    inputContainer.scrollIntoView({ behavior: 'auto', block: 'end' });
-                                }, 50);
+                                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                                }, 100);
+                            }
+                        } else if (heightDifference <= 50) {
+                            // 键盘关闭，恢复布局
+                            if (chatMessages) {
+                                chatMessages.style.maxHeight = '';
                             }
                         }
                     });
                 }
-                // ========== 虚拟键盘自动滚动功能结束 ==========
+                // ========== 虚拟键盘自适应功能结束 ==========
                 if (apiService) apiService.updateSettingsDisplay();
                 if (profileWidget) profileWidget.init();
 
