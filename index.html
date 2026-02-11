@@ -10538,66 +10538,82 @@ ${recentChat || '（暂无对话内容）'}
                 }
 
                 // ========== 虚拟键盘自动滚动功能 ==========
-                // 当虚拟键盘弹出时，自动滚动聊天内容，确保输入框可见且能看到最新消息
-                let initialViewportHeight = window.innerHeight;
-                let isKeyboardOpen = false;
-
-                function scrollChatToInputBox() {
-                    if (!chatMessages || !chatInput) return;
+                // 当虚拟键盘弹出时，自动滚动确保输入框可见（跨浏览器兼容）
+                let lastViewportHeight = window.innerHeight;
+                const INPUT_AREA_ID = 'chatInputAreaWrap';
+                
+                function ensureInputVisible() {
+                    const inputArea = document.getElementById(INPUT_AREA_ID);
+                    if (!inputArea) return;
                     
-                    // 获取输入框容器
-                    const inputAreaWrap = document.getElementById('chatInputAreaWrap');
-                    if (!inputAreaWrap) return;
-                    
-                    // 计算输入框到聊天消息容器顶部的距离
-                    const scrollDistance = inputAreaWrap.offsetTop - chatMessages.offsetTop + inputAreaWrap.offsetHeight - chatMessages.clientHeight;
-                    
-                    // 直接设置滚动位置，确保输入框始终在视口内
-                    if (scrollDistance > 0) {
-                        chatMessages.scrollTop = scrollDistance;
-                    } else {
-                        // 至少滚动到底部显示最新消息
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
+                    // 使用 scrollIntoView 是最兼容的跨浏览器方法
+                    inputArea.scrollIntoView({ behavior: 'auto', block: 'end' });
                 }
 
                 // 监听输入框焦点事件
                 if (chatInput) {
                     chatInput.addEventListener('focus', () => {
-                        isKeyboardOpen = true;
-                        // 立即滚动一次
-                        scrollChatToInputBox();
-                        // 延迟再滚动一次，确保键盘完全弹出后仍然可见
+                        // 焦点时立即滚动
+                        ensureInputVisible();
+                        
+                        // 加延迟确保虚拟键盘弹出后仍然可见
                         setTimeout(() => {
-                            scrollChatToInputBox();
-                        }, 150);
+                            ensureInputVisible();
+                        }, 100);
+                        
                         setTimeout(() => {
-                            scrollChatToInputBox();
-                        }, 400);
+                            ensureInputVisible();
+                        }, 300);
+                        
+                        setTimeout(() => {
+                            ensureInputVisible();
+                        }, 500);
                     });
 
-                    chatInput.addEventListener('blur', () => {
-                        isKeyboardOpen = false;
-                        // 键盘收起后恢复原样
+                    // 监听输入框的输入事件，确保不断滚动
+                    chatInput.addEventListener('input', () => {
+                        ensureInputVisible();
+                    });
+
+                    // 监听按键事件
+                    chatInput.addEventListener('keydown', () => {
                         setTimeout(() => {
-                            initialViewportHeight = window.innerHeight;
-                        }, 300);
+                            ensureInputVisible();
+                        }, 50);
                     });
                 }
 
-                // 监听窗口大小变化（键盘弹出/收起会改变viewport高度）
+                // 监听 resize 事件（键盘弹出/收起会改变 viewport 高度）
                 window.addEventListener('resize', () => {
                     const currentHeight = window.innerHeight;
-
-                    // 如果高度变小且输入框有焦点，说明键盘弹出
-                    if (currentHeight < initialViewportHeight && document.activeElement === chatInput) {
-                        scrollChatToInputBox();
+                    
+                    // 如果高度变小（键盘弹出）且输入框有焦点
+                    if (currentHeight < lastViewportHeight && document.activeElement === chatInput) {
+                        setTimeout(() => {
+                            ensureInputVisible();
+                        }, 50);
                     }
-                    // 如果高度恢复且输入框失去焦点，说明键盘收起
-                    else if (currentHeight > initialViewportHeight && !isKeyboardOpen) {
-                        initialViewportHeight = currentHeight;
-                    }
+                    
+                    lastViewportHeight = currentHeight;
                 });
+
+                // 监听 orientationchange 事件（屏幕方向改变）
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => {
+                        if (document.activeElement === chatInput) {
+                            ensureInputVisible();
+                        }
+                    }, 200);
+                });
+
+                // 监听虚拟键盘的展开/收起（有些浏览器支持）
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener('resize', () => {
+                        if (document.activeElement === chatInput) {
+                            ensureInputVisible();
+                        }
+                    });
+                }
                 // ========== 虚拟键盘自动滚动功能结束 ==========
                 if (apiService) apiService.updateSettingsDisplay();
                 if (profileWidget) profileWidget.init();
