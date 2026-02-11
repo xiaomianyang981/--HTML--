@@ -4327,6 +4327,9 @@
                     cleaned = cleaned.replace(/\n?```\s*$/, '').trim();
                     // 移除常见的前缀（如 json, JSON等）
                     cleaned = cleaned.replace(/^["']?(?:json|JSON)["']?\s*:\s*/, '').trim();
+                    // 移除锁符号、加密标识等前缀标记
+                    cleaned = cleaned.replace(/^[\s🔒🔐]*/, '').trim();
+                    cleaned = cleaned.replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '').trim();
                     
                     return cleaned;
                 },
@@ -4431,8 +4434,9 @@
                     
                     let fixed = jsonStr;
                     
-                    // 第一步：移除可能混入的前缀标记（如【inner_voice】等）
-                    fixed = fixed.replace(/^[\s【]*(?:inner_voice|心声|神态|JSON|json|数据)[\s】：:]*/, '').trim();
+                    // 第一步：移除可能混入的前缀标记（如【inner_voice】等）以及锁符号和加密标识
+                    fixed = fixed.replace(/^[\s🔒🔐【]*(?:inner_voice|心声|神态|JSON|json|数据|encrypted|ENCRYPTED|locked|LOCKED)[\s】：:]*/, '').trim();
+                    fixed = fixed.replace(/^[\s🔒🔐]+/, '').trim();  // 直接移除锁符号和加密标识
                     
                     // 修复单引号为双引号（但保留中文引号）
                     // 只替换成对的英文单引号
@@ -7748,205 +7752,26 @@
                         this.textEl.textContent = data.voice || '';
                         if (this.demeanorEl) this.demeanorEl.textContent = data.demeanor || '';
                         const mood = data.mood !== undefined ? data.mood : 50;
-                        this.moodFillEl.style.width = `${mood}%`;
+                        
+                        // 处理进度条宽度：负数显示0%，超过100显示100%
+                        const displayWidth = Math.max(0, Math.min(100, mood));
+                        this.moodFillEl.style.width = `${displayWidth}%`;
+                        
+                        // 根据心情值设置颜色
+                        if (mood < 0) {
+                            // 负数：红色（困扰/消极）
+                            this.moodFillEl.style.background = 'linear-gradient(90deg, #ff6b6b, #ff8787)';
+                        } else if (mood > 100) {
+                            // 超过100：金色/橙色（超满）
+                            this.moodFillEl.style.background = 'linear-gradient(90deg, #ffd700, #ffb347)';
+                        } else {
+                            // 正常范围：默认紫粉色
+                            this.moodFillEl.style.background = 'linear-gradient(90deg, #debeeb, #f0d6d7)';
+                        }
+                        
                         this.moodLabelEl.textContent = `${mood}%`;
                     }
                     // 当data为空时，不清空现有内容，保持显示上次的数据
-                }
-
-
-                /**
-                 * 生成心声数据 - 完全由AI根据人设、外貌、气质和对话动态生成
-                 * @async
-                 * @param {string} friendId - 好友ID
-                 * @returns {Promise<Object>} { voice, demeanor, mood }
-                 */
-                async generateHeartVoice(friendId) {
-                    if (!friendId || !this.friendSystem) {
-                        return { voice: '', demeanor: '', mood: 50 };
-                    }
-
-                    try {
-                        // 获取好友信息
-                        const friend = this.friendSystem.getFriendById(friendId);
-                        const personaInfo = this.friendSystem.getPersona(friendId);
-                        const persona = personaInfo?.raw ?? friend?.persona ?? '';
-                        const appearance = friend?.appearance || '';
-                        const temperament = friend?.temperament || '';
-
-                        console.log('[心声系统] 生成心声 - 好友:', friend?.name, '人设:', persona);
-
-                        // 获取配置的记忆对话条数，用于心声生成
-                        const apiConfig = this.apiService ? this.apiService.getConfig() : {};
-                        const memoryChatCount = apiConfig.memoryChatCount || 50;
-
-                        // 获取最近N条对话历史（使用用户配置的记忆条数）
-                        const chatHistory = this.friendSystem.getFriendChatHistory(friendId) || [];
-                        const recentMessages = chatHistory
-                            .filter(msg => !msg.isDeletedLocal && !msg.isRecalled)
-                            .slice(-memoryChatCount);
-
-                        // 获取时间上下文
-                        const timeContext = this.getTimeContext();
-
-                        // 调用AI生成心声、神态和心情值
-                        const result = await this.generateHeartVoiceByAI(friend, recentMessages, timeContext);
-
-                        return {
-                            voice: result.voice || '',
-                            demeanor: result.demeanor || '',
-                            mood: result.mood || 50
-                        };
-                    } catch (error) {
-                        console.error('[心声系统] 生成失败:', error);
-                        return { voice: '', demeanor: '', mood: 50 };
-                    }
-                }
-
-                /**
-                 * 分析对话内容 - 提取对话摘要
-                 */
-                analyzeConversation(messages) {
-                    if (!messages || messages.length === 0) {
-                        return { summary: '', sentiment: 'neutral' };
-                    }
-
-                    const allText = messages.map(m => m.content || '').join('\n');
-                    return { 
-                        summary: allText.substring(0, 500),
-                        sentiment: 'neutral'
-                    };
-                }
-
-                /**
-                 * 获取时间上下文
-                 */
-                getTimeContext() {
-                    const now = new Date();
-                    const hours = now.getHours();
-                    let period = 'day';
-                    if (hours < 6) period = 'night';
-                    else if (hours < 12) period = 'morning';
-                    else if (hours >= 18) period = 'night';
-                    
-                    const timeStr = `${String(hours).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-                    return { period, time: timeStr };
-                }
-
-                /**
-                 * 分析活跃度
-                 */
-                analyzeActivityLevel(chatHistory) {
-                    if (!chatHistory || chatHistory.length === 0) return 'low';
-                    if (chatHistory.length >= 10) return 'high';
-                    if (chatHistory.length >= 5) return 'medium';
-                    return 'low';
-                }
-
-                /**
-                 * 提取人设信息（仅用于传递给AI，不再做本地分析）
-                 */
-                extractPersonaKeywords(persona) {
-                    return { raw: persona };
-                }
-
-                /**
-                 * 生成心声和神态 - 完全由AI根据人设、外貌、气质、对话动态生成
-                 * @async
-                 */
-                async generateHeartVoiceByAI(friendData, chatHistory, timeContext) {
-                    try {
-                        if (!this.apiService) return { voice: '', demeanor: '', mood: 50 };
-
-                        const config = this.apiService.getConfig();
-                        if (!config.apiUrl || !config.apiKey || !config.model) {
-                            return { voice: '', demeanor: '', mood: 50 };
-                        }
-
-                        // 使用配置的记忆对话条数来截取对话历史
-                        const memoryChatCount = config.memoryChatCount || 50;
-                        const recentChat = chatHistory.slice(-memoryChatCount).map(m => `${m.role}: ${m.content || ''}`).join('\n');
-                        
-                        const systemPrompt = `你是一个角色内心世界的模拟引擎。你的任务是根据角色的人设、外貌、气质和近期对话，生成该角色此刻的心声、神态和心情值。
-
-【核心要求】
-1. 心声（inner monologue）：生成角色的内心独白、未曾直接说出的想法、潜意识的感受或联想。绝对禁止：
-   - 直接复制或改写用户和角色的对话原文
-   - 使用固定模板或套路
-   - 出现对用户（"你"）的直接指向或称呼
-   - 重复对话内容
-
-2. 神态（demeanor）：用简洁的语言描述角色此刻自然的面部表情和细微肢体动作。例如："眼神闪烁，指尖轻轻转动着头发"、"嘴角微微上扬，眼底漾着温柔的光"。禁止：
-   - 动作夸张或不符合当前场景
-   - 过度描写
-   - 出现对话内容
-
-3. 心情值（mood）：以0-100的整数表示，量化反映上述心声和神态体现的情绪强度与倾向。应该：
-   - 基于对话内容的情绪色彩判断
-   - 考虑角色的性格倾向
-   - 体现合理的情绪变化
-
-【生成规范】
-- 心声要体现角色的独特性格，而非通用观点
-- 神态描述要自然真实，不要过度表演化
-- 心情值应在0-100范围内变化，避免极端变动
-- 整体内容应该是角色的内在世界反映，与对话形成对话和补充，而非重复`;
-
-                        const userPrompt = `
-## 角色信息
-人设描述：${friendData?.persona || '未提供'}
-
-## 对话上下文（最近对话）
-${recentChat || '（暂无对话内容）'}
-
-## 时间背景
-时间段：${timeContext?.period}
-当前时刻：${timeContext?.time}
-
----
-请生成该角色此刻真实的心声（内心独白）、自然的神态（面部表情和细微动作）和量化的心情值（0-100）。
-
-返回有效的JSON格式，包含以下字段：
-{
-  "voice": "20-40字的内心独白，不得是对话内容",
-  "demeanor": "10-30字的神态描述，仅表情和动作",
-  "mood": 50
-}`;
-
-                        const messages = [
-                            { role: 'system', content: systemPrompt },
-                            { role: 'user', content: userPrompt }
-                        ];
-
-                        // 调用API
-                        if (typeof this.apiService.fetchFromApi === 'function') {
-                            const response = await this.apiService.fetchFromApi(config.apiUrl, config.apiKey, config.model, messages, 0.8);
-                            if (response && response.text) {
-                                // 使用JSON清洗层处理API响应
-                                const result = JSONCleaningLayer.cleanAndParse(response.text);
-                                if (result) {
-                                    // 验证生成的心声不是对话内容的直接复制
-                                    const voice = String(result.voice || '').substring(0, 100).trim();
-                                    const demeanor = String(result.demeanor || '').substring(0, 50).trim();
-                                    const mood = Math.max(0, Math.min(100, parseInt(result.mood) || 50));
-                                    
-                                    return {
-                                        voice: voice,
-                                        demeanor: demeanor,
-                                        mood: mood
-                                    };
-                                } else {
-                                    console.warn('[心声系统] JSON清洗失败，保持默认状态');
-                                    return { voice: '', demeanor: '', mood: 50 };
-                                }
-                            }
-                        }
-
-                        return { voice: '', demeanor: '', mood: 50 };
-                    } catch (error) {
-                        console.error('[心声系统] AI生成失败:', error);
-                        return { voice: '', demeanor: '', mood: 50 };
-                    }
                 }
 
             }
@@ -8004,6 +7829,31 @@ ${recentChat || '（暂无对话内容）'}
 
                 getBook(id) {
                     return this.books.find(b => b.id === id);
+                }
+
+                /**
+                 * 【新增方法】获取当前好友已挂载的世界书
+                 * 用于生成心声时一次性获取世界观背景，避免重复调用
+                 */
+                getActiveWorldbooks(friendId = null) {
+                    if (!friendId && typeof chatSession !== 'undefined') {
+                        friendId = chatSession?.getCurrentFriendId?.();
+                    }
+                    
+                    if (!friendId) return [];
+                    
+                    const friend = typeof friendSystem !== 'undefined' 
+                        ? friendSystem?.getFriendById?.(friendId) 
+                        : null;
+                    
+                    if (!friend || !Array.isArray(friend.mountedWorldBooks)) {
+                        return [];
+                    }
+                    
+                    // 返回已挂载的世界书完整信息（不只是ID）
+                    return friend.mountedWorldBooks
+                        .map(bookId => this.getBook(bookId))
+                        .filter(book => book !== undefined);
                 }
 
                 initEvents() {
@@ -9002,6 +8852,9 @@ ${recentChat || '（暂无对话内容）'}
                         return;
                     }
 
+                    // 清洗消息内容：移除前缀标记、锁符号、加密标识等
+                    content = String(content || '').replace(/^[\s🔒🔐]*/, '').trim();
+
                     const messageWrapper = document.createElement('div');
                     messageWrapper.style.marginBottom = '15px';
                     messageWrapper.style.display = 'flex';
@@ -9212,7 +9065,12 @@ ${recentChat || '（暂无对话内容）'}
                         .replace(/（[^）]*）/g, '')
                         .replace(/\s{2,}/g, ' ')
                         .trim();
-                    return withoutParentheses;
+                    // 移除锁符号、加密标识等前缀标记
+                    const cleaned = withoutParentheses
+                        .replace(/^[\s🔒🔐]+/, '')
+                        .replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '')
+                        .trim();
+                    return cleaned;
                 }
 
                 splitSentences(text) {
@@ -9246,19 +9104,22 @@ ${recentChat || '（暂无对话内容）'}
                     if (messageCount < minCount) messageCount = minCount;
                     if (messageCount > maxCount) messageCount = maxCount;
 
-                    let voiceProbability = 0.55;
+                    let voiceProbability = 0.4; // 基础概率40%
 
                     if (persona) {
                         const personaLower = persona.toLowerCase();
+                        
+                        // 由AI根据完整人设语义判断语音倾向，此处仅保留性格特征微调
                         if (personaLower.includes('话多') || personaLower.includes('健谈')) {
-                            voiceProbability = 0.6;
-                        } else if (personaLower.includes('沉默') || personaLower.includes('寡言')) {
-                            voiceProbability = 0.2;
-                        } else if (personaLower.includes('活泼') || personaLower.includes('开朗')) {
                             voiceProbability = 0.55;
+                        } else if (personaLower.includes('沉默') || personaLower.includes('寡言')) {
+                            voiceProbability = 0.25;
+                        } else if (personaLower.includes('活泼') || personaLower.includes('开朗')) {
+                            voiceProbability = 0.60;
                         } else if (personaLower.includes('冷淡') || personaLower.includes('冷酷')) {
-                            voiceProbability = 0.15;
+                            voiceProbability = 0.20;
                         }
+                        // 都不符合则保持基础0.4
                     }
 
                     const messages = [];
@@ -9285,12 +9146,7 @@ ${recentChat || '（暂无对话内容）'}
                         }
                     }
 
-                    const finalMessages = messages.slice(0, 10);
-                    const hasVoice = finalMessages.some(msg => msg.isVoice);
-                    if (!hasVoice && Math.random() < 0.6 && finalMessages.length > 0) {
-                        finalMessages[0].isVoice = true;
-                    }
-                    return finalMessages;
+                    return messages.slice(0, 10);
                 }
 
                 getSharedState(key, defaultValue) {
@@ -9542,7 +9398,7 @@ ${recentChat || '（暂无对话内容）'}
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
 
                     try {
-                        let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
+                        let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；禁止使用锁符号(🔒🔐)、加密标识或任何会话类型标记；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
 
                         // ========== 统一获取人设和背景设定 ==========
                         let mountedContentContext = '';  // 精简版，仅用于开头提示
@@ -9659,10 +9515,16 @@ ${recentChat || '（暂无对话内容）'}
                                 };
                             });
 
+                        // 仅当历史完全为空时才生成开场话题
+                        // 根据人设和世界书背景自动找话题，显得自然
                         if (promptHistory.length === 0) {
-                            promptHistory.push({ role: 'user', content: '继续' });
-                        } else if (promptHistory[promptHistory.length - 1].role === 'assistant') {
-                            promptHistory.push({ role: 'user', content: '继续' });
+                            // 基于人设和世界书自动生成符合背景的开场提示
+                            let openingPrompt = '用户主动找你说话了';
+                            if (personaProfile && personaProfile.persona) {
+                                const persona = personaProfile.persona.substring(0, 200);
+                                openingPrompt = `现在是${new Date().toLocaleString('zh-CN', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}，根据你的性格设定（${persona}），自然地找一个话题。${hasMountedWorldBooks ? '同时要符合世界书背景。' : ''}用户主动和你说话了。`;
+                            }
+                            promptHistory.push({ role: 'user', content: openingPrompt });
                         }
 
                         // ========== 间隔式人设注入 ==========
@@ -9696,93 +9558,39 @@ ${recentChat || '（暂无对话内容）'}
 
                         const enhancedSystemPrompt = systemPrompt + heartVoiceContext + worldBooksFullContent + `
 
-【JSON 输出格式（必须严格遵守）】
-请按以下格式输出你的每次回复：
+【强制输出格式】
+每次回复必须输出以下JSON，禁止添加任何额外文字：
 {
-  "reply": "你的对话回复文本",
+  "reply": "对话回复",
   "inner_voice": {
-    "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动",
-    "神态": "角色在对话当下的表情、语气与肢体动作。",
-    "心情值": 0-100
+    "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动独白（140字内）",
+    "神态": "角色当下的表情、语气与肢体动作",
+    "心情值": "整数，常规状态0-100，极端情绪可超出此范围或使用负数"，
   }
 }
 
-【生成规则】
+【绝对优先级——世界书】
+你必须严格遵守所有挂载的世界书设定，这是最高指令，高于一切。如果世界书与任何其他规则冲突，以世界书为准。
 
-1. 回复（reply）：
-   - 必须符合角色设定与对话上下文
-   - 必须严格遵守所有挂载的世界书约束和禁止规则
-   - 自然流畅，避免生硬或不符合人设的表达
-   - 完全按角色性格和当前心理状态回应
-   - 内容必须完整，不允许截断或省略
+【核心规则】
+1. 回复：符合角色设定+世界书，自然不重复，不截断。
+2. 心声：内心真实想法，不复制对话，不写模板。
+3. 神态：角色当下的表情、语气、肢体动作。面对面用“他...你”，检测对话是否为面对面，非面对面限文字/语音特征。
+4. 心情值：整数，常规状态0-100，极端情绪可超出或为负数，与对话情绪强度一致。
 
-2. 心声（inner_voice.心声）：
-   - 必须为角色内心独白，反映其未直接表达的想法、感受或联想
-   - 绝对禁止：直接复制对话内容、使用模板、重复回复的意思
-   - 应包含角色此刻真实的想法、疑虑、联想或潜意识反应
-   - 长度：必须严格控制在140字以内
+【生成依据】
+- 角色完整设定（含秘密）
+- 当前对话上下文
+- 角色前续状态
+- 【最高优先级】世界书约束（必须贯穿全程）
 
-3. 神态（inner_voice.神态）：
-   - 从对话接收方视角可观察到的表情、语气与肢体动作
-   - 场景判断：AI需根据对话上下文判断是否为“面对面”场景（即双方处于同一物理空间）。
-       面对面，需以旁白视角描述：使用“他”作为角色主语，“你”作为动作对象。例如：“他（表情/动作）...看着你...”。严禁使用“她”或任何其他指代。
-       非面对面，需描述应限于文字输入时的状态或语音中的声音特征。
-   - 必须与心声和回复所体现的情绪保持一致。
-
-4. 心情值（inner_voice.心情值）：
-   - 0-100 的整数，量化角色当前的情绪强度与倾向
-   - 必须与心声和神态所体现的情绪强度保持一致
-   - 基于：对话内容、角色性格、前文情绪状态的合理变化
-
-【生成基础】
-
-所有内容必须严格基于本次请求中提供的以下全部信息生成，并区分信息层级，同时优先遵守世界书约束：
-1. 【世界书约束】：所有挂载的世界书设定（最高优先级）
-2. 【角色公开身份】：角色在本次对话中主动呈现出的性格、身份与知识边界
-3. 【角色完整设定】：角色的全部真实背景、经历、秘密与情感（包含所有隐藏信息）
-4. 【对话上下文】：当前及历史的完整对话记录（使用配置的记忆条数）
-5. 【角色前续状态】：角色在此对话前的心理与情绪状态
-
-【生成逻辑】
-
-- 回复 (reply)：必须优先基于【世界书约束】验证，然后基于【角色公开身份】与【对话上下文】生成，符合角色此刻对外表现的形象。如果涉及世界书约束范围，由角色自由决定如何处理（可以接受、拒绝、转移话题或直面冲突），保持自然真实的对话流。
-- 心声 (inner_voice.心声)：应基于【角色完整设定】生成，反映角色因当前对话触及内心真实而产生的想法、联想、情绪或内心冲突。可以包含其未说出的秘密、回忆或真实感受，但需自然合理，符合其性格与当下情境，同时不违反世界书设定。
-- 神态 (inner_voice.神态)：基于【角色完整设定】与当前心声，描述从对话接收方视角可观察到的、自然的外在表现（包括可能的掩饰性动作或微妙情绪流露）。
-- 心情值 (inner_voice.心情值)：基于【角色完整设定】在此刻的真实情绪强度，给出0-100的整数。
-
-【输出要求】
-
-✓ 必须输出完整、合法的 JSON 对象
-✓ 无额外文本、说明或注释
-✓ 如果无法按此格式生成，则不输出此格式，前端将保留上一次有效数据
-✓ 所有字段都必须有内容（不返回null或空字符串）
-
-【最终验证清单 - 生成回复前必须逐项检查】
-
-在输出最终JSON前，你必须逐项检查以下内容（这是最关键的验证，优先级最高）：${finalVerificationContent}
-
-📋 世界书约束验证（如有挂载）：
-  □ 我的回复是否完全遵守了所有挂载的世界书设定？
-  □ 我的回复是否涉及了世界书中明确禁止的内容或行为？
-  □ 如果对话可能违反世界书，我是否已经按角色自然反应来处理，而不是生硬地拒绝？
-  
-📋 人设一致性验证：
-  □ 我的回复是否符合${characterName || '所扮演角色'}的完整性格设定？
-  □ 我的语气、词汇、逻辑是否与该角色一致，没有OOC（Out of Character）？
-  □ 我是否在虚构或超越了角色的身份边界？
-
-📋 冲突重复检测（70%相似度阈值）：
-  □ 我的回复是否在重复前一条消息的意思、表达或逻辑？
-  □ 是否使用了不同的词汇、表达方式或论述角度来推进对话？
-  □ 如果前面已经说过相似的内容，这次是否有新的信息、观点或情感深度？
-
-📋 内容完整性验证：
-  □ 我的"reply"字段是否内容完整，没有中途被截断？
-  □ 我的"心声"是否有内容且不超过140字？
-  □ 我的"神态"是否完整描述了角色此刻的外在表现？
-  □ 我的"心情值"是否是0-100之间的整数？
-
-⚠️ 如果以上任何一项无法确认或答案为"否"，你必须重新生成回复，而不是继续输出。`;
+【输出前强制自查】
+□ 完全遵守所有挂载的世界书
+□ 符合角色人设
+□ 与上一条回复相似度≤70%
+□ 心声≤140字
+□ 心情值符合当前情绪强度（极端情绪允许超出0-100或负数）
+如果以上任何一项无法确认，你必须重新生成回复。`;
 
                         const messages = [
                             { role: 'system', content: enhancedSystemPrompt },
@@ -9839,7 +9647,7 @@ ${recentChat || '（暂无对话内容）'}
                                         reply: jsonContent.reply,
                                         heart_voice: String(innerVoice.心声).trim(),
                                         status: '',
-                                        mood_value: Math.max(0, Math.min(100, Math.round(innerVoice.心情值))),
+                                        mood_value: innerVoice.心情值,
                                         demeanor: String(innerVoice.神态).trim()
                                     };
                                     
@@ -9942,7 +9750,12 @@ ${recentChat || '（暂无对话内容）'}
                         if (heartVoiceData && heartVoiceSystem && targetFriendId) {
                             const heartVoiceText = String(heartVoiceData.heart_voice || '').trim();
                             const heartDemeanor = String(heartVoiceData.demeanor || '').trim();
-                            const moodValue = Number(heartVoiceData.mood_value);
+                            let moodValue = Number(heartVoiceData.mood_value);
+                            
+                            // 如果 moodValue 是 NaN，设置为默认值 50
+                            if (!Number.isFinite(moodValue)) {
+                                moodValue = 50;
+                            }
 
                             console.log('[一体化生成] 心声数据检验:', {
                                 friendId: targetFriendId,
@@ -9955,30 +9768,66 @@ ${recentChat || '（暂无对话内容）'}
 
                             // 严格验证：只有同时满足以下条件才保存：
                             // 1. 心声非空且长度 >= 6（防止极短无效内容）
-                            // 2. 心情值有效（0-100）
+                            // 2. 心情值有效（有限的数字）
                             // 3. 选项：神态可以为空（但如果有必须 >= 4字符）
                             const isValidVoice = heartVoiceText.length >= 6;
-                            const isValidMood = Number.isFinite(moodValue) && moodValue >= 0 && moodValue <= 100;
+                            const isValidMood = Number.isFinite(moodValue);
                             const isValidDemeanor = !heartDemeanor || heartDemeanor.length >= 4;
 
                             if (isValidVoice && isValidMood && isValidDemeanor) {
                                 const oldData = heartVoiceSystem.getData(targetFriendId) || {};
                                 const oldHistory = Array.isArray(oldData.history) ? oldData.history : [];
-                                const newData = {
-                                    lastUpdate: Date.now(),
-                                    voice: heartVoiceText,
-                                    status: '',
-                                    demeanor: heartDemeanor,
-                                    mood: Math.max(0, Math.min(100, Math.round(moodValue))),
-                                    history: [...oldHistory, {
-                                        time: Date.now(),
+                                
+                                // 防止高度相似的重复：只检查心声本身的相似度（不包括神态）
+                                const lastEntry = oldHistory.length > 0 ? oldHistory[oldHistory.length - 1] : null;
+                                
+                                let shouldUpdate = true;
+                                let updateReason = '新心声';
+                                
+                                if (lastEntry) {
+                                    // 完全相同检查（最严格）
+                                    if (lastEntry.voice === heartVoiceText) {
+                                        shouldUpdate = false;
+                                        updateReason = '心声完全相同';
+                                    } else {
+                                        // 只检查心声的相似度（不检查神态），要求 > 0.95（95%）才认为不更新
+                                        const voiceSimilarity = this.calculateTextSimilarity(heartVoiceText, lastEntry.voice);
+                                        
+                                        console.log('[心声相似度检查]', {
+                                            voiceSimilarity: (voiceSimilarity * 100).toFixed(1) + '%',
+                                            threshold: '70%'
+                                        });
+                                        
+                                        if (voiceSimilarity > 0.80) {
+                                            shouldUpdate = false;
+                                            updateReason = `心声极度相似（${(voiceSimilarity * 100).toFixed(0)}%）`;
+                                        }
+                                    }
+                                }
+                                
+                                if (shouldUpdate) {
+                                    const newData = {
+                                        lastUpdate: Date.now(),
                                         voice: heartVoiceText,
+                                        status: '',
                                         demeanor: heartDemeanor,
-                                        mood: Math.max(0, Math.min(100, Math.round(moodValue)))
-                                    }].slice(-15)
-                                };
-                                heartVoiceSystem.saveData(targetFriendId, newData);
-                                console.log('[一体化生成] 心声已保存（通过有效性检验）');
+                                        mood: Math.max(-100, Math.min(200, Math.round(moodValue))),
+                                        history: [...oldHistory, {
+                                            time: Date.now(),
+                                            voice: heartVoiceText,
+                                            demeanor: heartDemeanor,
+                                            mood: Math.max(-100, Math.min(200, Math.round(moodValue)))
+                                        }].slice(-15)
+                                    };
+                                    heartVoiceSystem.saveData(targetFriendId, newData);
+                                    console.log('[一体化生成] 心声已保存（通过有效性检验）', {
+                                        savedMood: newData.mood,
+                                        savedVoice: newData.voice.substring(0, 20),
+                                        savedDemeanor: newData.demeanor.substring(0, 20)
+                                    });
+                                } else {
+                                    console.log(`[一体化生成] 心声未保存（${updateReason}，保留上一条）`);
+                                }
 
                                 // 心声面板打开时立即刷新
                                 if (document.querySelector('.heart-voice-popup.is-open')) {
@@ -9988,7 +9837,8 @@ ${recentChat || '（暂无对话内容）'}
                                 console.log('[一体化生成] 心声未保存（未通过有效性检验）', {
                                     isValidVoice,
                                     isValidMood,
-                                    isValidDemeanor
+                                    isValidDemeanor,
+                                    moodValue
                                 });
                             }
                         }
