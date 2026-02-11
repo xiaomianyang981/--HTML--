@@ -45,10 +45,12 @@
         body {
             background: #FFFFFF;
             min-height: 100vh;
+            min-height: 100dvh; /* 在移动设备上用 dvh（Dynamic Viewport Height）处理键盘 */
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom)); /* 考虑安全区域 */
         }
 
         @keyframes fade-in-scale {
@@ -584,6 +586,8 @@
             /* 键盘自适应 */
             -webkit-user-select: none;
             -webkit-touch-callout: none;
+            transition: margin-top 0.3s ease-out, height 0.3s ease-out;
+            margin-top: 0;
         }
 
         /* 聊天消息容器优化 */
@@ -10559,98 +10563,123 @@ ${recentChat || '（暂无对话内容）'}
                     friendSystem.init();
                 }
 
-                // ========== 键盘自适应（强化版）==========
+                // ========== 键盘自适应（终极版 - 直接改变布局）==========
                 const chatModal = document.getElementById('chatModal');
                 const chatModalContent = chatModal?.querySelector('.modal-content');
                 const inputAreaWrap = document.getElementById('chatInputAreaWrap');
                 
-                if (chatModalContent) {
-                    let lastViewportHeight = window.innerHeight;
-                    let keyboardHeight = 0;
+                if (chatModalContent && chatModal) {
+                    let isAdjusting = false;
+                    let originalBottom = 0;
                     
-                    // 监听 visualViewport 变化（最精确的键盘检测）
-                    const updateLayoutForKeyboard = () => {
+                    // 获取初始状态
+                    const getInitialState = () => {
+                        const rect = chatModalContent.getBoundingClientRect();
+                        return {
+                            top: rect.top,
+                            bottom: rect.bottom,
+                            height: rect.height
+                        };
+                    };
+                    
+                    let initialState = getInitialState();
+                    
+                    // 主要的键盘检测和调整逻辑
+                    const handleKeyboardChange = () => {
                         if (!window.visualViewport) return;
                         
-                        const currentVVHeight = window.visualViewport.height;
+                        const vvHeight = window.visualViewport.height;
                         const windowHeight = window.innerHeight;
-                        const heightDiff = windowHeight - currentVVHeight;
+                        const keyboardHeight = windowHeight - vvHeight;
                         
-                        // 键盘打开：高度下降明显
-                        if (heightDiff > 50) {
-                            keyboardHeight = heightDiff;
-                            const modalRect = chatModalContent.getBoundingClientRect();
-                            const modalBottom = modalRect.bottom;
+                        // 键盘打开（高度差大于50）
+                        if (keyboardHeight > 50) {
+                            isAdjusting = true;
                             
-                            // 计算需要上推的距离
-                            const needPushUp = Math.max(0, modalBottom - (currentVVHeight - 20));
+                            // 计算需要的调整量
+                            const currentRect = chatModalContent.getBoundingClientRect();
+                            const currentBottom = currentRect.bottom;
                             
-                            if (needPushUp > 0) {
-                                // 直接上推整个聊天模态框
-                                chatModalContent.style.transform = `translateY(-${needPushUp}px)`;
-                                chatModalContent.style.transition = 'transform 0.2s ease-out';
+                            // 键盘的顶部位置
+                            const keyboardTop = vvHeight;
+                            
+                            // 如果 modal 会被键盘遮挡，就上推
+                            if (currentBottom > keyboardTop) {
+                                const pushUpAmount = currentBottom - keyboardTop + 10; // 留 10px 距离
+                                
+                                // 使用 margin-top 上推整个 modal
+                                chatModalContent.style.marginTop = `-${pushUpAmount}px`;
                                 
                                 // 同时调整消息列表高度
                                 if (chatMessages) {
-                                    const inputHeight = inputAreaWrap?.offsetHeight || 120;
                                     const headerHeight = chatModalContent.querySelector('.status-bar')?.offsetHeight || 0;
                                     const navHeight = chatModalContent.querySelector('.modal-header')?.offsetHeight || 0;
+                                    const inputHeight = inputAreaWrap?.offsetHeight || 120;
                                     
-                                    const availableHeight = currentVVHeight - inputHeight - headerHeight - navHeight - 20;
-                                    if (availableHeight > 50) {
-                                        chatMessages.style.maxHeight = availableHeight + 'px';
+                                    const msgHeight = vvHeight - headerHeight - navHeight - inputHeight - 20;
+                                    if (msgHeight > 50) {
+                                        chatMessages.style.maxHeight = msgHeight + 'px';
+                                        // 自动滚到最底
+                                        setTimeout(() => {
+                                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                                        }, 50);
                                     }
-                                    
-                                    // 自动滚动到底部
-                                    setTimeout(() => {
-                                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                                    }, 100);
                                 }
                             }
-                        } 
-                        // 键盘收起：高度恢复
-                        else if (heightDiff < 30 && keyboardHeight > 0) {
-                            keyboardHeight = 0;
-                            chatModalContent.style.transform = 'translateY(0)';
-                            chatModalContent.style.transition = 'transform 0.2s ease-out';
+                        }
+                        // 键盘关闭（高度差小于30）
+                        else if (keyboardHeight < 30 && isAdjusting) {
+                            isAdjusting = false;
+                            
+                            // 平滑恢复原始样式
+                            chatModalContent.style.marginTop = '0px';
                             
                             if (chatMessages) {
                                 chatMessages.style.maxHeight = '';
                             }
                         }
-                        
-                        lastViewportHeight = currentVVHeight;
                     };
                     
-                    // 监听 visualViewport
+                    // 监听 visualViewport 的 resize 事件
                     if (window.visualViewport) {
-                        window.visualViewport.addEventListener('resize', updateLayoutForKeyboard);
+                        window.visualViewport.addEventListener('resize', handleKeyboardChange);
+                        window.visualViewport.addEventListener('scroll', handleKeyboardChange);
                     }
                     
-                    // 备用方案：监听窗口 resize
-                    window.addEventListener('resize', updateLayoutForKeyboard);
+                    // 备用：监听 window resize
+                    let resizeTimeout;
+                    window.addEventListener('resize', () => {
+                        clearTimeout(resizeTimeout);
+                        resizeTimeout = setTimeout(handleKeyboardChange, 100);
+                    });
                     
-                    // 输入框焦点时强制滚动到可见
+                    // 输入框焦点事件
                     if (chatInput) {
                         chatInput.addEventListener('focus', () => {
+                            // 延迟以等待键盘动画完成
                             setTimeout(() => {
-                                inputAreaWrap.scrollIntoView({ behavior: 'auto', block: 'end' });
+                                handleKeyboardChange();
+                                // 确保输入框可见
+                                inputAreaWrap?.scrollIntoView({ behavior: 'auto', block: 'end' });
                                 if (chatMessages) {
                                     chatMessages.scrollTop = chatMessages.scrollHeight;
                                 }
-                            }, 350);
+                            }, 300);
                         });
                         
                         chatInput.addEventListener('blur', () => {
-                            // 键盘收起时，恢复布局
                             setTimeout(() => {
-                                if (chatModalContent) {
-                                    chatModalContent.style.transform = 'translateY(0)';
-                                }
-                                if (chatMessages) {
-                                    chatMessages.style.maxHeight = '';
-                                }
-                            }, 100);
+                                handleKeyboardChange();
+                            }, 200);
+                        });
+                    }
+                    
+                    // 处理输入时的更新
+                    if (chatInput) {
+                        chatInput.addEventListener('input', () => {
+                            if (chatMessages) {
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                            }
                         });
                     }
                 }
