@@ -9059,7 +9059,7 @@ ${recentChat || '（暂无对话内容）'}
                         voiceMessage.className = `message ${role}`;
                         voiceMessage.style.display = 'flex';
                         voiceMessage.style.alignItems = 'center';
-                        voiceMessage.style.gap = '8px';
+                        voiceMessage.style.gap = '4px';
                         voiceMessage.style.cursor = 'pointer';
                         voiceMessage.style.maxWidth = '200px';
                         voiceMessage.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
@@ -9096,9 +9096,9 @@ ${recentChat || '（暂无对话内容）'}
 
                         const transcriptionDiv = document.createElement('div');
                         transcriptionDiv.style.display = 'none';
-                        transcriptionDiv.style.marginTop = '8px';
+                        transcriptionDiv.style.marginTop = '2px';
                         transcriptionDiv.style.padding = '8px 12px';
-                        transcriptionDiv.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
+                        transcriptionDiv.style.backgroundColor = '#f0f0f0';
                         transcriptionDiv.style.borderRadius = '8px';
                         transcriptionDiv.style.fontSize = '13px';
                         transcriptionDiv.style.color = '#1a1a1a';
@@ -10552,9 +10552,13 @@ ${recentChat || '（暂无对话内容）'}
                                 // 滚动到最新消息
                                 chatMessages.scrollTop = chatMessages.scrollHeight;
                             }
-                            // 确保输入框可见
-                            chatInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 300);
+                            // 确保输入框及其所在的容器可见
+                            const inputContainer = document.getElementById('chatInputAreaWrap');
+                            if (inputContainer) {
+                                inputContainer.scrollIntoView({ behavior: 'auto', block: 'end' });
+                            }
+                            chatInput.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+                        }, 100);
                     });
 
                     chatInput.addEventListener('blur', () => {
@@ -10577,12 +10581,33 @@ ${recentChat || '（暂无对话内容）'}
                                 chatMessages.scrollTop = chatMessages.scrollHeight;
                             }, 100);
                         }
+                        // 确保输入框在键盘打开时也可见
+                        const inputContainer = document.getElementById('chatInputAreaWrap');
+                        if (inputContainer) {
+                            setTimeout(() => {
+                                inputContainer.scrollIntoView({ behavior: 'auto', block: 'end' });
+                            }, 100);
+                        }
                     }
                     // 如果高度恢复且输入框失去焦点，说明键盘收起
                     else if (currentHeight > initialViewportHeight && !isKeyboardOpen) {
                         initialViewportHeight = currentHeight;
                     }
                 });
+
+                // 使用visualViewport API支持（适用于现代移动浏览器）
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener('resize', () => {
+                        if (isKeyboardOpen && document.activeElement === chatInput) {
+                            const inputContainer = document.getElementById('chatInputAreaWrap');
+                            if (inputContainer) {
+                                setTimeout(() => {
+                                    inputContainer.scrollIntoView({ behavior: 'auto', block: 'end' });
+                                }, 50);
+                            }
+                        }
+                    });
+                }
                 // ========== 虚拟键盘自动滚动功能结束 ==========
                 if (apiService) apiService.updateSettingsDisplay();
                 if (profileWidget) profileWidget.init();
