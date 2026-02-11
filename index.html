@@ -10538,16 +10538,34 @@ ${recentChat || '（暂无对话内容）'}
                 }
 
                 // ========== 虚拟键盘自动滚动功能 ==========
-                // 当虚拟键盘弹出时，自动滚动确保输入框可见（跨浏览器兼容）
+                // 当虚拟键盘弹出时，自动滚动确保输入框可见且有足够空间（跨浏览器兼容）
                 let lastViewportHeight = window.innerHeight;
                 const INPUT_AREA_ID = 'chatInputAreaWrap';
+                const KEYBOARD_SAFETY_MARGIN = 60; // 输入框距离键盘的安全距离（像素）
                 
                 function ensureInputVisible() {
                     const inputArea = document.getElementById(INPUT_AREA_ID);
                     if (!inputArea) return;
                     
-                    // 使用 scrollIntoView 是最兼容的跨浏览器方法
+                    // 方法1：使用 scrollIntoView（基础滚动）
                     inputArea.scrollIntoView({ behavior: 'auto', block: 'end' });
+                    
+                    // 方法2：直接计算和设置 scrollTop（更精确控制）
+                    setTimeout(() => {
+                        const rect = inputArea.getBoundingClientRect();
+                        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                        const scrollableContainer = document.documentElement;
+                        
+                        // 计算需要向下滚动的距离，确保输入框底部有足够空间
+                        const bottomGap = rect.bottom + KEYBOARD_SAFETY_MARGIN - viewportHeight;
+                        
+                        if (bottomGap > 0) {
+                            // 需要向下滚动
+                            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                            const targetScroll = currentScroll + bottomGap + 10; // 多加10px的安全边距
+                            window.scrollTo(0, targetScroll);
+                        }
+                    }, 10);
                 }
 
                 // 监听输入框焦点事件
@@ -10556,10 +10574,10 @@ ${recentChat || '（暂无对话内容）'}
                         // 焦点时立即滚动
                         ensureInputVisible();
                         
-                        // 加延迟确保虚拟键盘弹出后仍然可见
+                        // 虚拟键盘通常需要200-500ms弹出，加多个延迟确保可见
                         setTimeout(() => {
                             ensureInputVisible();
-                        }, 100);
+                        }, 150);
                         
                         setTimeout(() => {
                             ensureInputVisible();
@@ -10568,6 +10586,10 @@ ${recentChat || '（暂无对话内容）'}
                         setTimeout(() => {
                             ensureInputVisible();
                         }, 500);
+                        
+                        setTimeout(() => {
+                            ensureInputVisible();
+                        }, 800);
                     });
 
                     // 监听输入框的输入事件，确保不断滚动
@@ -10589,9 +10611,12 @@ ${recentChat || '（暂无对话内容）'}
                     
                     // 如果高度变小（键盘弹出）且输入框有焦点
                     if (currentHeight < lastViewportHeight && document.activeElement === chatInput) {
-                        setTimeout(() => {
-                            ensureInputVisible();
-                        }, 50);
+                        // 键盘正在弹出，更激进地滚动
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                ensureInputVisible();
+                            }, i * 60);
+                        }
                     }
                     
                     lastViewportHeight = currentHeight;
@@ -10603,13 +10628,14 @@ ${recentChat || '（暂无对话内容）'}
                         if (document.activeElement === chatInput) {
                             ensureInputVisible();
                         }
-                    }, 200);
+                    }, 300);
                 });
 
                 // 监听虚拟键盘的展开/收起（有些浏览器支持）
                 if (window.visualViewport) {
                     window.visualViewport.addEventListener('resize', () => {
                         if (document.activeElement === chatInput) {
+                            // 每次 visualViewport 变化时都触发滚动
                             ensureInputVisible();
                         }
                     });
