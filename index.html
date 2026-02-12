@@ -86,12 +86,8 @@
         }
 
         /* 非主屏幕页面的状态栏统一与返回栏保持白色 */
-        #chatModal .status-bar,
-        #apiModal .status-bar,
-        #friendListModal .status-bar,
-        #charSettingsModal .status-bar,
-        #worldbookModal .status-bar,
-        #settingsModal .status-bar {
+        /* 使用通用选择器确保所有弹窗页面的状态栏都是白色，无需手动添加 */
+        .modal .status-bar {
             background-color: #FFFFFF;
         }
 
@@ -790,15 +786,17 @@
         }
 
         /* 聊天窗口按钮样式 */
+        /* 统一返回按钮标准尺寸：32x32px, 字体20px, 圆角8px */
+        /* 所有新加页面的返回按钮必须遵循此标准 */
         #backToFriendList {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             color: #787785;
             cursor: pointer;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1756,18 +1754,21 @@
             color: #787785;
         }
 
+        /* 统一返回按钮标准尺寸：32x32px, 字体20px, 圆角8px */
+        /* 所有新加页面的返回按钮必须遵循此标准 */
         .settings-back {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 20px;
             color: #787785;
             cursor: pointer;
-            padding: 8px 10px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
-            min-height: 40px;
+            padding: 0;
         }
 
 
@@ -1971,10 +1972,12 @@
             text-align: center;
         }
 
+        /* 统一返回按钮标准尺寸：32x32px, 字体20px, 圆角8px */
+        /* 所有新加页面的返回按钮必须遵循此标准 */
         .friend-settings-back {
             background: none;
             border: none;
-            font-size: 22px;
+            font-size: 20px;
             color: #787785;
             cursor: pointer;
             width: 32px;
@@ -1983,6 +1986,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 8px;
+            padding: 0;
         }
 
 
@@ -2771,32 +2775,27 @@
         }
 
         /* ========== 统一页面适配逻辑 ========== */
+        /* 设计原则：使用通用选择器 .modal 替代硬编码页面ID */
+        /* 优势：所有新增弹窗页面自动继承统一样式，无需手动添加 */
+        /* 主屏幕不受影响（在 .iphone-container 内，不在 .modal 内） */
 
         /* 1. 所有弹窗页面添加box-sizing，防止margin-top额外撑开高度 */
-        #chatModal .modal-content,
-        #apiModal .modal-content,
-        .settings-screen,
-        .friend-settings-screen {
+        .modal .modal-content,
+        .modal .settings-screen,
+        .modal .friend-settings-screen {
+            /* 通用选择器确保所有弹窗页面统一 */
             box-sizing: border-box;
             margin-top: 0;
         }
 
         /* 2. 状态栏显示/隐藏联动（仅作用于弹窗页面） */
-        /* 显示状态栏时：弹窗页面的.status-bar显示 */
-        body:not(.hide-status-bar) #chatModal .status-bar,
-        body:not(.hide-status-bar) #apiModal .status-bar,
-        body:not(.hide-status-bar) .settings-screen .status-bar,
-        body:not(.hide-status-bar) .friend-settings-screen .status-bar,
-        body:not(.hide-status-bar) .worldbookModal .status-bar {
+        /* 显示状态栏时：所有弹窗页面的.status-bar显示 */
+        body:not(.hide-status-bar) .modal .status-bar {
             visibility: visible !important;
         }
 
-        /* 隐藏状态栏时：弹窗页面的.status-bar隐藏且不占位 */
-        body.hide-status-bar #chatModal .status-bar,
-        body.hide-status-bar #apiModal .status-bar,
-        body.hide-status-bar .settings-screen .status-bar,
-        body.hide-status-bar .friend-settings-screen .status-bar,
-        body.hide-status-bar .worldbookModal .status-bar {
+        /* 隐藏状态栏时：所有弹窗页面的.status-bar隐藏且不占位 */
+        body.hide-status-bar .modal .status-bar {
             display: none !important;
         }
 
@@ -2804,10 +2803,10 @@
 
         /* 3. 统一顶部栏位置（含安全区） */
         /* 显示状态栏时的导航栏样式（紧贴状态栏） */
-        body:not(.hide-status-bar) #chatModal .modal-header,
-        body:not(.hide-status-bar) #apiModal .modal-header,
-        body:not(.hide-status-bar) .settings-nav,
-        body:not(.hide-status-bar) .friend-settings-nav {
+        body:not(.hide-status-bar) .modal .modal-header,
+        body:not(.hide-status-bar) .modal .settings-nav,
+        body:not(.hide-status-bar) .modal .friend-settings-nav {
+            /* 通用选择器自动应用到所有弹窗页面 */
             padding: 0 !important;
             padding-top: 0px !important;
             padding-bottom: 10px !important;
@@ -2820,10 +2819,10 @@
         }
 
         /* 隐藏状态栏时的导航栏样式（考虑安全区） */
-        body.hide-status-bar #chatModal .modal-header,
-        body.hide-status-bar #apiModal .modal-header,
-        body.hide-status-bar .settings-nav,
-        body.hide-status-bar .friend-settings-nav {
+        body.hide-status-bar .modal .modal-header,
+        body.hide-status-bar .modal .settings-nav,
+        body.hide-status-bar .modal .friend-settings-nav {
+            /* 通用选择器自动应用到所有弹窗页面 */
             padding: 0 !important;
             padding-top: calc(0px + env(safe-area-inset-top, 0px)) !important;
             padding-bottom: 10px !important;
@@ -2841,8 +2840,8 @@
         }
 
         /* 5. 弹窗页面无顶部空白 */
-        #chatModal .modal-content,
-        #apiModal .modal-content {
+        .modal .modal-content {
+            /* 通用选择器确保所有弹窗页面统一 */
             padding-top: 0;
         }
 
@@ -2867,10 +2866,10 @@
 
         /* 全局适配优化 */
         .iphone-container,
-        .settings-screen,
-        .friend-settings-screen,
-        #chatModal .modal-content,
-        #apiModal .modal-content {
+        .modal .settings-screen,
+        .modal .friend-settings-screen,
+        .modal .modal-content {
+            /* 通用选择器确保所有弹窗页面统一 */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -3402,10 +3401,8 @@
                 </div>
             </div>
             <div class="settings-nav">
-                <button class="settings-back" id="closeFriendListModal"
-                    style="background: none; border: none; cursor: pointer; padding: 0; font-size: 18px; color: #f0d6d7;">
+                <button class="settings-back" id="closeFriendListModal">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div class="settings-title">好友列表</div>
                 <button class="settings-back"
@@ -3498,8 +3495,7 @@
 
             <!-- 导航栏 -->
             <div class="modal-header" style="position: relative;">
-                <button id="backToFriendList"
-                    style="background: none; border: none; color: #787785; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                <button id="backToFriendList">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <h3 id="chatTitle"
@@ -3615,7 +3611,7 @@
                     </div>
                     <div id="chatExtraPanel" class="chat-extra-panel" aria-hidden="true">
                         <div class="chat-extra-grid">
-                            <button type="button" class="chat-extra-item" aria-label="总结">
+                            <button type="button" class="chat-extra-item" id="chatSummaryBtn" aria-label="总结">
                                 <span class="chat-extra-icon"><i class="fas fa-clipboard-list"></i></span>
                                 <span class="chat-extra-label">总结</span>
                             </button>
@@ -3949,7 +3945,6 @@
             <div class="settings-nav">
                 <button id="settingsBack" class="settings-back">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div class="settings-title">设置</div>
                 <span style="width: 42px;"></span>
@@ -5334,9 +5329,21 @@
                     reader.onload = (event) => {
                         const imageUrl = event.target.result;
                         modalAvatarTemp = imageUrl;
+                        // 立即更新到pendingCharAvatar，实现即时预览
+                        pendingCharAvatar = imageUrl;
                         setAvatarModalPreview(imageUrl);
+                        setCharAvatarDisplay(imageUrl);
                         if (charAvatarUrlModalInput) {
                             charAvatarUrlModalInput.value = '';
+                        }
+                        
+                        // Safari兼容性：强制重绘
+                        if (charAvatarDisplay) {
+                            void charAvatarDisplay.offsetWidth;
+                            charAvatarDisplay.style.opacity = '0.99';
+                            setTimeout(() => {
+                                charAvatarDisplay.style.opacity = '1';
+                            }, 10);
                         }
                     };
                     reader.readAsDataURL(file);
@@ -5352,7 +5359,13 @@
             if (confirmAvatarPicker && avatarPickerModal) {
                 confirmAvatarPicker.addEventListener('click', () => {
                     const urlValue = charAvatarUrlModalInput ? charAvatarUrlModalInput.value.trim() : '';
-                    pendingCharAvatar = urlValue || modalAvatarTemp || '';
+                    // 优先使用URL输入，其次使用已上传的文件（pendingCharAvatar已在文件选择时更新）
+                    if (urlValue) {
+                        pendingCharAvatar = urlValue;
+                    } else if (!pendingCharAvatar && modalAvatarTemp) {
+                        pendingCharAvatar = modalAvatarTemp;
+                    }
+                    // 如果pendingCharAvatar已有值（文件上传时设置），则保持不变
                     setCharAvatarDisplay(pendingCharAvatar);
                     avatarPickerModal.style.display = 'none';
                 });
@@ -5391,6 +5404,33 @@
                     if (chatSession) {
                         // 更新聊天对话框标题
                         chatTitle.textContent = newName;
+                        
+                        // 更新聊天界面头像
+                        const chatHeader = chatModal.querySelector('.modal-header');
+                        const existingAvatar = document.getElementById('chatFriendAvatarIcon');
+                        
+                        if (existingAvatar) {
+                            existingAvatar.remove();
+                        }
+                        
+                        if (pendingCharAvatar && chatHeader) {
+                            const avatarIcon = document.createElement('div');
+                            avatarIcon.id = 'chatFriendAvatarIcon';
+                            avatarIcon.style.cssText = 'width: 32px; height: 32px; border-radius: 50%; overflow: hidden; margin-right: 8px; flex-shrink: 0; background: #f0f0f0; display: flex; align-items: center; justify-content: center;';
+                            
+                            const avatarImg = document.createElement('img');
+                            avatarImg.src = pendingCharAvatar;
+                            avatarImg.alt = newName;
+                            avatarImg.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                            
+                            avatarImg.onerror = () => {
+                                avatarIcon.innerHTML = '<i class="fas fa-user" style="font-size: 16px; color: #999;"></i>';
+                            };
+                            
+                            avatarIcon.appendChild(avatarImg);
+                            chatHeader.insertBefore(avatarIcon, chatTitle);
+                        }
+                        
                         chatSession.showChatStatus('好友设置已保存', 'success');
                     }
                     // 刷新好友列表
@@ -5913,7 +5953,12 @@
                 }
 
                 setStorage(key, value) {
-                    localStorage.setItem(key, JSON.stringify(value));
+                    // 同步写入localStorage，确保立即可读
+                    try {
+                        localStorage.setItem(key, JSON.stringify(value));
+                    } catch (e) {
+                        console.error('保存到localStorage失败:', e);
+                    }
                 }
 
                 rebuildCacheFromFriends(friends) {
@@ -6025,6 +6070,7 @@
                 }
 
                 getFriendChatHistory(friendId) {
+                    // 每次都从localStorage直接读取，确保获取最新数据
                     const history = this.getStorage(`chat_${friendId}`, []);
                     return Array.isArray(history) ? history : [];
                 }
@@ -6057,6 +6103,17 @@
                         const img = document.createElement('img');
                         img.src = friend.avatar;
                         img.alt = friend.name;
+                        
+                        // 图片加载失败时显示默认图标
+                        img.onerror = () => {
+                            avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+                        };
+                        
+                        // Safari兼容性：确保图片加载后立即显示
+                        img.onload = () => {
+                            void avatarDiv.offsetWidth;
+                        };
+                        
                         avatarDiv.appendChild(img);
                     } else {
                         const icon = document.createElement('i');
@@ -6169,6 +6226,13 @@
                         pendingAddFriendAvatar = imageUrl;
                         avatarPreview.style.backgroundImage = `url('${imageUrl}')`;
                         avatarPreview.classList.add('has-image');
+                        
+                        // Safari兼容性：强制重绘确保图片显示
+                        void avatarPreview.offsetWidth;
+                        avatarPreview.style.opacity = '0.99';
+                        setTimeout(() => {
+                            avatarPreview.style.opacity = '1';
+                        }, 10);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -9047,8 +9111,8 @@
                     chatMessages.appendChild(messageWrapper);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-                    // 实时更新好友列表
-                    if (this.currentFriendId && typeof window.updateFriendList === 'function') {
+                    // 实时更新好友列表（仅用户消息立即更新，AI消息批量更新避免频繁刷新）
+                    if (this.currentFriendId && typeof window.updateFriendList === 'function' && role === 'user') {
                         window.updateFriendList();
                     }
                 }
@@ -9339,6 +9403,11 @@
                     const freshFriend = friends.find(f => f.id === friend.id) || friend;
                     this.currentFriendId = freshFriend.id;
                     chatTitle.textContent = friend.name;
+                    
+                    // 强制刷新好友列表，确保显示最新消息预览
+                    if (typeof window.updateFriendList === 'function') {
+                        window.updateFriendList();
+                    }
 
                     // 清除回复预览和图片上传状态（重要：防止消息混乱）
                     this.clearReplyPrefill();
@@ -9346,12 +9415,31 @@
                     chatInput.value = '';
 
                     // 更新聊天头部的好友头像
-                    if (freshFriend.avatar) {
-                        // 移除可能存在的旧头像
-                        const existingAvatar = document.getElementById('chatFriendAvatarIcon');
-                        if (existingAvatar && existingAvatar.nextSibling === chatTitle) {
-                            existingAvatar.remove();
-                        }
+                    const chatHeader = chatModal.querySelector('.modal-header');
+                    const existingAvatar = document.getElementById('chatFriendAvatarIcon');
+                    
+                    // 移除旧头像
+                    if (existingAvatar) {
+                        existingAvatar.remove();
+                    }
+                    
+                    // 创建新头像（如果有）
+                    if (freshFriend.avatar && chatHeader) {
+                        const avatarIcon = document.createElement('div');
+                        avatarIcon.id = 'chatFriendAvatarIcon';
+                        avatarIcon.style.cssText = 'width: 32px; height: 32px; border-radius: 50%; overflow: hidden; margin-right: 8px; flex-shrink: 0; background: #f0f0f0; display: flex; align-items: center; justify-content: center;';
+                        
+                        const avatarImg = document.createElement('img');
+                        avatarImg.src = freshFriend.avatar;
+                        avatarImg.alt = freshFriend.name;
+                        avatarImg.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                        
+                        avatarImg.onerror = () => {
+                            avatarIcon.innerHTML = '<i class="fas fa-user" style="font-size: 16px; color: #999;"></i>';
+                        };
+                        
+                        avatarIcon.appendChild(avatarImg);
+                        chatHeader.insertBefore(avatarIcon, chatTitle);
                     }
 
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
@@ -9362,6 +9450,7 @@
                         apiWarning.style.display = 'none';
                     }
 
+                    // 强制从localStorage重新读取最新聊天记录，避免缓存延迟
                     const history = this.friendSystem ? this.friendSystem.getFriendChatHistory(friend.id) : [];
                     const historyChanged = this.ensureHistoryIds(history);
                     if (historyChanged && this.friendSystem) {
@@ -10045,6 +10134,11 @@
                             }
 
                             this.friendSystem.saveFriendChatHistory(targetFriendId, realHistory);
+                            
+                            // AI回复完成后统一刷新好友列表
+                            if (typeof window.updateFriendList === 'function') {
+                                window.updateFriendList();
+                            }
                         }
 
                         // 心声已由本次API返回，避免二次请求
@@ -10138,6 +10232,15 @@
                 closeChatExtraPanel();
             });
 
+            // 总结按钮
+            const chatSummaryBtn = document.getElementById('chatSummaryBtn');
+            if (chatSummaryBtn) {
+                chatSummaryBtn.addEventListener('click', () => {
+                    closeChatExtraPanel();
+                    const summaryModal = document.getElementById('summaryModal');
+                    if (summaryModal) summaryModal.style.display = 'flex';
+                });
+            }
 
             // 语音输入相关
             const voiceModal = document.getElementById('voiceModal');
@@ -10727,7 +10830,6 @@
                 <button id="worldbookBack" class="settings-back"
                     onclick="document.getElementById('worldbookModal').style.display='none'">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div class="settings-title">创世书</div>
                 <span style="width: 42px;"></span>
@@ -10772,7 +10874,6 @@
             <div class="settings-nav">
                 <button id="wbListBack" class="settings-back">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div class="settings-title">世界书</div>
                 <button id="wbAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
@@ -10804,7 +10905,6 @@
             <div class="settings-nav">
                 <button id="wbEditBack" class="settings-back">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div id="wbEditTitle" class="settings-title">新建世界书</div>
                 <span style="width: 42px;"></span>
@@ -10847,7 +10947,6 @@
             <div class="settings-nav">
                 <button id="hgListBack" class="settings-back">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div class="settings-title">HTML 游戏</div>
                 <button id="hgAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
@@ -10879,7 +10978,6 @@
             <div class="settings-nav">
                 <button id="hgEditBack" class="settings-back">
                     <i class="fas fa-chevron-left"></i>
-                    返回
                 </button>
                 <div id="hgEditTitle" class="settings-title">新建HTML游戏</div>
                 <span style="width: 42px;"></span>
@@ -10910,6 +11008,35 @@
         </div>
     </div>
     <!-- 世界书 Modal End -->
+
+    <!-- 总结全屏页面 -->
+    <div class="modal" id="summaryModal" style="display: none;">
+        <div class="settings-screen" style="display: flex; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time">14:30</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="summaryBack" class="settings-back"
+                    onclick="document.getElementById('summaryModal').style.display='none'">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="settings-title">总结</div>
+                <span style="width: 42px;"></span>
+            </div>
+            <div class="settings-scroll" style="flex: 1; padding: 16px;">
+                <!-- 总结内容区域，后续步骤填充 -->
+                <div id="summaryContent" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #999; font-size: 14px;">
+                    总结功能开发中...
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
