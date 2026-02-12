@@ -611,6 +611,10 @@
             font-weight: 500;
         }
 
+        .preset-drawer-item:hover {
+            background: #E8E4E9 !important;
+        }
+
         @keyframes modalSlideIn {
             from {
                 transform: translateY(-30px);
@@ -653,6 +657,36 @@
 
         .modal-close:hover {
             background-color: #f5f5f5;
+        }
+
+        /* 自定义错误弹窗样式 */
+        #customErrorModal .modal-content {
+            width: 80%;
+            max-width: 350px;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            animation: fade-in-scale 0.3s ease-out forwards;
+        }
+
+        #customErrorModal h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        #customErrorModal p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            word-break: break-all;
+        }
+
+        #customErrorModal .btn {
+            width: 100%;
+            height: 44px;
+            border-radius: 12px;
         }
 
         .cute-toast {
@@ -3314,6 +3348,40 @@
                     <button id="testApi" class="btn btn-secondary">测试连接</button>
                     <button id="saveApi" class="btn btn-primary">保存配置</button>
                 </div>
+
+                <!-- API预设管理 -->
+                <div id="apiPresetSection" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E8E4E9;">
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设管理</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="presetName" class="form-control" placeholder="输入预设名称" style="flex: 1; font-size: 14px;">
+                            <button id="savePreset" class="btn btn-secondary" style="white-space: nowrap;">保存预设</button>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 6px;">给当前配置起个名字，方便下次快速切换</div>
+                    </div>
+
+                    <div style="margin-top: 16px;">
+                        <label style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设列表</label>
+                        <div id="presetListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+                            <button id="apiPresetDrawerBtn" type="button" style="color: #333; font-size: 14px; padding: 12px; text-align: center; background: #F5F3F6; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">点击选择API预设</button>
+                        </div>
+                    </div>
+                    
+                    <!-- API预设选择弹窗 -->
+                    <div id="apiPresetModal" class="modal" style="display: none;">
+                        <div class="modal-content" style="width: 260px; height: 280px; max-width: 260px; max-height: 280px; border-radius: 14px; padding: 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden;">
+                            <div style="padding: 10px 12px; border-bottom: 1px solid #E8E4E9; flex-shrink: 0;">
+                                <h3 style="margin: 0; font-size: 13px; color: #333; text-align: center; font-weight: 600;">选择API预设</h3>
+                            </div>
+                            <div id="apiPresetDrawerList" style="padding: 6px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1;">
+                                <!-- 预设列表项将动态生成 -->
+                            </div>
+                            <div style="padding: 8px 10px; border-top: 1px solid #E8E4E9; display: flex; gap: 8px; justify-content: center; flex-shrink: 0;">
+                                <button id="closeApiPresetModal" type="button" style="padding: 4px 20px; background: #F5F3F6; border: none; border-radius: 6px; cursor: pointer; color: #666; font-size: 12px; font-weight: 500;">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -3681,19 +3749,17 @@
     </div>
 
     <!-- 图片内容弹窗 -->
-    <div class="modal" id="imageDescModal" style="display: none; z-index: 2000;">
-        <div
-            style="background-color: white; border-radius: 15px; width: 85%; max-width: 320px; padding: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); position: relative;">
-            <button id="closeImageDescModal"
-                style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+    <div class="modal" id="imageDescModal" style="display: none; z-index: 2000; background-color: rgba(0, 0, 0, 0.5);">
+        <div style="background-color: white; border-radius: 18px; width: 90%; max-width: 340px; padding: 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; display: flex; flex-direction: column; gap: 20px;">
+            <button id="closeImageDescModal" style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 24px; color: #ccc; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; hover: color #999;">
                 <i class="fas fa-times"></i>
             </button>
 
-            <h3 style="margin: 0 0 12px 0; color: #787785; font-size: 16px; font-weight: 600;">图片内容</h3>
+            <h3 style="margin: 0; color: #333; font-size: 16px; font-weight: 600;">图片描述</h3>
 
-            <div style="margin-bottom: 18px;">
-                <textarea id="imageDescText" class="image-desc-box" readonly></textarea>
-            </div>
+            <div id="imageDescText" style="color: #555; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; padding: 12px; background-color: #f9f9f9; border-radius: 12px; border: 1px solid #eee;"></div>
+
+            <button id="imageDescOkBtn" class="btn btn-primary" style="width: 100%; height: 44px; border-radius: 12px; margin-top: 8px;">确定</button>
         </div>
     </div>
 
@@ -4545,6 +4611,58 @@
                 }, 2000);
             }
 
+            // 自定义错误弹窗函数
+            function showCustomErrorModal(errorCode) {
+                const customErrorModal = document.getElementById('customErrorModal');
+                const customApiErrorText = document.getElementById('customApiErrorText');
+                const customErrorOkButton = document.getElementById('customErrorOkButton');
+
+                if (!customErrorModal || !customApiErrorText) return;
+
+                // 格式化错误信息
+                let errorMessage = 'API请求失败：';
+                if (typeof errorCode === 'object' && errorCode.status) {
+                    // 如果是response对象
+                    errorMessage += errorCode.status;
+                    if (errorCode.message) {
+                        errorMessage += ' - ' + errorCode.message;
+                    }
+                } else if (typeof errorCode === 'number') {
+                    // HTTP状态码
+                    errorMessage += errorCode;
+                } else if (typeof errorCode === 'string') {
+                    // 错误信息字符串
+                    errorMessage += errorCode;
+                } else {
+                    errorMessage += '未知错误';
+                }
+
+                customApiErrorText.textContent = errorMessage;
+                customErrorModal.style.display = 'flex';
+
+                // 移除旧的事件监听器并添加新的
+                if (customErrorOkButton) {
+                    const newButton = customErrorOkButton.cloneNode(true);
+                    customErrorOkButton.parentNode.replaceChild(newButton, customErrorOkButton);
+                    
+                    // 重新获取克隆后的按钮
+                    const clonedButton = document.getElementById('customErrorOkButton');
+                    if (clonedButton) {
+                        clonedButton.addEventListener('click', function() {
+                            customErrorModal.style.display = 'none';
+                        });
+                    }
+                }
+
+                // 点击背景关闭（只添加一次）
+                customErrorModal.onclick = function(e) {
+                    if (e.target === customErrorModal) {
+                        customErrorModal.style.display = 'none';
+                    }
+                };
+            }
+
+
             // 重写 alert 函数
             window.alert = function (message) {
                 showCuteToast();
@@ -5244,6 +5362,8 @@
                     if (config.models && config.models.length > 0) {
                         apiService.updateModelSelect(config.models);
                     }
+                    // 打开模态框时重新渲染预设列表
+                    apiService.renderPresetList();
                 });
             }
 
@@ -6573,9 +6693,13 @@
                             errorMessage = '网络连接失败，请检查API地址';
                         } else if (error.message.includes('401')) {
                             errorMessage = 'API密钥无效或已过期';
+                        } else if (error.message.includes('请求失败:')) {
+                            // 提取HTTP状态码
+                            errorMessage = error.message.replace('请求失败:', '').trim();
                         }
 
-                        this.showApiStatus(`拉取失败: ${errorMessage}`, 'error');
+                        // 显示自定义错误弹窗
+                        showCustomErrorModal(errorMessage);
 
                         const exampleModels = [
                             { id: 'gpt-3.5-turbo', name: 'GPT 3.5 Turbo' },
@@ -6625,7 +6749,12 @@
                         this.showApiStatus('API连接成功！', 'success');
                     } catch (error) {
                         console.error('测试连接失败:', error);
-                        this.showApiStatus(`连接失败: ${error.message}`, 'error');
+                        let errorMessage = error.message;
+                        if (error.message && error.message.includes('连接失败:')) {
+                            // 提取HTTP状态码
+                            errorMessage = error.message.replace('连接失败:', '').trim();
+                        }
+                        showCustomErrorModal(errorMessage);
                     } finally {
                         testApiBtn.textContent = '测试连接';
                         testApiBtn.disabled = false;
@@ -6664,6 +6793,143 @@
                         apiModal.style.display = 'none';
                         apiStatus.style.display = 'none';
                     }, 2000);
+                }
+
+                // ========== API预设管理 ==========
+                getPresets() {
+                    const defaultPresets = [];
+                    const presetsStr = this.friendSystem
+                        ? this.friendSystem.getStorage('apiPresets', JSON.stringify(defaultPresets))
+                        : localStorage.getItem('apiPresets') || JSON.stringify(defaultPresets);
+                    try {
+                        return JSON.parse(presetsStr);
+                    } catch {
+                        return defaultPresets;
+                    }
+                }
+
+                savePreset(name, preset) {
+                    const presets = this.getPresets();
+                    // 检查是否已存在同名预设，若有则更新
+                    const existingIndex = presets.findIndex(p => p.name === name);
+                    if (existingIndex >= 0) {
+                        presets[existingIndex] = { name, ...preset, savedTime: new Date().toISOString() };
+                    } else {
+                        presets.push({ name, ...preset, savedTime: new Date().toISOString() });
+                    }
+                    
+                    if (this.friendSystem) {
+                        this.friendSystem.setStorage('apiPresets', JSON.stringify(presets));
+                    } else {
+                        localStorage.setItem('apiPresets', JSON.stringify(presets));
+                    }
+                }
+
+                deletePreset(name) {
+                    const presets = this.getPresets();
+                    const filteredPresets = presets.filter(p => p.name !== name);
+                    if (this.friendSystem) {
+                        this.friendSystem.setStorage('apiPresets', JSON.stringify(filteredPresets));
+                    } else {
+                        localStorage.setItem('apiPresets', JSON.stringify(filteredPresets));
+                    }
+                }
+
+                loadPreset(name) {
+                    const presets = this.getPresets();
+                    const preset = presets.find(p => p.name === name);
+                    if (preset) {
+                        apiUrlInput.value = preset.apiUrl;
+                        apiKeyInput.value = preset.apiKey;
+                        if (preset.model && modelSelect.value !== preset.model) {
+                            // 如果有保存的模型，尝试设置（但不强制）
+                            const options = Array.from(modelSelect.options);
+                            const matchingOption = options.find(opt => opt.value === preset.model);
+                            if (matchingOption) {
+                                modelSelect.value = preset.model;
+                            }
+                        }
+                        this.showApiStatus(`已加载预设: ${name}`, 'success');
+                    }
+                }
+
+                renderPresetList() {
+                    const container = document.getElementById('presetListContainer');
+                    const drawerList = document.getElementById('apiPresetDrawerList');
+                    const presets = this.getPresets();
+
+                    if (!container) return;
+
+                    // 主列表始终显示按钮
+                    container.innerHTML = '<button id="apiPresetDrawerBtn" type="button" style="color: #333; font-size: 12px; padding: 8px; text-align: center; background: #F5F3F6; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">点击选择API预设</button>';
+                    this.setupDrawerButton();
+
+                    // 填充抽屉列表
+                    if (drawerList) {
+                        if (presets.length === 0) {
+                            drawerList.innerHTML = '<div style="color: #999; font-size: 11px; padding: 10px; text-align: center;">暂无预设</div>';
+                        } else {
+                            drawerList.innerHTML = presets.map(preset => `
+                                <div style="display: flex; gap: 6px; align-items: center; padding: 5px 6px;">
+                                    <button data-preset-name="${preset.name}" class="preset-drawer-item" type="button" style="flex: 1; padding: 5px 6px; background: #F5F3F6; border: none; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px; color: #333; transition: background 0.2s;">
+                                        <div style="font-weight: 500; font-size: 11px;">${preset.name}</div>
+                                        <div style="font-size: 9px; color: #999; margin-top: 1px;">${preset.apiUrl.substring(0, 25)}...</div>
+                                    </button>
+                                    <button data-preset-name="${preset.name}" class="preset-delete-drawer-btn" type="button" style="width: 24px; height: 24px; min-width: 24px; padding: 0; background: #F5F3F6; border: none; border-radius: 4px; cursor: pointer; color: #999; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">×</button>
+                                </div>
+                            `).join('');
+
+                            // 绑定抽屉项的点击事件
+                            drawerList.querySelectorAll('.preset-drawer-item').forEach(btn => {
+                                btn.addEventListener('click', (e) => {
+                                    const name = btn.dataset.presetName;
+                                    this.loadPreset(name);
+                                    this.closeApiPresetDrawer();
+                                });
+                            });
+
+                            // 绑定删除按钮事件
+                            drawerList.querySelectorAll('.preset-delete-drawer-btn').forEach(btn => {
+                                btn.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const name = btn.dataset.presetName;
+                                    this.deletePreset(name);
+                                    this.renderPresetList();
+                                });
+                                // 添加hover效果
+                                btn.addEventListener('mouseenter', () => {
+                                    btn.style.background = '#E8E4E9';
+                                    btn.style.color = '#666';
+                                });
+                                btn.addEventListener('mouseleave', () => {
+                                    btn.style.background = '#F5F3F6';
+                                    btn.style.color = '#999';
+                                });
+                            });
+                        }
+                    }
+                }
+
+                setupDrawerButton() {
+                    const drawerBtn = document.getElementById('apiPresetDrawerBtn');
+                    if (drawerBtn && !drawerBtn.hasListener) {
+                        drawerBtn.addEventListener('click', () => this.openApiPresetDrawer());
+                        drawerBtn.hasListener = true;
+                    }
+                }
+
+                openApiPresetDrawer() {
+                    const modal = document.getElementById('apiPresetModal');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                    }
+                }
+
+                closeApiPresetDrawer() {
+                    const modal = document.getElementById('apiPresetModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                    }
                 }
             }
 
@@ -8916,7 +9182,9 @@
                         voiceMessage.style.alignItems = 'center';
                         voiceMessage.style.gap = '4px';
                         voiceMessage.style.cursor = 'pointer';
-                        voiceMessage.style.maxWidth = '200px';
+                        voiceMessage.style.width = 'auto';  // 根据内容自动计算宽度
+                        voiceMessage.style.minWidth = '60px';  // 最小宽度
+                        voiceMessage.style.maxWidth = '320px';  // 最大宽度限制，防止冲出屏幕
                         voiceMessage.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
                         voiceMessage.style.padding = '10px 15px';
                         voiceMessage.style.borderRadius = '12px';
@@ -9060,21 +9328,59 @@
 
                 sanitizeAiResponse(text) {
                     if (!text) return '';
-                    const withoutParentheses = text
+                    
+                    // ===== 第一阶段：移除所有不应该在口头对话中出现的格式化描述 =====
+                    let cleaned = text
+                        // 移除所有 [语音...] 类型的描述
+                        .replace(/\[语音[\s\S]*?\]/g, '')
+                        // 移除所有 【...】 类型的标记（可能含有系统描述）
+                        .replace(/【[\s\S]*?】/g, '')
+                        // 移除所有 (...) 类型的补充说明
                         .replace(/\([^\)]*\)/g, '')
+                        // 移除所有 （...）类型的补充说明
                         .replace(/（[^）]*）/g, '')
+                        // 移除多余空格
                         .replace(/\s{2,}/g, ' ')
                         .trim();
-                    // 移除锁符号、加密标识等前缀标记
-                    const cleaned = withoutParentheses
+                    
+                    // ===== 第二阶段：检查残留的关键词并进一步清理 =====
+                    // 如果仍然包含"语音"、"声音"等说明性词汇且不是自然对话的一部分
+                    const hasVoiceMarkers = /^\[|^\【|语音时长|秒：|语音\s*\d+秒/.test(cleaned);
+                    if (hasVoiceMarkers) {
+                        // 这是格式化的说明文本，不是对话
+                        cleaned = cleaned
+                            .replace(/^.*?：/, '') // 移除前面的"语音 XXs："之类
+                            .replace(/^\s*\[.*?\]\s*/, '') // 移除开头的格式标记
+                            .trim();
+                    }
+                    
+                    // ===== 第三阶段：移除锁符号、加密标识等前缀标记 =====
+                    const finalCleaned = cleaned
                         .replace(/^[\s🔒🔐]+/, '')
                         .replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '')
                         .trim();
-                    return cleaned;
+                    
+                    return finalCleaned;
                 }
 
                 splitSentences(text) {
-                    const sentences = text.split(/([。！？\n]+)/);
+                    if (!text) return [];
+                    
+                    // ===== 预处理：在分割前移除所有格式化文本 =====
+                    let preprocessed = text
+                        // 移除所有 [语音...] 类型的描述
+                        .replace(/\[语音[\s\S]*?\]/g, '')
+                        // 移除所有 【...】 类型的标记
+                        .replace(/【[\s\S]*?】/g, '')
+                        // 移除包含"秒："的格式化行（如"15秒：...")
+                        .replace(/\d+秒：[^\n。！？]*[\n。！？]?/g, '')
+                        .trim();
+                    
+                    // 如果预处理后为空，返回空数组
+                    if (!preprocessed) return [];
+                    
+                    // ===== 分割逻辑 =====
+                    const sentences = preprocessed.split(/([。！？\n]+)/);
                     const result = [];
 
                     for (let i = 0; i < sentences.length; i++) {
@@ -9082,15 +9388,16 @@
                         if (!sentence.trim()) continue;
 
                         if (/^[。！？\n]+$/.test(sentence)) {
+                            // 保留标点符号
                             if (result.length > 0) {
                                 result[result.length - 1] += sentence;
                             }
                         } else {
-                            result.push(sentence);
+                            result.push(sentence.trim());
                         }
                     }
 
-                    return result.length > 0 ? result : [text];
+                    return result.length > 0 ? result : [preprocessed];
                 }
 
                 generateAIMessages(response, persona) {
@@ -9206,10 +9513,11 @@
                     let text = String(desc || '').trim();
                     if (!text) return '';
 
+                    // 移除所有可能的前缀
                     text = text
                         .replace(/^\[图片\]/, '')
                         .replace(/^（图片）/, '')
-                        .replace(/^(图片描述|描述|画面|场景)：/, '')
+                        .replace(/^(图片描述|描述|画面|场景|特写)：/g, '')
                         .trim();
 
                     const abstractWords = ['感觉', '情绪', '氛围', '心情', '美好', '温柔', '治愈', '抽象', '朦胧', '意境', '梦', '思念', '浪漫'];
@@ -9217,20 +9525,29 @@
                     const isAbstract = abstractWords.some(w => text.includes(w));
                     const looksLikeDialogue = /[“”"']|说|问|回复|聊天|对话|表示|喊|发给你|你看|这是|我拍的|给你看/.test(text);
 
-                    if (hasConcreteMarks && !isAbstract && !looksLikeDialogue) return text;
+                    if (hasConcreteMarks && !isAbstract && !looksLikeDialogue) {
+                        // 如果文本具体，直接返回，但确保前面加上“特写：”或“画面：”
+                        if (!/^(特写|画面)/.test(text)) {
+                            return `特写：${text}`;
+                        }
+                        return text;
+                    }
 
+                    // 如果文本不具体，生成一个全新的、完整的描述
                     const parts = ['手指', '眼睛', '发梢', '侧脸', '肩颈', '锁骨', '背影'];
                     const actions = ['轻轻抬起', '缓慢合拢', '微微倾斜', '正对镜头停住', '轻轻触碰'];
                     const scenes = ['窗边的柔光里', '昏黄的室内灯光下', '雨后的街灯下', '清晨的自然光中', '安静的室内背景前'];
-                    const details = ['指节纹理清晰可见', '睫毛投下细小阴影', '发丝贴在颈侧', '衣料褶皱被光线勾勒', '皮肤细小纹理清晰'];
+                    const details = ['指节纹理清晰可见', '睫毛投下细小阴影', '发丝贴在颈侧', '衣料褶皱被光线勾勒出立体的层次感', '皮肤细小纹理清晰'];
+                    const background = ['床沿被略微压出凹陷', '枕头边缘露出一角', '背景虚化的书架上摆放着几本翻开的书籍', '窗外的夜景模糊成一片光斑'];
 
                     const seedText = text || String(aiResponse || '');
                     const seed = Math.max(0, seedText.length);
-                    const subject = parts[seed % parts.length];
-                    const action = actions[seed % actions.length];
-                    const scene = scenes[seed % scenes.length];
-                    const detail = details[seed % details.length];
-                    return `特写：${subject}${action}，${scene}，${detail}`;
+                    
+                    const line1 = `特写：${parts[seed % parts.length]}${actions[seed % actions.length]}，${scenes[seed % scenes.length]}，${details[seed % details.length]}。`;
+                    const line2 = `画面：${background[seed % background.length]}。`;
+
+                    // 返回一个完整的多行文本
+                    return `${line1}\n${line2}`;
                 }
 
                 addLoadingMessage(id) {
@@ -9401,18 +9718,21 @@
                         let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；禁止使用锁符号(🔒🔐)、加密标识或任何会话类型标记；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
 
                         // ========== 统一获取人设和背景设定 ==========
+                        // 一次性读取所有必需数据，避免重复读取
                         let mountedContentContext = '';  // 精简版，仅用于开头提示
                         let hasMountedWorldBooks = false;
                         let worldBookTitles = [];  // 用于最后的验证清单
                         let worldBooksFullContent = '';  // 完整世界书内容，仅在最后验证清单使用
                         let characterName = '';     // 用于最后的验证清单
                         let personaProfile = null;  // 用于最后的验证清单
+                        let friends = [];  // 一次读取，整个函数复用
+                        let personaInfo = null;  // 一次读取，整个函数复用
                         
                         if (targetFriendId) {
-                            // 1. 获取人设信息
-                            const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
+                            // 1. 一次性获取所有好友数据
+                            friends = this.friendSystem ? this.friendSystem.getFriends() : [];
                             const friend = friends.find(f => f.id === targetFriendId);
-                            const personaInfo = this.friendSystem ? this.friendSystem.getPersona(targetFriendId) : null;
+                            personaInfo = this.friendSystem ? this.friendSystem.getPersona(targetFriendId) : null;
                             const persona = personaInfo?.raw ?? friend?.persona ?? '';
 
                             // 2. 获取已挂载的世界书和HTML游戏
@@ -9556,7 +9876,14 @@
                             finalVerificationContent += `\n  我扮演的角色：${characterName}`;
                         }
 
-                        const enhancedSystemPrompt = systemPrompt + heartVoiceContext + worldBooksFullContent + `
+                        // ========== 防重复提示：在系统提示中直接告诉AI不要重复前一条 ==========
+                        let antiRepeatContext = '';
+                        if (window._previousAIContent) {
+                            const prevReplyPreview = window._previousAIContent.substring(0, 80);
+                            antiRepeatContext = `\n\n【重要】你的前一条回复是："${prevReplyPreview}${window._previousAIContent.length > 80 ? '...' : ''}"。本次回复必须完全不同，不能重复相同的内容、表达方式或逻辑。请提供新的角度、情绪或话题。`;
+                        }
+
+                        const enhancedSystemPrompt = systemPrompt + heartVoiceContext + antiRepeatContext + worldBooksFullContent + `
 
 【强制输出格式】
 每次回复必须输出以下JSON，禁止添加任何额外文字：
@@ -9565,7 +9892,7 @@
   "inner_voice": {
     "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动独白（140字内）",
     "神态": "角色当下的表情、语气与肢体动作",
-    "心情值": "整数，常规状态0-100，极端情绪可超出此范围或使用负数"，
+    "心情值": "整数，常规状态0-100，极端情绪可超出此范围或使用负数"
   }
 }
 
@@ -9587,7 +9914,7 @@
 【输出前强制自查】
 □ 完全遵守所有挂载的世界书
 □ 符合角色人设
-□ 与上一条回复相似度≤70%
+□ 与上一条回复相似度≤50%
 □ 心声≤140字
 □ 心情值符合当前情绪强度（极端情绪允许超出0-100或负数）
 如果以上任何一项无法确认，你必须重新生成回复。`;
@@ -9598,12 +9925,13 @@
                         ];
 
                         // 一体化生成：所有回复都包含JSON格式的reply和inner_voice
+                        // 注意：不使用 response_format 参数以保障最大兼容性
+                        // 而是通过 system prompt 中的明确指令让 AI 输出 JSON
                         const requestBody = {
                             model: config.model,
                             messages: messages,
-                            max_tokens: 800,
-                            temperature: 0.9,
-                            response_format: { type: 'json_object' }
+                            max_tokens: 1200,
+                            temperature: 0.9
                         };
 
                         const response = await fetch(`${config.apiUrl}/chat/completions`, {
@@ -9634,34 +9962,34 @@
                         // 一体化JSON格式解析（严格验证结构）
                         // 使用JSON清洗层处理API响应
                         const jsonContent = JSONCleaningLayer.cleanAndParse(rawAiResponse);
-                        if (jsonContent) {
-                            // 验证JSON结构的完整性
-                            if (jsonContent.reply && jsonContent.inner_voice) {
-                                // 验证inner_voice包含所有必需字段
-                                const innerVoice = jsonContent.inner_voice;
-                                if (innerVoice.心声 && innerVoice.神态 && typeof innerVoice.心情值 === 'number') {
-                                    rawAiResponse = jsonContent.reply;
-                                    
-                                    // 提取并标准化心声数据
-                                    heartVoiceData = {
-                                        reply: jsonContent.reply,
-                                        heart_voice: String(innerVoice.心声).trim(),
-                                        status: '',
-                                        mood_value: innerVoice.心情值,
-                                        demeanor: String(innerVoice.神态).trim()
-                                    };
-                                    
-                                    console.log('[一体化生成] 成功解析JSON响应，心声已提取');
-                                } else {
-                                    // JSON结构不完整，不使用此数据
-                                    console.warn('[一体化生成] JSON结构不完整，缺少必需字段');
-                                    // 尝试从JSON中提取任何回复字段
-                                    rawAiResponse = jsonContent.reply || '';
+                        if (jsonContent && typeof jsonContent === 'object') {
+                            // 验证JSON结构的完整性 - 必须有reply字段且是字符串
+                            if (jsonContent.reply && typeof jsonContent.reply === 'string' && jsonContent.reply.trim().length > 0) {
+                                // 优先使用reply作为回复
+                                rawAiResponse = jsonContent.reply.trim();
+                                
+                                // 如果同时有完整的inner_voice，则提取
+                                if (jsonContent.inner_voice && typeof jsonContent.inner_voice === 'object') {
+                                    const innerVoice = jsonContent.inner_voice;
+                                    if (innerVoice.心声 && innerVoice.神态 && typeof innerVoice.心情值 === 'number') {
+                                        // 提取并标准化心声数据
+                                        heartVoiceData = {
+                                            reply: jsonContent.reply,
+                                            heart_voice: String(innerVoice.心声).trim(),
+                                            status: '',
+                                            mood_value: innerVoice.心情值,
+                                            demeanor: String(innerVoice.神态).trim()
+                                        };
+                                        
+                                        console.log('[一体化生成] 成功解析JSON响应，心声已提取');
+                                    } else {
+                                        console.warn('[一体化生成] inner_voice结构不完整');
+                                    }
                                 }
                             } else {
-                                // 缺少reply或inner_voice，尝试提取纯文本回复
-                                console.warn('[一体化生成] JSON缺少reply或inner_voice字段');
-                                rawAiResponse = jsonContent.reply || '';
+                                // 即使JSON存在但reply无效，也设为空值并进行后续清理
+                                console.warn('[一体化生成] JSON缺少有效的reply字段');
+                                rawAiResponse = '';
                             }
                         } else {
                             // JSON清洗失败，检查是否是纯文本响应
@@ -9669,11 +9997,25 @@
                             // 检查原始响应是否包含JSON标记
                             if (rawAiResponse.includes('{') || rawAiResponse.includes('【')) {
                                 // 可能是混合格式，尝试提取纯文本部分
-                                const plainText = rawAiResponse
+                                let plainText = rawAiResponse
                                     .replace(/\{[\s\S]*?\}/g, '') // 移除JSON对象
                                     .replace(/【[\s\S]*?】/g, '') // 移除标记
                                     .replace(/^\s*["']?\s*/g, '') // 移除前缀空格和引号
                                     .trim();
+                                
+                                // ==== 强化清理：移除所有可能的心声相关关键词 ====
+                                plainText = plainText
+                                    .replace(/心声[：:].*/g, '') // 移除"心声："开头的所有内容
+                                    .replace(/神态[：:].*/g, '') // 移除"神态："开头的所有内容
+                                    .replace(/心情值[：:].*/g, '') // 移除"心情值："开头的所有内容
+                                    .replace(/["""].*?["""]/g, '') // 移除引号中的内容（可能是JSON格式残留）
+                                    .trim();
+                                
+                                // 最后检查：如果内容仍然看起来像包含心声数据，清空它
+                                if (plainText.includes('心声') || plainText.includes('神态') || plainText.includes('心情值')) {
+                                    plainText = '';
+                                }
+                                
                                 if (plainText && plainText.length >= 10) {
                                     rawAiResponse = plainText;
                                     console.log('[一体化生成] 提取纯文本部分作为回复');
@@ -9688,25 +10030,54 @@
                         if (!rawAiResponse || rawAiResponse.length < 2) {
                             return;
                         }
+
+                        // ========== 防御性清理：确保不会有心声混入 ==========
+                        // 这是最后一道防线，确保即使前面的步骤出现问题，
+                        // 也不会让心声内容显示在对话中
+                        if (rawAiResponse.includes('心声') || rawAiResponse.includes('心情值') || rawAiResponse.includes('神态')) {
+                            console.warn('[防御] 检测到心声关键词混入rawAiResponse，本条消息已丢弃');
+                            return;
+                        }
+                        
+                        // 如果仍然包含JSON结构，说明提取失败，丢弃此消息
+                        if (rawAiResponse.includes('{') && rawAiResponse.includes('}')) {
+                            console.warn('[防御] 检测到JSON结构混入rawAiResponse，本条消息已丢弃');
+                            return;
+                        }
+
                         const aiResponse = this.sanitizeAiResponse(rawAiResponse);
 
-                        // ========== 冲突检测：计算当前回复与前一条的相似度 ==========
+                        // ========== 二次防御清理：确保对话内容纯净 ==========
+                        // 如果清理后仍然包含不自然的描述文本，则放弃此消息
+                        if (aiResponse.includes('[') || aiResponse.includes(']') || 
+                            aiResponse.includes('【') || aiResponse.includes('】') ||
+                            aiResponse.includes('秒：') || /语音\s*\d+秒/.test(aiResponse)) {
+                            console.warn('[二次防御] 检测到格式化文本仍残留，本条消息已丢弃');
+                            return;
+                        }
+                        
+                        // 验证回复长度（去除空格后）
+                        if (!aiResponse.replace(/\s/g, '').length) {
+                            console.warn('[二次防御] 清理后无有效内容');
+                            return;
+                        }
+
+                        // ========== 重复检测：与前一条回复比较 ==========
+                        // 注：防重复逻辑已通过systemPrompt提前告知AI，这里仅作为最后防线
                         if (window._previousAIContent) {
                             const similarity = this.calculateTextSimilarity(aiResponse, window._previousAIContent);
-                            console.log(`[冲突检测] 相似度: ${(similarity * 100).toFixed(1)}% (阈值70%)`);
-
+                            console.log(`[最终检测] 相似度: ${(similarity * 100).toFixed(1)}%`);
                             if (similarity > 0.7) {
-                                console.warn(`⚠️ 警告：当前回复与前一条的相似度${(similarity * 100).toFixed(1)}%，超过70%的重复阈值`);
-                                console.log('前一条回复:', window._previousAIContent.substring(0, 100));
-                                console.log('当前回复:', aiResponse.substring(0, 100));
+                                console.warn(`[最终检测] 警告：相似度${(similarity * 100).toFixed(1)}%，接近重复。但已允许发送，因为AI已在systemPrompt中接收防重复指令`);
                             }
                         }
-                        // 保存当前回复，供下次比对
+
+                        // 保存本次回复，供下次参考
                         window._previousAIContent = aiResponse;
 
-                        const friends = this.friendSystem ? this.friendSystem.getFriends() : [];
+                        // 复用之前一次读取的数据，避免重复读取
                         const currentFriend = friends.find(f => f.id === targetFriendId);
-                        const currentPersona = this.friendSystem ? (this.friendSystem.getPersona(targetFriendId)?.raw ?? currentFriend?.persona ?? '') : '';
+                        const currentPersona = personaInfo?.raw ?? currentFriend?.persona ?? '';
                         
                         // 一体化生成：心声数据已由API直接返回，无需降级处理
                         const aiMessages = this.generateAIMessages(aiResponse, currentPersona || '');
@@ -9795,7 +10166,7 @@
                                         
                                         console.log('[心声相似度检查]', {
                                             voiceSimilarity: (voiceSimilarity * 100).toFixed(1) + '%',
-                                            threshold: '70%'
+                                            threshold: '50%'
                                         });
                                         
                                         if (voiceSimilarity > 0.80) {
@@ -9907,7 +10278,18 @@
                     } catch (error) {
                         console.error('发送消息失败:', error);
                         this.stopHeartVoicePulse();  // 错误时也停止脉动
-                        showCuteToast(`调用API时遇到问题: ${error.message || error}`);
+                        
+                        // 提取错误信息并显示自定义错误弹窗
+                        let errorMessage = error.message || '未知错误';
+                        
+                        // 如果是HTTP错误，提取状态码
+                        if (error.message && error.message.includes('请求失败:')) {
+                            errorMessage = error.message.replace('请求失败:', '').trim();
+                        } else if (error.statusCode) {
+                            errorMessage = error.statusCode.toString();
+                        }
+                        
+                        showCustomErrorModal(errorMessage);
                         // 不生成备用心声，保持之前的心声显示
                     } finally {
                         this.isProcessing = false;
@@ -9922,7 +10304,6 @@
                     this.currentFriendId = id || null;
                 }
             }
-
             // ========== 事件监听器绑定 ==========
 
             // API相关按钮
@@ -10097,9 +10478,16 @@
                 pendingImageDesc = null;
             }
 
+            // 图片描述弹窗确定按钮
+            const imageDescOkBtn = document.getElementById('imageDescOkBtn');
+            if (imageDescOkBtn) {
+                imageDescOkBtn.addEventListener('click', closeImageDesc);
+            }
+
             window.openImageDescModal = (messageWrapper, msgId, content) => {
                 if (!imageDescModal || !imageDescText) return;
-                imageDescText.value = content || '';
+                // 使用 textContent 而不是 value，确保保留分行和格式
+                imageDescText.textContent = content || '';
                 pendingImageDesc = { messageWrapper, msgId };
                 imageDescModal.style.display = 'flex';
             };
@@ -10376,6 +10764,68 @@
                 window.worldBookSystem = new WorldBookSystem();
                 window.htmlGameSystem = new HtmlGameSystem();
 
+                // ========== 事件监听器绑定（必须在apiService初始化之后）==========
+
+                // API相关按钮
+                fetchModelsBtn.addEventListener('click', () => apiService && apiService.fetchModels());
+                testApiBtn.addEventListener('click', () => apiService && apiService.testConnection());
+                saveApiBtn.addEventListener('click', () => apiService && apiService.saveConfiguration());
+
+                // API预设管理
+                const savePresetBtn = document.getElementById('savePreset');
+                const presetNameInput = document.getElementById('presetName');
+                if (savePresetBtn && apiService) {
+                    savePresetBtn.addEventListener('click', () => {
+                        const name = presetNameInput.value.trim();
+                        if (!name) {
+                            apiService.showApiStatus('请输入预设名称', 'error');
+                            return;
+                        }
+                        
+                        const currentConfig = {
+                            apiUrl: apiUrlInput.value.trim(),
+                            apiKey: apiKeyInput.value.trim(),
+                            model: modelSelect.value
+                        };
+                        
+                        if (!currentConfig.apiUrl || !currentConfig.apiKey) {
+                            apiService.showApiStatus('请先配置API地址和密钥', 'error');
+                            return;
+                        }
+                        
+                        apiService.savePreset(name, currentConfig);
+                        apiService.showApiStatus(`已保存预设: ${name}`, 'success');
+                        presetNameInput.value = '';
+                        apiService.renderPresetList();
+                    });
+                }
+
+                // 初始化预设列表
+                if (apiService) {
+                    apiService.renderPresetList();
+                }
+
+                // 绑定API预设弹窗关闭按钮
+                const closeApiPresetModalBtn = document.getElementById('closeApiPresetModal');
+                if (closeApiPresetModalBtn) {
+                    closeApiPresetModalBtn.addEventListener('click', () => {
+                        const modal = document.getElementById('apiPresetModal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+
+                // 点击弹窗外部关闭
+                const apiPresetModal = document.getElementById('apiPresetModal');
+                if (apiPresetModal) {
+                    apiPresetModal.addEventListener('click', (e) => {
+                        if (e.target === apiPresetModal) {
+                            apiPresetModal.style.display = 'none';
+                        }
+                    });
+                }
+
                 registerApps();
                 renderHomeApps();
                 if (window.appManager && typeof window.appManager.setStatus === 'function') {
@@ -10473,6 +10923,15 @@
             });
         })();
     </script>
+
+    <!-- Custom Error Modal -->
+    <div id="customErrorModal" class="modal" style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-content" style="width: 90%; max-width: 320px; border-radius: 18px; padding: 28px; text-align: center; background-color: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <h3 style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px; line-height: 1.4;">出现错误：</h3>
+            <p id="customApiErrorText" style="font-size: 14px; color: #666; margin-bottom: 28px; word-break: break-word; line-height: 1.5; min-height: 40px;"></p>
+            <button id="customErrorOkButton" class="btn btn-primary" style="width: 100%; height: 44px; border-radius: 12px;">确定</button>
+        </div>
+    </div>
 
     <!-- 世界书 Modal Start -->
     <div id="worldbookModal" class="modal" style="display: none; background-color: transparent;">
