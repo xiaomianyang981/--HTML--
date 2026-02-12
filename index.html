@@ -786,8 +786,10 @@
         }
 
         /* 聊天窗口按钮样式 */
-        /* 统一返回按钮标准尺寸：32x32px, 字体20px, 圆角8px */
-        /* 所有新加页面的返回按钮必须遵循此标准 */
+        /* ========== 返回按钮统一标准（强制规范） ========== */
+        /* 尺寸：32x32px | 字体：20px | 圆角：8px | 颜色：#787785 */
+        /* ⚠️ 重要：返回按钮内只能有图标 <i class="fas fa-chevron-left"></i>，不得包含任何文字！ */
+        /* 示例用法：<button id="backToFriendList"><i class="fas fa-chevron-left"></i></button> */
         #backToFriendList {
             background: none;
             border: none;
@@ -1754,8 +1756,10 @@
             color: #787785;
         }
 
-        /* 统一返回按钮标准尺寸：32x32px, 字体20px, 圆角8px */
-        /* 所有新加页面的返回按钮必须遵循此标准 */
+        /* ========== 返回按钮统一标准（强制规范） ========== */
+        /* 尺寸：32x32px | 字体：20px | 圆角：8px | 颜色：#787785 */
+        /* ⚠️ 重要：返回按钮内只能有图标 <i class="fas fa-chevron-left"></i>，不得包含任何文字！ */
+        /* 示例用法：<button class="settings-back"><i class="fas fa-chevron-left"></i></button> */
         .settings-back {
             display: flex;
             align-items: center;
@@ -1972,8 +1976,10 @@
             text-align: center;
         }
 
-        /* 统一返回按钮标准尺寸：32x32px, 字体20px, 圆角8px */
-        /* 所有新加页面的返回按钮必须遵循此标准 */
+        /* ========== 返回按钮统一标准（强制规范） ========== */
+        /* 尺寸：32x32px | 字体：20px | 圆角：8px | 颜色：#787785 */
+        /* ⚠️ 重要：返回按钮内只能有图标 <i class="fas fa-chevron-left"></i>，不得包含任何文字！ */
+        /* 示例用法：<button class="friend-settings-back"><i class="fas fa-chevron-left"></i></button> */
         .friend-settings-back {
             background: none;
             border: none;
@@ -2145,6 +2151,125 @@
             font-size: 15px;
             font-weight: 500;
             color: #333;
+        }
+
+        /* 小结卡片 */
+        .summary-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 4px 14px rgba(120, 119, 133, 0.07);
+            border: 1px solid #f5f0f0;
+            transition: box-shadow 0.2s ease;
+        }
+        .summary-card:hover {
+            box-shadow: 0 6px 20px rgba(120, 119, 133, 0.12);
+        }
+        .summary-card-body {
+            font-size: 13.5px;
+            color: #555;
+            line-height: 1.65;
+            max-height: 100px;
+            overflow-y: auto;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .summary-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .summary-card-time {
+            font-size: 11px;
+            color: #c8c0c0;
+        }
+        .summary-card-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .summary-card-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 10px;
+            background: #faf5f5;
+            color: #c0b0b0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.15s ease;
+        }
+        .summary-card-btn:hover {
+            background: #f5eaea;
+            color: #a08888;
+        }
+        .summary-card-processed {
+            opacity: 0.55;
+            border-style: dashed;
+        }
+
+        /* 悬浮球 */
+        .summary-fab {
+            position: absolute;
+            bottom: 28px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f0d6d7, #e8c4d0);
+            color: #fff;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(240, 200, 210, 0.45);
+            z-index: 100;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            user-select: none;
+            touch-action: none;
+        }
+        .summary-fab:active {
+            transform: scale(0.92);
+        }
+        .summary-fab-panel {
+            display: none;
+            position: absolute;
+            bottom: 86px;
+            right: 20px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 6px 24px rgba(120, 119, 133, 0.15);
+            border: 1px solid #f5f0f0;
+            z-index: 101;
+            min-width: 130px;
+        }
+        .summary-fab-panel.is-open {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .summary-fab-action {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: #787785;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+        .summary-fab-action:hover {
+            background: #faf5f5;
         }
 
         .ios-switch {
@@ -4394,6 +4519,7 @@
                     cuteToast.style.display = 'none';
                 }, 2000);
             }
+            window.showCuteToast = showCuteToast;
 
             // 自定义错误弹窗函数
             function showCustomErrorModal(errorCode) {
@@ -10134,10 +10260,15 @@
                             }
 
                             this.friendSystem.saveFriendChatHistory(targetFriendId, realHistory);
-                            
+
                             // AI回复完成后统一刷新好友列表
                             if (typeof window.updateFriendList === 'function') {
                                 window.updateFriendList();
+                            }
+
+                            // ===== 自动总结检测 =====
+                            if (window.summarySystem) {
+                                try { window.summarySystem.checkAutoSummary(targetFriendId, realHistory, config); } catch(e) { console.warn('[自动总结] 检测异常:', e); }
                             }
                         }
 
@@ -10237,8 +10368,12 @@
             if (chatSummaryBtn) {
                 chatSummaryBtn.addEventListener('click', () => {
                     closeChatExtraPanel();
+                    const fid = chatSession ? chatSession.getCurrentFriendId() : null;
                     const summaryModal = document.getElementById('summaryModal');
-                    if (summaryModal) summaryModal.style.display = 'flex';
+                    if (summaryModal) {
+                        if (fid) summaryModal.dataset.friendId = fid;
+                        summaryModal.style.display = 'flex';
+                    }
                 });
             }
 
@@ -10634,6 +10769,8 @@
             document.addEventListener('DOMContentLoaded', () => {
                 friendSystem = new FriendSystem();
                 apiService = new ApiService(friendSystem);
+                // 将apiService暴露给总结系统使用
+                window.summarySystemApiService = apiService;
                 chatSession = new ChatSession(friendSystem, apiService);
                 heartVoiceSystem = new HeartVoiceSystem(friendSystem, apiService);
                 profileWidget = new ProfileWidget();
@@ -11011,7 +11148,7 @@
 
     <!-- 总结全屏页面 -->
     <div class="modal" id="summaryModal" style="display: none;">
-        <div class="settings-screen" style="display: flex; flex-direction: column;">
+        <div class="settings-screen" style="display: flex; flex-direction: column; position: relative;">
             <!-- 状态栏 -->
             <div class="status-bar">
                 <div class="time">14:30</div>
@@ -11027,16 +11164,853 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="settings-title">总结</div>
-                <span style="width: 42px;"></span>
+                <button id="summaryHeartBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;" aria-label="一锫">
+                    <i class="fas fa-heart"></i>
+                </button>
             </div>
-            <div class="settings-scroll" style="flex: 1; padding: 16px;">
-                <!-- 总结内容区域，后续步骤填充 -->
-                <div id="summaryContent" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #999; font-size: 14px;">
-                    总结功能开发中...
+            <div class="settings-scroll" style="flex: 1; padding: 20px 16px;">
+                <!-- 自动总结轮数设置 -->
+                <div style="background: #fff; border-radius: 16px; padding: 16px 18px; box-shadow: 0 8px 20px rgba(120, 119, 133, 0.06); display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: 15px; font-weight: 600; color: #787785;">自动总结</span>
+                        <span style="font-size: 12px; color: #b0b0b0;">每隔指定轮数自动生成总结</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input id="summaryRoundsInput" type="text" value="25"
+                            style="width: 48px; height: 32px; text-align: center; border: 1.5px solid #f0e0e0; border-radius: 10px; font-size: 14px; font-weight: 600; color: #787785; background: #faf7fa; outline: none;">
+                        <span style="font-size: 13px; color: #b0b0b0; white-space: nowrap;">轮/次</span>
+                    </div>
+                </div>
+
+                <!-- 大总结按钮 -->
+                <div style="display: flex; justify-content: center; margin-top: 24px;">
+                    <button id="bigSummaryBtn" type="button"
+                        style="padding: 14px 40px; border-radius: 24px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7, #e8c4d0); box-shadow: 0 4px 15px rgba(240, 214, 215, 0.4); transition: transform 0.15s ease, box-shadow 0.15s ease; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-book-open" style="font-size: 16px;"></i>
+                        大总结
+                    </button>
+                </div>
+
+                <!-- 小结卡片列表 -->
+                <div style="margin-top: 24px; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #b0b0b0; letter-spacing: 0.5px;">小结记录</div>
+                <div id="summaryContent" style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- 小结卡片由 JS 动态渲染 -->
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- 大总结全屏页面 -->
+    <div class="modal" id="bigSummaryModal" style="display: none;">
+        <div class="settings-screen" style="display: flex; flex-direction: column; position: relative;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time">14:30</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="bigSummaryBack" class="settings-back"
+                    onclick="document.getElementById('bigSummaryModal').style.display='none'">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="settings-title">大总结</div>
+                <button id="bigSummaryHeartBtn" style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;" aria-label="一锫">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            <div class="settings-scroll" style="flex: 1; padding: 20px 16px;">
+                <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #b0b0b0; letter-spacing: 0.5px;">大总结记录</div>
+                <div id="bigSummaryContent" style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- 大总结卡片由 JS 动态渲染 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // 总结系统
+    (function() {
+        // ===== 公共工具函数（需要提前定义） =====
+        function getFriendId() {
+            const modal = document.getElementById('summaryModal');
+            return modal ? (modal.dataset.friendId || null) : null;
+        }
+        function getList(key, friendId) {
+            try { return JSON.parse(localStorage.getItem(key + friendId)) || []; }
+            catch { return []; }
+        }
+        function saveList(key, friendId, list) {
+            localStorage.setItem(key + friendId, JSON.stringify(list));
+        }
+        function escapeHtml(str) {
+            const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+        }
+        function nowTime() {
+            const d = new Date();
+            return d.getFullYear() + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+        }
+
+        // ===== 渲染函数（需要提前定义） =====
+        function renderCards(containerId, storagePrefix, emptyText) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const friendId = getFriendId();
+            if (!friendId) { container.innerHTML = ''; return; }
+            const list = getList(storagePrefix, friendId);
+            if (list.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px 0;color:#ccc;font-size:14px;">' + emptyText + '</div>';
+                return;
+            }
+            container.innerHTML = list.map((item, i) => {
+                const isProcessed = item.processed && storagePrefix === 'summaries_';
+                return `
+                <div class="summary-card${isProcessed ? ' summary-card-processed' : ''}" data-index="${i}">
+                    <div class="summary-card-body">${escapeHtml(item.text)}</div>
+                    <div class="summary-card-footer">
+                        <span class="summary-card-time">${item.time || ''}${isProcessed ? ' <i class="fas fa-archive" style="color:#d4c8d0;margin-left:4px;font-size:10px;" title="已归档至大总结"></i>' : ''}</span>
+                        <div class="summary-card-actions">
+                            <button class="summary-card-btn summary-edit-btn" data-index="${i}" title="编辑"><i class="fas fa-pen"></i></button>
+                            <button class="summary-card-btn summary-delete-btn" data-index="${i}" title="删除"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderSummaries() { renderCards('summaryContent', 'summaries_', '暂无小结'); }
+        function renderBigSummaries() { renderCards('bigSummaryContent', 'bigSummaries_', '暂无大总结'); }
+
+        // ===== 轮数设置 =====
+        const ROUNDS_KEY = 'summaryRoundsPerCycle';
+        const MAX_ROUNDS = 70;
+        const roundsInput = document.getElementById('summaryRoundsInput');
+        if (roundsInput) {
+            const saved = parseInt(localStorage.getItem(ROUNDS_KEY));
+            if (!isNaN(saved) && saved >= 1 && saved <= MAX_ROUNDS) roundsInput.value = saved;
+            roundsInput.addEventListener('change', () => {
+                let v = parseInt(roundsInput.value);
+                if (isNaN(v) || v < 1) v = 1;
+                if (v > MAX_ROUNDS) v = MAX_ROUNDS;
+                roundsInput.value = v;
+                localStorage.setItem(ROUNDS_KEY, v);
+            });
+        }
+
+        // ===== 大总结入口 =====
+        const bigSummaryBtn = document.getElementById('bigSummaryBtn');
+        if (bigSummaryBtn) {
+            bigSummaryBtn.addEventListener('click', () => {
+                const m = document.getElementById('bigSummaryModal');
+                if (m) m.style.display = 'flex';
+                renderBigSummaries();
+            });
+        }
+
+        // ===== 爱心按钮：手动生成小结 =====
+        const summaryHeartBtn = document.getElementById('summaryHeartBtn');
+        if (summaryHeartBtn) {
+            summaryHeartBtn.addEventListener('click', () => {
+                const friendId = getFriendId();
+                if (!friendId) {
+                    showCuteToast('请先选择聊天对象');
+                    return;
+                }
+
+                // 获取当前轮数
+                const count = parseInt(localStorage.getItem('summaryCounter_' + friendId)) || 0;
+                
+                // 弹窗询问
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+                
+                overlay.innerHTML = `<div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);width:90%;max-width:300px;">
+                    <h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 12px;text-align:center;">手动生成小结</h3>
+                    <p style="color:#666;font-size:14px;text-align:center;margin:0 0 20px;">当前对话轮数：<strong>${count}</strong></p>
+                    <p style="color:#999;font-size:13px;text-align:center;margin:0 0 20px;">是否立即生成本轮小结？</p>
+                    <div style="display:flex;gap:8px;justify-content:center;">
+                        <button class="cancel-btn" style="padding:10px 24px;border-radius:16px;border:1px solid #e8e0e0;background:#fff;color:#999;cursor:pointer;font-weight:600;">取消</button>
+                        <button class="confirm-btn" style="padding:10px 24px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;cursor:pointer;font-weight:600;">确定</button>
+                    </div>
+                </div>`;
+                
+                document.body.appendChild(overlay);
+                
+                overlay.querySelector('.cancel-btn').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                });
+                
+                overlay.querySelector('.confirm-btn').addEventListener('click', async () => {
+                    document.body.removeChild(overlay);
+
+                    // 优先使用全局apiService，否则从localStorage读取
+                    let apiConfig;
+                    if (window.summarySystemApiService && typeof window.summarySystemApiService.getConfig === 'function') {
+                        apiConfig = window.summarySystemApiService.getConfig();
+                    } else {
+                        apiConfig = {
+                            apiUrl: localStorage.getItem('apiUrl'),
+                            apiKey: localStorage.getItem('apiKey'),
+                            model: localStorage.getItem('selectedModel')
+                        };
+                    }
+
+                    if (!apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
+                        showCuteToast('请先配置API设置');
+                        return;
+                    }
+
+                    // 从localStorage直接读取聊天记录
+                    let chatHistory = [];
+                    try { chatHistory = JSON.parse(localStorage.getItem('chat_' + friendId)) || []; } catch(e) {}
+                    
+                    if (chatHistory.length === 0) {
+                        showCuteToast('没有聊天记录可供总结');
+                        return;
+                    }
+
+                    // 检查是否有有效的对话内容（排除已删除、已撤回和空消息）
+                    const validMessages = chatHistory.filter(m => !m.isDeletedLocal && !m.isRecalled && m.content && m.content.trim());
+                    
+                    if (validMessages.length === 0) {
+                        showCuteToast('没有有效的对话内容可供总结');
+                        return;
+                    }
+
+                    if (validMessages.length < 2) {
+                        showCuteToast('对话内容太少，至少需要2条有效消息');
+                        return;
+                    }
+
+                    await generateAutoSummary(friendId, chatHistory, apiConfig);
+                });
+                
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) document.body.removeChild(overlay);
+                });
+            });
+        }
+
+        // ===== 大总结页面爱心按钮：手动生成大总结 =====
+        const bigSummaryHeartBtn = document.getElementById('bigSummaryHeartBtn');
+        if (bigSummaryHeartBtn) {
+            bigSummaryHeartBtn.addEventListener('click', async () => {
+                const friendId = getFriendId();
+                if (!friendId) {
+                    showCuteToast('请先选择聊天对象');
+                    return;
+                }
+
+                // 获取未归档的小结数量
+                const summaries = getList('summaries_', friendId);
+                const unprocessedCount = summaries.filter(s => !s.processed).length;
+                
+                // 弹窗询问
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+                
+                overlay.innerHTML = `<div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);width:90%;max-width:300px;">
+                    <h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 12px;text-align:center;">手动生成大总结</h3>
+                    <p style="color:#666;font-size:14px;text-align:center;margin:0 0 20px;">未归档小结数：<strong>${unprocessedCount}</strong></p>
+                    <p style="color:#999;font-size:13px;text-align:center;margin:0 0 20px;">是否立即生成大总结？<br><span style="font-size:12px;color:#bbb;">(需要至少5条未归档小结)</span></p>
+                    <div style="display:flex;gap:8px;justify-content:center;">
+                        <button class="cancel-btn" style="padding:10px 24px;border-radius:16px;border:1px solid #e8e0e0;background:#fff;color:#999;cursor:pointer;font-weight:600;">取消</button>
+                        <button class="confirm-btn" style="padding:10px 24px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;cursor:pointer;font-weight:600;">确定</button>
+                    </div>
+                </div>`;
+                
+                document.body.appendChild(overlay);
+                
+                overlay.querySelector('.cancel-btn').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                });
+                
+                overlay.querySelector('.confirm-btn').addEventListener('click', async () => {
+                    document.body.removeChild(overlay);
+
+                    // 检查未归档的小结数量
+                    if (unprocessedCount < 5) {
+                        showCuteToast('未归档的小结不足5条，无法生成大总结');
+                        return;
+                    }
+
+                    // 优先使用全局apiService，否则从localStorage读取
+                    let apiConfig;
+                    if (window.summarySystemApiService && typeof window.summarySystemApiService.getConfig === 'function') {
+                        apiConfig = window.summarySystemApiService.getConfig();
+                    } else {
+                        apiConfig = {
+                            apiUrl: localStorage.getItem('apiUrl'),
+                            apiKey: localStorage.getItem('apiKey'),
+                            model: localStorage.getItem('selectedModel')
+                        };
+                    }
+
+                    if (!apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
+                        showCuteToast('请先配置API设置');
+                        return;
+                    }
+
+                    const summaries = getList('summaries_', friendId);
+                    await generateBigSummary(friendId, summaries, apiConfig);
+                });
+                
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) document.body.removeChild(overlay);
+                });
+            });
+        }
+
+        // ===== 通用卡片事件代理（编辑/删除） =====
+        function bindCardEvents(containerId, storagePrefix, typeName, renderFn) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.summary-edit-btn');
+                const deleteBtn = e.target.closest('.summary-delete-btn');
+                const friendId = getFriendId();
+                if (!friendId) return;
+
+                if (editBtn) {
+                    const idx = parseInt(editBtn.dataset.index);
+                    const list = getList(storagePrefix, friendId);
+                    if (!list[idx]) return;
+                    const card = editBtn.closest('.summary-card');
+                    const body = card.querySelector('.summary-card-body');
+                    if (card.querySelector('.summary-edit-area')) return;
+
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'summary-edit-area';
+                    textarea.value = list[idx].text;
+                    textarea.style.cssText = 'width:100%;min-height:60px;padding:8px 10px;border:1.5px solid #f0d6d7;border-radius:12px;font-size:13px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;';
+                    const btnRow = document.createElement('div');
+                    btnRow.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin-top:8px;';
+                    btnRow.innerHTML = '<button class="summary-edit-cancel" style="padding:6px 14px;border-radius:14px;border:1px solid #e8e0e0;background:#fff;color:#999;font-size:12px;font-weight:600;cursor:pointer;">取消</button><button class="summary-edit-save" style="padding:6px 14px;border-radius:14px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;font-size:12px;font-weight:600;cursor:pointer;">保存</button>';
+                    body.style.display = 'none';
+                    card.querySelector('.summary-card-footer').before(textarea, btnRow);
+                    btnRow.querySelector('.summary-edit-cancel').addEventListener('click', () => { textarea.remove(); btnRow.remove(); body.style.display = ''; });
+                    btnRow.querySelector('.summary-edit-save').addEventListener('click', () => {
+                        const val = textarea.value.trim();
+                        if (val) { list[idx].text = val; saveList(storagePrefix, friendId, list); }
+                        renderFn();
+                    });
+                }
+
+                if (deleteBtn) {
+                    const idx = parseInt(deleteBtn.dataset.index);
+                    const overlay = document.createElement('div');
+                    overlay.style.cssText = 'position:fixed;inset:0;z-index:2400;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;padding:24px;';
+                    overlay.innerHTML = '<div style="background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,245,255,0.92));border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-width:280px;text-align:center;border:1px solid rgba(245,220,250,0.5);"><h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 12px;">删除' + typeName + '</h3><p style="color:#8b7d9c;font-size:14px;margin:0 0 24px;">确认删除这条' + typeName + '吗？</p><div style="display:flex;gap:12px;justify-content:center;"><button class="sd-yes" style="padding:10px 24px;background:linear-gradient(135deg,#f0d6d7,#ffc4d0);color:#fff;border:none;border-radius:20px;font-weight:600;cursor:pointer;">删除</button><button class="sd-no" style="padding:10px 24px;background:rgba(255,255,255,0.8);color:#8b7d9c;border:1px solid rgba(240,220,250,0.4);border-radius:20px;font-weight:600;cursor:pointer;">取消</button></div></div>';
+                    document.body.appendChild(overlay);
+                    overlay.querySelector('.sd-yes').addEventListener('click', () => {
+                        const list = getList(storagePrefix, friendId);
+                        list.splice(idx, 1); saveList(storagePrefix, friendId, list);
+                        overlay.remove(); renderFn();
+                    });
+                    overlay.querySelector('.sd-no').addEventListener('click', () => overlay.remove());
+                    overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
+                }
+            });
+        }
+
+        bindCardEvents('summaryContent', 'summaries_', '小结', renderSummaries);
+        bindCardEvents('bigSummaryContent', 'bigSummaries_', '大总结', renderBigSummaries);
+
+        // ===== 打开页面时渲染 =====
+        function observeModal(id, fn) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            new MutationObserver(() => { if (el.style.display !== 'none') fn(); }).observe(el, { attributes: true, attributeFilter: ['style'] });
+        }
+        observeModal('summaryModal', renderSummaries);
+        observeModal('bigSummaryModal', renderBigSummaries);
+
+        // ===== 悬浮球 =====
+        function initFab(fabId, panelId, addBtnId, storagePrefix, renderFn) {
+            const fab = document.getElementById(fabId);
+            const panel = document.getElementById(panelId);
+            const addBtn = document.getElementById(addBtnId);
+            
+            // 调试信息
+            console.log(`InitFab: fabId=${fabId}, fab=${!!fab}, panel=${!!panel}, addBtn=${!!addBtn}`);
+            
+            if (!fab || !panel) return;
+
+            // 拖拽
+            let isDragging = false, hasMoved = false, startX, startY, fabX, fabY;
+            fab.addEventListener('pointerdown', (e) => {
+                isDragging = true; hasMoved = false;
+                startX = e.clientX; startY = e.clientY;
+                const rect = fab.getBoundingClientRect();
+                const parent = fab.parentElement.getBoundingClientRect();
+                fabX = rect.left - parent.left; fabY = rect.top - parent.top;
+                fab.setPointerCapture(e.pointerId);
+                e.preventDefault();
+            });
+            fab.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX, dy = e.clientY - startY;
+                if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
+                if (!hasMoved) return;
+                const parent = fab.parentElement.getBoundingClientRect();
+                let nx = fabX + dx, ny = fabY + dy;
+                nx = Math.max(0, Math.min(nx, parent.width - fab.offsetWidth));
+                ny = Math.max(0, Math.min(ny, parent.height - fab.offsetHeight));
+                fab.style.left = nx + 'px'; fab.style.top = ny + 'px';
+                fab.style.right = 'auto'; fab.style.bottom = 'auto';
+                // 同步面板位置
+                panel.style.left = nx + 'px'; panel.style.top = (ny - panel.offsetHeight - 10) + 'px';
+                panel.style.right = 'auto'; panel.style.bottom = 'auto';
+            });
+            fab.addEventListener('pointerup', () => { isDragging = false; });
+
+            // 点击切换面板
+            fab.addEventListener('click', () => {
+                if (hasMoved) return;
+                panel.classList.toggle('is-open');
+            });
+
+            // 点面板外关闭
+            fab.closest('.settings-screen').addEventListener('click', (e) => {
+                if (!fab.contains(e.target) && !panel.contains(e.target)) panel.classList.remove('is-open');
+            });
+
+            // 手动添加
+            if (addBtn) {
+                addBtn.addEventListener('click', () => {
+                    panel.classList.remove('is-open');
+                    const friendId = getFriendId();
+                    if (!friendId) return;
+                    // 弹出输入框
+                    const overlay = document.createElement('div');
+                    overlay.style.cssText = 'position:fixed;inset:0;z-index:2400;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;padding:24px;';
+                    overlay.innerHTML = '<div style="background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,245,255,0.92));border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);width:100%;max-width:320px;border:1px solid rgba(245,220,250,0.5);"><h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 14px;text-align:center;">添加' + (storagePrefix === 'bigSummaries_' ? '大总结' : '小结') + '</h3><textarea class="fab-add-input" placeholder="输入内容..." style="width:100%;min-height:90px;padding:10px 12px;border:1.5px solid #f0e0e0;border-radius:14px;font-size:13.5px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;box-sizing:border-box;"></textarea><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;"><button class="fab-add-cancel" style="padding:8px 18px;border-radius:16px;border:1px solid #e8e0e0;background:#fff;color:#999;font-size:13px;font-weight:600;cursor:pointer;">取消</button><button class="fab-add-save" style="padding:8px 18px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;font-size:13px;font-weight:600;cursor:pointer;">保存</button></div></div>';
+                    document.body.appendChild(overlay);
+                    const input = overlay.querySelector('.fab-add-input');
+                    input.focus();
+                    overlay.querySelector('.fab-add-cancel').addEventListener('click', () => overlay.remove());
+                    overlay.querySelector('.fab-add-save').addEventListener('click', () => {
+                        const val = input.value.trim();
+                        if (!val) return;
+                        const list = getList(storagePrefix, friendId);
+                        list.unshift({ text: val, time: nowTime() });
+                        saveList(storagePrefix, friendId, list);
+                        overlay.remove();
+                        renderFn();
+                    });
+                    overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
+                });
+            }
+        }
+
+        // 悬浮窗功能已删除
+
+        // ===== 自动总结 =====
+        const COUNTER_PREFIX = 'summaryCounter_';
+
+        function getCounter(friendId) {
+            return parseInt(localStorage.getItem(COUNTER_PREFIX + friendId)) || 0;
+        }
+        function setCounter(friendId, val) {
+            localStorage.setItem(COUNTER_PREFIX + friendId, val);
+        }
+
+        function checkAutoSummary(friendId, chatHistory, apiConfig) {
+            if (!friendId || !apiConfig) return;
+            // 检查上次失败是否还在限流期内
+            if (!canGenerateSummary(friendId, 'small')) return;
+            const count = getCounter(friendId) + 1;
+            const threshold = parseInt(localStorage.getItem(ROUNDS_KEY)) || 25;
+            setCounter(friendId, count);
+            if (count < threshold) return;
+            // 达到轮数，触发总结（不立即重置，只在成功时才重置）
+            generateAutoSummary(friendId, chatHistory, apiConfig);
+        }
+
+        function resetSummaryCounter(friendId) {
+            setCounter(friendId, 0);
+        }
+
+        function showSummaryFailedToast() {
+            const toast = document.getElementById('cuteToast');
+            if (toast) {
+                toast.querySelector('p').textContent = '总结失败，轮数已上云，轮数不会丢失';
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            }
+        }
+
+        // ===== 限流机制 =====
+        const FAILURE_COOLDOWN_MS = 600000; // 10分钟限流
+        function recordSummaryFailureTime(friendId, type) {
+            const key = 'summaryFailureTime_' + type + '_' + friendId;
+            localStorage.setItem(key, Date.now().toString());
+        }
+        function canGenerateSummary(friendId, type) {
+            const key = 'summaryFailureTime_' + type + '_' + friendId;
+            const lastFailTime = localStorage.getItem(key);
+            if (!lastFailTime) return true;
+            const elapsed = Date.now() - parseInt(lastFailTime);
+            return elapsed > FAILURE_COOLDOWN_MS;
+        }
+
+        // ===== 大总结自动合成 =====
+        function checkAndGenerateBigSummary(friendId, apiConfig) {
+            if (!friendId) return;
+            if (!canGenerateSummary(friendId, 'big')) return;
+            const summaries = getList('summaries_', friendId);
+            // 只统计未被处理过的小结
+            const unprocessed = summaries.filter(s => !s.processed);
+            if (unprocessed.length < 15) return;
+            generateBigSummaryAuto(friendId, summaries, apiConfig);
+        }
+
+        // 自动合成未处理小结的大总结（不需要用户选择）
+        async function generateBigSummaryAuto(friendId, summaries, apiConfig) {
+            if (!apiConfig || !apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
+                console.warn('[大总结] API配置缺失，跳过自动合成');
+                return;
+            }
+
+            // 只取未处理的小结
+            const unprocessed = summaries.filter(s => !s.processed);
+            const selectedCount = Math.min(unprocessed.length, 15);
+            if (selectedCount < 15) return;
+            const wordLimit = 700;
+            const maxTokens = 1000;
+
+            showCuteToast('正在自动合成大总结...');
+
+            // 构建小结素材
+            const summaryTexts = unprocessed.slice(0, selectedCount).map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
+
+            const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
+
+要求：
+- 字数严格控制在${wordLimit}字以内（越精简越好）
+- 只保留核心记忆、关键事件、重要结论
+- 删除重复信息、冗余细节
+- 语言简洁有力，禁止流水账，禁止编故事
+- 直接输出大总结内容，不加标题或编号
+
+小结列表：
+${summaryTexts}`;
+
+            try {
+                const resp = await fetch(`${apiConfig.apiUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + apiConfig.apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: apiConfig.model, messages: [{ role: 'user', content: prompt }], max_tokens: maxTokens, temperature: 0.3 })
+                });
+                if (!resp.ok) {
+                    recordSummaryFailureTime(friendId, 'big');
+                    showSummaryFailedToast();
+                    return;
+                }
+                const data = await resp.json();
+                const text = (data.choices?.[0]?.message?.content || '').trim();
+                if (!text || text.length < 100) {
+                    recordSummaryFailureTime(friendId, 'big');
+                    showSummaryFailedToast();
+                    return;
+                }
+
+                // 保存大总结
+                const bigSummaries = getList('bigSummaries_', friendId);
+                bigSummaries.unshift({ text: text, time: nowTime() });
+                saveList('bigSummaries_', friendId, bigSummaries);
+
+                // 标记已处理的小结
+                const usedTexts = new Set(unprocessed.slice(0, selectedCount).map(s => s.text));
+                summaries.forEach(s => { if (usedTexts.has(s.text) && !s.processed) s.processed = true; });
+                saveList('summaries_', friendId, summaries);
+
+                renderBigSummaries();
+                renderSummaries();
+                showCuteToast('大总结已自动生成');
+            } catch(e) {
+                console.warn('[大总结] 自动合成失败:', e);
+                recordSummaryFailureTime(friendId, 'big');
+                showSummaryFailedToast();
+            }
+        }
+
+        // 手动合成大总结（用户可选择数量）
+        async function generateBigSummary(friendId, summaries, apiConfig) {
+            if (!apiConfig || !apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
+                showCuteToast('API 配置不完整，请检查设置');
+                return;
+            }
+
+            // 只对未处理的小结让用户选择
+            const unprocessed = summaries.filter(s => !s.processed);
+            if (unprocessed.length < 5) {
+                showCuteToast('未归档的小结不足5条');
+                return;
+            }
+
+            const selectedCount = await showSummaryCountSelector(unprocessed.length);
+            if (!selectedCount) return;
+
+            const wordLimit = Math.min(700, Math.max(200, selectedCount * 45));
+            const maxTokens = Math.min(1000, Math.max(300, selectedCount * 65));
+
+            showCuteToast('正在生成大总结...');
+
+            const summaryTexts = unprocessed.slice(0, selectedCount).map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
+
+            const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
+
+要求：
+- 字数严格控制在${wordLimit}字以内（越精简越好）
+- 只保留核心记忆、关键事件、重要结论
+- 删除重复信息、冗余细节
+- 语言简洁有力，禁止流水账，禁止编故事
+- 直接输出大总结内容，不加标题或编号
+
+小结列表：
+${summaryTexts}`;
+
+            try {
+                const resp = await fetch(`${apiConfig.apiUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + apiConfig.apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: apiConfig.model, messages: [{ role: 'user', content: prompt }], max_tokens: maxTokens, temperature: 0.3 })
+                });
+                if (!resp.ok) {
+                    recordSummaryFailureTime(friendId, 'big');
+                    showCuteToast(`API 请求失败 (${resp.status})，请检查配置或稍后重试`);
+                    console.error('[大总结] API错误:', resp.status);
+                    return;
+                }
+                const data = await resp.json();
+                const text = (data.choices?.[0]?.message?.content || '').trim();
+                if (!text || text.length < 100) {
+                    recordSummaryFailureTime(friendId, 'big');
+                    showCuteToast('API 返回内容不足，请稍后重试');
+                    console.warn('[大总结] 返回内容过短:', text?.length || 0);
+                    return;
+                }
+
+                // 保存大总结
+                const bigSummaries = getList('bigSummaries_', friendId);
+                bigSummaries.unshift({ text: text, time: nowTime() });
+                saveList('bigSummaries_', friendId, bigSummaries);
+
+                // 标记已处理的小结
+                const usedTexts = new Set(unprocessed.slice(0, selectedCount).map(s => s.text));
+                summaries.forEach(s => { if (usedTexts.has(s.text) && !s.processed) s.processed = true; });
+                saveList('summaries_', friendId, summaries);
+
+                renderBigSummaries();
+                renderSummaries();
+                showCuteToast('大总结已生成');
+            } catch(e) {
+                console.error('[大总结] 合成失败:', e.message);
+                recordSummaryFailureTime(friendId, 'big');
+                showCuteToast(`大总结生成失败: ${e.message}`);
+            }
+        }
+
+        // 显示小结数量选择器
+        function showSummaryCountSelector(totalCount) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+                
+                const options = [];
+                // 生成选项：5条起，每5条一档，最多到总数
+                for (let i = 5; i <= totalCount; i += 5) {
+                    const wordLimit = Math.min(700, Math.max(200, i * 45));
+                    options.push(`<div class="count-option" data-count="${i}" style="padding:12px 20px;margin:6px 0;background:#f8f8f8;border-radius:10px;cursor:pointer;transition:all 0.2s;border:1px solid #e0e0e0;">${i}条小结 → 约${wordLimit}字大总结</div>`);
+                }
+                // 如果总数不是5的倍数，添加全部选项
+                if (totalCount % 5 !== 0) {
+                    const wordLimit = Math.min(700, Math.max(200, totalCount * 45));
+                    options.push(`<div class="count-option" data-count="${totalCount}" style="padding:12px 20px;margin:6px 0;background:#f8f8f8;border-radius:10px;cursor:pointer;transition:all 0.2s;border:1px solid #e0e0e0;">全部${totalCount}条 → 约${wordLimit}字大总结</div>`);
+                }
+                
+                overlay.innerHTML = `<div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);width:90%;max-width:320px;">
+                    <h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 16px;text-align:center;">选择合成数量</h3>
+                    <div style="max-height:300px;overflow-y:auto;">${options.join('')}</div>
+                    <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;">
+                        <button class="cancel-btn" style="padding:8px 18px;border-radius:16px;border:1px solid #e8e0e0;background:#fff;color:#999;cursor:pointer;">取消</button>
+                    </div>
+                </div>`;
+                
+                document.body.appendChild(overlay);
+                
+                // 选项点击事件
+                overlay.querySelectorAll('.count-option').forEach(option => {
+                    option.addEventListener('mouseover', () => {
+                        option.style.background = '#e8f4fd';
+                        option.style.borderColor = '#4a9eff';
+                    });
+                    option.addEventListener('mouseout', () => {
+                        option.style.background = '#f8f8f8';
+                        option.style.borderColor = '#e0e0e0';
+                    });
+                    option.addEventListener('click', () => {
+                        const count = parseInt(option.dataset.count);
+                        document.body.removeChild(overlay);
+                        resolve(count);
+                    });
+                });
+                
+                // 取消按钮
+                overlay.querySelector('.cancel-btn').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(null);
+                });
+            });
+        }
+
+        async function generateAutoSummary(friendId, chatHistory, apiConfig) {
+            if (!apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
+                showCuteToast('API 配置不完整，请检查设置');
+                return;
+            }
+
+            showCuteToast('正在生成小结...');
+
+            // 增量总结：只取上次总结之后的新消息
+            const lastIdx = parseInt(localStorage.getItem('lastSummaryIndex_' + friendId)) || 0;
+            const newMessages = chatHistory.slice(lastIdx);
+
+            const recent = newMessages
+                .filter(m => !m.isDeletedLocal && !m.isRecalled && m.content)
+                .map(m => {
+                    const role = (m.role === 'ai' || m.role === 'assistant') ? 'AI' : '用户';
+                    return role + '：' + m.content;
+                }).join('\n');
+
+            if (!recent) {
+                showCuteToast('没有新的对话内容可供总结');
+                return;
+            }
+
+            const prompt = `你是一位文笔精练的总结助手。请根据以下对话记录，生成一段200～450字的精简总结。
+
+要求：
+- 总结对话中的核心内容、关键事件、情感变化和重要结论
+- 语言精炼有条理，禁止流水账，禁止废话套话
+- 字数严格控制在200～450字之间
+- 直接输出总结内容，不加标题、编号或前缀
+
+对话记录：
+${recent}`;
+
+            try {
+                const resp = await fetch(`${apiConfig.apiUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + apiConfig.apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: apiConfig.model, messages: [{ role: 'user', content: prompt }], max_tokens: 800, temperature: 0.5 })
+                });
+                if (!resp.ok) {
+                    recordSummaryFailureTime(friendId, 'small');
+                    const errMsg = `API 请求失败 (${resp.status})，请检查配置或稍后重试`;
+                    showCuteToast(errMsg);
+                    console.error('[自动总结] API错误:', resp.status);
+                    return;
+                }
+                const data = await resp.json();
+                const text = (data.choices?.[0]?.message?.content || '').trim();
+                if (!text || text.length < 50) {
+                    recordSummaryFailureTime(friendId, 'small');
+                    showCuteToast('API 返回内容不足，请稍后重试');
+                    console.warn('[自动总结] 返回内容过短:', text?.length || 0);
+                    return;
+                }
+                showSummaryConfirm(friendId, text, chatHistory.length);
+            } catch(e) {
+                console.error('[自动总结] API 调用异常:', e.message);
+                recordSummaryFailureTime(friendId, 'small');
+                showCuteToast(`总结生成失败: ${e.message}`);
+            }
+        }
+
+        // ===== 确认弹窗 =====
+        function showSummaryConfirm(friendId, text, historyLength) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;padding:20px;';
+            overlay.innerHTML = `
+                <div style="background:linear-gradient(135deg,rgba(255,255,255,0.97),rgba(252,248,255,0.95));border-radius:24px;padding:22px 20px;box-shadow:0 10px 40px rgba(0,0,0,0.15);width:100%;max-width:340px;border:1px solid rgba(245,220,250,0.4);position:relative;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                        <h3 style="color:#4a4858;font-size:16px;font-weight:700;margin:0;">自动总结完成</h3>
+                        <button class="sc-edit-toggle" title="编辑" style="width:32px;height:32px;border:none;border-radius:10px;background:#faf5f5;color:#d4a0a8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background 0.15s;">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    <div class="sc-text-display" style="font-size:13.5px;color:#555;line-height:1.7;max-height:200px;overflow-y:auto;word-break:break-word;white-space:pre-wrap;padding:12px 14px;background:#fdfbfd;border-radius:14px;border:1px solid #f5eff0;"></div>
+                    <textarea class="sc-text-edit" style="display:none;width:100%;min-height:140px;max-height:200px;padding:12px 14px;border:1.5px solid #f0d6d7;border-radius:14px;font-size:13.5px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;box-sizing:border-box;line-height:1.7;"></textarea>
+                    <div style="display:flex;justify-content:center;margin-top:16px;">
+                        <button class="sc-confirm" style="padding:10px 36px;border-radius:20px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(240,214,215,0.35);transition:transform 0.15s;">确定</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            const display = overlay.querySelector('.sc-text-display');
+            const editArea = overlay.querySelector('.sc-text-edit');
+            const editToggle = overlay.querySelector('.sc-edit-toggle');
+            const confirmBtn = overlay.querySelector('.sc-confirm');
+
+            display.textContent = text;
+            editArea.value = text;
+            let isEditing = false;
+
+            editToggle.addEventListener('click', () => {
+                isEditing = !isEditing;
+                if (isEditing) {
+                    display.style.display = 'none';
+                    editArea.style.display = '';
+                    editArea.focus();
+                    editToggle.style.background = '#f0d6d7';
+                    editToggle.style.color = '#fff';
+                } else {
+                    const val = editArea.value.trim();
+                    if (val) display.textContent = val;
+                    display.style.display = '';
+                    editArea.style.display = 'none';
+                    editToggle.style.background = '#faf5f5';
+                    editToggle.style.color = '#d4a0a8';
+                }
+            });
+
+            confirmBtn.addEventListener('click', () => {
+                const finalText = isEditing ? editArea.value.trim() : display.textContent;
+                if (finalText) {
+                    const list = getList('summaries_', friendId);
+                    list.unshift({ text: finalText, time: nowTime() });
+                    saveList('summaries_', friendId, list);
+                    renderSummaries();
+                    // 总结保存成功，重置计数器
+                    resetSummaryCounter(friendId);
+                    // 记录增量总结位置
+                    if (historyLength) {
+                        localStorage.setItem('lastSummaryIndex_' + friendId, historyLength);
+                    }
+                    showCuteToast('已自动生成1条新小结');
+                    // 检查是否需要自动合成大总结 - 优先使用全局apiService
+                    let bigSummaryConfig;
+                    if (window.summarySystemApiService && typeof window.summarySystemApiService.getConfig === 'function') {
+                        bigSummaryConfig = window.summarySystemApiService.getConfig();
+                    } else {
+                        bigSummaryConfig = { apiUrl: localStorage.getItem('apiUrl'), apiKey: localStorage.getItem('apiKey'), model: localStorage.getItem('selectedModel') };
+                    }
+                    checkAndGenerateBigSummary(friendId, bigSummaryConfig);
+                }
+                overlay.remove();
+            });
+        }
+
+        // 暴露给外部
+        window.summarySystem = { getList, saveList, renderSummaries, renderBigSummaries, getFriendId, nowTime, checkAutoSummary };
+    })();
+    </script>
 </body>
 
 </html>
