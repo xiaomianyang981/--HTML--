@@ -25,14 +25,6 @@
             /* 计算内容区和底部区的高度 */
             --total-header-height: calc(var(--status-bar-height) + var(--header-height-normal));
             --total-header-height-hidden: calc(var(--status-bar-height-hidden) + var(--header-height-hidden));
-
-            /* 容器总高度 */
-            --container-height: 100vh;
-
-            /* 内容区自动填充：容器高度 - 顶部栏高度 - 底部区高度 */
-            --footer-area-height: 0px;
-            --content-height: calc(var(--container-height) - var(--total-header-height) - var(--footer-area-height));
-            --content-height-hidden: calc(var(--container-height) - var(--total-header-height-hidden) - var(--footer-area-height));
         }
 
         * {
@@ -4893,11 +4885,6 @@
                 }
             }
 
-            function announce(name) {
-                // 空实现：statusEl已删除（HTML中不存在id="statusText"）
-                // 保留函数签名以防止引用错误
-            }
-
 
             // 图标元素
             const phoneIcon = document.getElementById('phoneIcon');
@@ -5257,7 +5244,6 @@
 
             function openAppWithNotice(appId, name, notice) {
                 launchApp(appId);
-                announce(name);
                 if (notice) alert(notice);
             }
 
@@ -5265,13 +5251,11 @@
                 message: () => openAppWithNotice('message', '消息', '消息功能开发中...'),
                 feixin: () => {
                     launchApp('feixin');
-                    announce('甜聊');
                     friendListModal.style.display = 'flex';
                     renderFriendList();
                 },
                 worldbook: () => {
                     launchApp('worldbook');
-                    announce('世界书');
                     const worldbookModal = document.getElementById('worldbookModal');
                     if (worldbookModal) {
                         worldbookModal.style.display = 'flex';
@@ -5279,7 +5263,6 @@
                 },
                 settings: () => {
                     launchApp('settings');
-                    announce('设置');
                     settingsModal.style.display = 'flex';
                     if (apiService) apiService.updateSettingsDisplay();
                 },
@@ -5297,7 +5280,6 @@
                     return;
                 }
                 launchApp(appId);
-                announce('应用');
                 alert('功能开发中...');
             }
 
