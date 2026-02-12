@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -2422,15 +2422,15 @@
             border: 1px solid rgba(250, 230, 235, 0.4);
             -webkit-overflow-scrolling: touch;
         }
-        
+
         .heart-voice-text::-webkit-scrollbar {
             width: 4px;
         }
-        
+
         .heart-voice-text::-webkit-scrollbar-track {
             background: transparent;
         }
-        
+
         .heart-voice-text::-webkit-scrollbar-thumb {
             background: rgba(120, 119, 133, 0.2);
             border-radius: 2px;
@@ -2481,15 +2481,15 @@
             border: 1px solid rgba(250, 230, 235, 0.4);
             -webkit-overflow-scrolling: touch;
         }
-        
+
         .heart-voice-demeanor::-webkit-scrollbar {
             width: 4px;
         }
-        
+
         .heart-voice-demeanor::-webkit-scrollbar-track {
             background: transparent;
         }
-        
+
         .heart-voice-demeanor::-webkit-scrollbar-thumb {
             background: rgba(120, 119, 133, 0.2);
             border-radius: 2px;
@@ -2918,11 +2918,13 @@
                 box-shadow: 0 0 0 0 rgba(240, 214, 215, 0.4);
                 background-color: rgba(240, 214, 215, 0.1);
             }
+
             50% {
                 transform: scale(1.15);
                 box-shadow: 0 0 0 8px rgba(240, 214, 215, 0.2);
                 background-color: rgba(240, 214, 215, 0.25);
             }
+
             100% {
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(240, 214, 215, 0);
@@ -3343,32 +3345,42 @@
                 <!-- API预设管理 -->
                 <div id="apiPresetSection" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E8E4E9;">
                     <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设管理</label>
+                        <label
+                            style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设管理</label>
                         <div style="display: flex; gap: 8px;">
-                            <input type="text" id="presetName" class="form-control" placeholder="输入预设名称" style="flex: 1; font-size: 14px;">
+                            <input type="text" id="presetName" class="form-control" placeholder="输入预设名称"
+                                style="flex: 1; font-size: 14px;">
                             <button id="savePreset" class="btn btn-secondary" style="white-space: nowrap;">保存预设</button>
                         </div>
                         <div style="font-size: 12px; color: #999; margin-top: 6px;">给当前配置起个名字，方便下次快速切换</div>
                     </div>
 
                     <div style="margin-top: 16px;">
-                        <label style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设列表</label>
-                        <div id="presetListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
-                            <button id="apiPresetDrawerBtn" type="button" style="color: #333; font-size: 14px; padding: 12px; text-align: center; background: #F5F3F6; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">点击选择API预设</button>
+                        <label
+                            style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设列表</label>
+                        <div id="presetListContainer"
+                            style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+                            <!-- 按钮由 JS 动态生成 -->
                         </div>
                     </div>
-                    
+
                     <!-- API预设选择弹窗 -->
                     <div id="apiPresetModal" class="modal" style="display: none;">
-                        <div class="modal-content" style="width: 260px; height: 280px; max-width: 260px; max-height: 280px; border-radius: 14px; padding: 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden;">
+                        <div class="modal-content"
+                            style="width: 260px; height: 280px; max-width: 260px; max-height: 280px; border-radius: 14px; padding: 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden;">
                             <div style="padding: 10px 12px; border-bottom: 1px solid #E8E4E9; flex-shrink: 0;">
-                                <h3 style="margin: 0; font-size: 13px; color: #333; text-align: center; font-weight: 600;">选择API预设</h3>
+                                <h3
+                                    style="margin: 0; font-size: 13px; color: #333; text-align: center; font-weight: 600;">
+                                    选择API预设</h3>
                             </div>
-                            <div id="apiPresetDrawerList" style="padding: 6px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1;">
+                            <div id="apiPresetDrawerList"
+                                style="padding: 6px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1;">
                                 <!-- 预设列表项将动态生成 -->
                             </div>
-                            <div style="padding: 8px 10px; border-top: 1px solid #E8E4E9; display: flex; gap: 8px; justify-content: center; flex-shrink: 0;">
-                                <button id="closeApiPresetModal" type="button" style="padding: 4px 20px; background: #F5F3F6; border: none; border-radius: 6px; cursor: pointer; color: #666; font-size: 12px; font-weight: 500;">取消</button>
+                            <div
+                                style="padding: 8px 10px; border-top: 1px solid #E8E4E9; display: flex; gap: 8px; justify-content: center; flex-shrink: 0;">
+                                <button id="closeApiPresetModal" type="button"
+                                    style="padding: 4px 20px; background: #F5F3F6; border: none; border-radius: 6px; cursor: pointer; color: #666; font-size: 12px; font-weight: 500;">取消</button>
                             </div>
                         </div>
                     </div>
@@ -3555,7 +3567,8 @@
             </div>
 
             <!-- 输入框区域 -->
-            <div style="background-color: #FFFFFF; border-top: 1px solid #f6f2f1; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px);">
+            <div
+                style="background-color: #FFFFFF; border-top: 1px solid #f6f2f1; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px);">
                 <div id="chatInputAreaWrap" class="chat-input-area-wrap" style="padding: 8px 12px 2px;">
                     <div id="replyPreview" class="reply-preview">
                         <span id="replyPreviewText" class="reply-preview-text"></span>
@@ -3741,16 +3754,21 @@
 
     <!-- 图片内容弹窗 -->
     <div class="modal" id="imageDescModal" style="display: none; z-index: 2000; background-color: rgba(0, 0, 0, 0.5);">
-        <div style="background-color: white; border-radius: 18px; width: 90%; max-width: 340px; padding: 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; display: flex; flex-direction: column; gap: 20px;">
-            <button id="closeImageDescModal" style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 24px; color: #ccc; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; hover: color #999;">
+        <div
+            style="background-color: white; border-radius: 18px; width: 90%; max-width: 340px; padding: 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; display: flex; flex-direction: column; gap: 20px;">
+            <button id="closeImageDescModal"
+                style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 24px; color: #ccc; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; hover: color #999;">
                 <i class="fas fa-times"></i>
             </button>
 
             <h3 style="margin: 0; color: #333; font-size: 16px; font-weight: 600;">图片描述</h3>
 
-            <div id="imageDescText" style="color: #555; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; padding: 12px; background-color: #f9f9f9; border-radius: 12px; border: 1px solid #eee;"></div>
+            <div id="imageDescText"
+                style="color: #555; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; padding: 12px; background-color: #f9f9f9; border-radius: 12px; border: 1px solid #eee;">
+            </div>
 
-            <button id="imageDescOkBtn" class="btn btn-primary" style="width: 100%; height: 44px; border-radius: 12px; margin-top: 8px;">确定</button>
+            <button id="imageDescOkBtn" class="btn btn-primary"
+                style="width: 100%; height: 44px; border-radius: 12px; margin-top: 8px;">确定</button>
         </div>
     </div>
 
@@ -3964,8 +3982,8 @@
                         <div class="settings-card-desc">角色每次回复时参考最近N条对话，数值越大角色记忆越久但响应可能变慢</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="number" id="memoryChatCountInput" 
-                            style="width: 60px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; text-align: center;" 
+                        <input type="number" id="memoryChatCountInput"
+                            style="width: 60px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; text-align: center;"
                             min="1" max="999" value="50">
                         <span style="font-size: 14px; color: #787785;">条</span>
                     </div>
@@ -4157,17 +4175,17 @@
                  */
                 sanitizeRawText(text) {
                     if (!text) return '';
-                    
+
                     // 移除文本开头的markdown代码块标记
                     let cleaned = text.replace(/^```(?:json)?\s*\n?/, '').trim();
                     // 移除文本末尾的markdown代码块标记
                     cleaned = cleaned.replace(/\n?```\s*$/, '').trim();
                     // 移除常见的前缀（如 json, JSON等）
                     cleaned = cleaned.replace(/^["']?(?:json|JSON)["']?\s*:\s*/, '').trim();
-                    // 移除锁符号、加密标识等前缀标记
-                    cleaned = cleaned.replace(/^[\s🔒🔐]*/, '').trim();
+                    // 移除开头的emoji、锁符号、加密标识等前缀标记
+                    cleaned = cleaned.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '').trim();
                     cleaned = cleaned.replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '').trim();
-                    
+
                     return cleaned;
                 },
 
@@ -4178,36 +4196,36 @@
                  */
                 extractJSON(text) {
                     if (!text) return null;
-                    
+
                     // 使用括号匹配来正确提取JSON对象
                     let braceCount = 0;
                     let startIndex = -1;
                     let inString = false;
                     let escaped = false;
-                    
+
                     for (let i = 0; i < text.length; i++) {
                         const char = text[i];
-                        
+
                         // 处理转义字符
                         if (escaped) {
                             escaped = false;
                             continue;
                         }
-                        
+
                         if (char === '\\') {
                             escaped = true;
                             continue;
                         }
-                        
+
                         // 处理字符串边界
                         if (char === '"' && !escaped) {
                             inString = !inString;
                             continue;
                         }
-                        
+
                         // 如果在字符串内，跳过括号计数
                         if (inString) continue;
-                        
+
                         // 计数大括号
                         if (char === '{') {
                             if (startIndex === -1) startIndex = i;
@@ -4220,33 +4238,33 @@
                             }
                         }
                     }
-                    
+
                     // 如果没有找到完整的JSON对象，尝试找JSON数组
                     let bracketCount = 0;
                     startIndex = -1;
                     inString = false;
                     escaped = false;
-                    
+
                     for (let i = 0; i < text.length; i++) {
                         const char = text[i];
-                        
+
                         if (escaped) {
                             escaped = false;
                             continue;
                         }
-                        
+
                         if (char === '\\') {
                             escaped = true;
                             continue;
                         }
-                        
+
                         if (char === '"' && !escaped) {
                             inString = !inString;
                             continue;
                         }
-                        
+
                         if (inString) continue;
-                        
+
                         if (char === '[') {
                             if (startIndex === -1) startIndex = i;
                             bracketCount++;
@@ -4257,7 +4275,7 @@
                             }
                         }
                     }
-                    
+
                     return null;
                 },
 
@@ -4268,18 +4286,18 @@
                  */
                 fixJSONErrors(jsonStr) {
                     if (!jsonStr) return '';
-                    
+
                     let fixed = jsonStr;
-                    
-                    // 第一步：移除可能混入的前缀标记（如【inner_voice】等）以及锁符号和加密标识
-                    fixed = fixed.replace(/^[\s🔒🔐【]*(?:inner_voice|心声|神态|JSON|json|数据|encrypted|ENCRYPTED|locked|LOCKED)[\s】：:]*/, '').trim();
-                    fixed = fixed.replace(/^[\s🔒🔐]+/, '').trim();  // 直接移除锁符号和加密标识
-                    
+
+                    // 第一步：移除可能混入的前缀标记（如【inner_voice】等）以及emoji、加密标识
+                    fixed = fixed.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s【]*(?:inner_voice|心声|神态|JSON|json|数据|encrypted|ENCRYPTED|locked|LOCKED)[\s】：:]*/gu, '').trim();
+                    fixed = fixed.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '').trim();
+
                     // 修复单引号为双引号（但保留中文引号）
                     // 只替换成对的英文单引号
                     fixed = fixed.replace(/([^\\])'([^']*)'([^\\])/g, '$1"$2"$3');
                     fixed = fixed.replace(/^'([^']*)'/, '"$1"');
-                    
+
                     // 修复未闭合的字符串（尾部的杂散引号）
                     // 计算引号数量，如果是奇数则删除最后的引号
                     const quoteCount = (fixed.match(/"/g) || []).length;
@@ -4291,23 +4309,23 @@
                             fixed += '"';
                         }
                     }
-                    
+
                     // 修复末尾缺少的大括号
                     if (fixed.trim().startsWith('{') && !fixed.trim().endsWith('}')) {
                         fixed = fixed.trimEnd() + '}';
                     }
-                    
+
                     // 修复末尾缺少的方括号
                     if (fixed.trim().startsWith('[') && !fixed.trim().endsWith(']')) {
                         fixed = fixed.trimEnd() + ']';
                     }
-                    
+
                     // 修复多余的逗号（JSON末尾）
                     fixed = fixed.replace(/,\s*([}\]])/g, '$1');
-                    
+
                     // 移除控制字符和不可见字符
                     fixed = fixed.replace(/[\x00-\x1F\x7F]/g, '');
-                    
+
                     return fixed;
                 },
 
@@ -4325,24 +4343,24 @@
                     try {
                         // 步骤1: 清洗前缀杂余
                         let cleaned = this.sanitizeRawText(rawText);
-                        
+
                         // 步骤2: 提取JSON部分
                         let jsonStr = this.extractJSON(cleaned);
                         if (!jsonStr) {
                             console.warn('[JSON清洗层] 未能提取JSON结构');
                             return null;
                         }
-                        
+
                         // 步骤3: 修复常见格式错误
                         jsonStr = this.fixJSONErrors(jsonStr);
-                        
+
                         // 调试输出
                         console.log('[JSON清洗层] 修复后的JSON（前200字）:', jsonStr.slice(0, 200));
-                        
+
                         // 步骤4: 尝试解析
                         const result = JSON.parse(jsonStr);
-                        console.log('[JSON清洗层] 成功解析JSON', { 
-                            original_length: rawText.length, 
+                        console.log('[JSON清洗层] 成功解析JSON', {
+                            original_length: rawText.length,
                             cleaned_length: jsonStr.length,
                             keys: Object.keys(result)
                         });
@@ -4415,18 +4433,18 @@
                 if (customErrorOkButton) {
                     const newButton = customErrorOkButton.cloneNode(true);
                     customErrorOkButton.parentNode.replaceChild(newButton, customErrorOkButton);
-                    
+
                     // 重新获取克隆后的按钮
                     const clonedButton = document.getElementById('customErrorOkButton');
                     if (clonedButton) {
-                        clonedButton.addEventListener('click', function() {
+                        clonedButton.addEventListener('click', function () {
                             customErrorModal.style.display = 'none';
                         });
                     }
                 }
 
                 // 点击背景关闭（只添加一次）
-                customErrorModal.onclick = function(e) {
+                customErrorModal.onclick = function (e) {
                     if (e.target === customErrorModal) {
                         customErrorModal.style.display = 'none';
                     }
@@ -5397,13 +5415,13 @@
                     // 清除该好友的所有相关数据
                     // 1. 删除好友的聊天历史
                     localStorage.removeItem(`chat_${currentFriendId}`);
-                    
+
                     // 2. 删除好友的人设数据
                     localStorage.removeItem(`persona_${currentFriendId}`);
-                    
+
                     // 3. 删除好友的心声数据
                     localStorage.removeItem(`heartvoice_${currentFriendId}`);
-                    
+
                     // 4. 删除好友的其他相关配置
                     const allKeys = Object.keys(localStorage);
                     allKeys.forEach(key => {
@@ -6570,7 +6588,7 @@
                     } else {
                         presets.push({ name, ...preset, savedTime: new Date().toISOString() });
                     }
-                    
+
                     if (this.friendSystem) {
                         this.friendSystem.setStorage('apiPresets', JSON.stringify(presets));
                     } else {
@@ -6709,7 +6727,7 @@
                     this.deleteCancelBtn = document.getElementById('hvDeleteCancel');
                     this.pendingDeleteIndex = -1;
                     this.selectedItems = new Set();
-                    
+
                     // 多选模式状态
                     this.isMultiSelectMode = false;
                     this.multiSelectItems = new Map(); // 存储选中的项 {time -> true}
@@ -6749,11 +6767,11 @@
                             this.performDelete();
                         });
                     }
-                    
+
                     // 多选模式按钮
                     const deleteSelectBtn = document.getElementById('hv-delete-select-btn');
                     const exportSelectBtn = document.getElementById('hv-export-select-btn');
-                    
+
                     if (deleteSelectBtn) {
                         deleteSelectBtn.addEventListener('click', () => {
                             if (this.isMultiSelectMode) {
@@ -6765,7 +6783,7 @@
                             }
                         });
                     }
-                    
+
                     if (exportSelectBtn) {
                         exportSelectBtn.addEventListener('click', () => {
                             if (this.isMultiSelectMode) {
@@ -6855,13 +6873,13 @@
 
                     const data = this.getData(friendId);
                     const history = (data && data.history) ? data.history : [];
-                    
+
                     // 过滤无效项：只保留心声长度 >= 6 的有效记录
                     const validHistory = history.filter(item => {
                         const voiceText = String(item.voice || '').trim();
                         return voiceText.length >= 6;
                     });
-                    
+
                     const sorted = [...validHistory].reverse();
 
                     // 顶部工具栏（多选模式下显示）
@@ -6877,13 +6895,13 @@
                             </div>
                         `;
                         this.historyList.insertAdjacentHTML('beforeend', toolbarHtml);
-                        
+
                         // 绑定多选模式按钮事件
                         setTimeout(() => {
                             const deleteBtn = this.historyList.querySelector('#hv-multi-delete-btn');
                             const exportBtn = this.historyList.querySelector('#hv-multi-export-btn');
                             const cancelBtn = this.historyList.querySelector('#hv-multi-cancel-btn');
-                            
+
                             if (deleteBtn) deleteBtn.addEventListener('click', () => this.confirmMultiDelete());
                             if (exportBtn) exportBtn.addEventListener('click', () => this.confirmMultiExport());
                             if (cancelBtn) cancelBtn.addEventListener('click', () => this.exitMultiSelectMode());
@@ -6927,7 +6945,7 @@
                             </button>
                         </div>
                     `;
-                        
+
                         // 使用textContent安全地设置心声内容
                         const contentDiv = el.querySelector('.hv-history-content');
                         if (contentDiv) {
@@ -6956,7 +6974,7 @@
                                     if (countEl) countEl.textContent = this.multiSelectItems.size;
                                 });
                             }
-                            
+
                             // 点击项也能切换选中
                             el.addEventListener('click', (e) => {
                                 if (!e.target.closest('input[type="checkbox"]')) {
@@ -7084,15 +7102,15 @@
                             <h3 style="color: #4a4858; font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">确认删除</h3>
                             <p style="color: #8b7d9c; font-size: 14px; margin: 0 0 24px 0;">确认删除选中的 ${this.multiSelectItems.size} 条记录吗？</p>
                             <div style="display: flex; gap: 12px; justify-content: center;">
-                                <button id="hv-multi-confirm-yes" style="padding: 10px 24px; background: linear-gradient(135deg, #f0d6d7, #ffc4d0); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(240, 214, 215, 0.3);">删除</button>
-                                <button id="hv-multi-confirm-no" style="padding: 10px 24px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 20px; font-weight: 600; cursor: pointer;">取消</button>
+                                <button id="hv-multi-delete-yes" style="padding: 10px 24px; background: linear-gradient(135deg, #f0d6d7, #ffc4d0); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(240, 214, 215, 0.3);">删除</button>
+                                <button id="hv-multi-delete-no" style="padding: 10px 24px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 20px; font-weight: 600; cursor: pointer;">取消</button>
                             </div>
                         </div>
                     `;
                     document.body.appendChild(confirmOverlay);
 
-                    const yesBtn = confirmOverlay.querySelector('#hv-multi-confirm-yes');
-                    const noBtn = confirmOverlay.querySelector('#hv-multi-confirm-no');
+                    const yesBtn = confirmOverlay.querySelector('#hv-multi-delete-yes');
+                    const noBtn = confirmOverlay.querySelector('#hv-multi-delete-no');
 
                     yesBtn.addEventListener('click', () => {
                         this.performMultiDelete();
@@ -7139,15 +7157,15 @@
                             <h3 style="color: #4a4858; font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">确认导出</h3>
                             <p style="color: #8b7d9c; font-size: 14px; margin: 0 0 24px 0;">确认导出选中的 ${this.multiSelectItems.size} 条记录吗？</p>
                             <div style="display: flex; gap: 12px; justify-content: center;">
-                                <button id="hv-multi-confirm-yes" style="padding: 10px 24px; background: linear-gradient(135deg, #debeeb, #d4a5e0); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(222, 190, 235, 0.3);">导出</button>
-                                <button id="hv-multi-confirm-no" style="padding: 10px 24px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 20px; font-weight: 600; cursor: pointer;">取消</button>
+                                <button id="hv-multi-export-yes" style="padding: 10px 24px; background: linear-gradient(135deg, #debeeb, #d4a5e0); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(222, 190, 235, 0.3);">导出</button>
+                                <button id="hv-multi-export-no" style="padding: 10px 24px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 20px; font-weight: 600; cursor: pointer;">取消</button>
                             </div>
                         </div>
                     `;
                     document.body.appendChild(confirmOverlay);
 
-                    const yesBtn = confirmOverlay.querySelector('#hv-multi-confirm-yes');
-                    const noBtn = confirmOverlay.querySelector('#hv-multi-confirm-no');
+                    const yesBtn = confirmOverlay.querySelector('#hv-multi-export-yes');
+                    const noBtn = confirmOverlay.querySelector('#hv-multi-export-no');
 
                     yesBtn.addEventListener('click', async () => {
                         await this.performMultiExport();
@@ -7771,11 +7789,11 @@
                         this.textEl.textContent = data.voice || '';
                         if (this.demeanorEl) this.demeanorEl.textContent = data.demeanor || '';
                         const mood = data.mood !== undefined ? data.mood : 50;
-                        
+
                         // 处理进度条宽度：负数显示0%，超过100显示100%
                         const displayWidth = Math.max(0, Math.min(100, mood));
                         this.moodFillEl.style.width = `${displayWidth}%`;
-                        
+
                         // 根据心情值设置颜色
                         if (mood < 0) {
                             // 负数：红色（困扰/消极）
@@ -7787,7 +7805,7 @@
                             // 正常范围：默认紫粉色
                             this.moodFillEl.style.background = 'linear-gradient(90deg, #debeeb, #f0d6d7)';
                         }
-                        
+
                         this.moodLabelEl.textContent = `${mood}%`;
                     }
                     // 当data为空时，不清空现有内容，保持显示上次的数据
@@ -7858,17 +7876,17 @@
                     if (!friendId && typeof chatSession !== 'undefined') {
                         friendId = chatSession?.getCurrentFriendId?.();
                     }
-                    
+
                     if (!friendId) return [];
-                    
-                    const friend = typeof friendSystem !== 'undefined' 
-                        ? friendSystem?.getFriendById?.(friendId) 
+
+                    const friend = typeof friendSystem !== 'undefined'
+                        ? friendSystem?.getFriendById?.(friendId)
                         : null;
-                    
+
                     if (!friend || !Array.isArray(friend.mountedWorldBooks)) {
                         return [];
                     }
-                    
+
                     // 返回已挂载的世界书完整信息（不只是ID）
                     return friend.mountedWorldBooks
                         .map(bookId => this.getBook(bookId))
@@ -8871,8 +8889,8 @@
                         return;
                     }
 
-                    // 清洗消息内容：移除前缀标记、锁符号、加密标识等
-                    content = String(content || '').replace(/^[\s🔒🔐]*/, '').trim();
+                    // 清洗消息内容：移除开头的emoji、前缀标记、加密标识等
+                    content = String(content || '').replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '').trim();
 
                     const messageWrapper = document.createElement('div');
                     messageWrapper.style.marginBottom = '15px';
@@ -9028,7 +9046,7 @@
                     }
                     chatMessages.appendChild(messageWrapper);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                    
+
                     // 实时更新好友列表
                     if (this.currentFriendId && typeof window.updateFriendList === 'function') {
                         window.updateFriendList();
@@ -9052,7 +9070,7 @@
                 // ========== 人设冲突检测：计算文本相似度 ==========
                 calculateTextSimilarity(text1, text2) {
                     if (!text1 || !text2) return 0;
-                    
+
                     // 标准化文本（小写、去标点、分词）
                     const normalize = (str) => {
                         return str.toLowerCase()
@@ -9060,12 +9078,12 @@
                             .split('')
                             .filter(c => c.trim());
                     };
-                    
+
                     const arr1 = normalize(text1);
                     const arr2 = normalize(text2);
-                    
+
                     if (arr1.length === 0 || arr2.length === 0) return 0;
-                    
+
                     // 计算相同词汇的比例
                     let matches = 0;
                     for (let char of arr1) {
@@ -9074,51 +9092,57 @@
                             arr2.splice(arr2.indexOf(char), 1);
                         }
                     }
-                    
+
                     const similarity = (2 * matches) / (arr1.length + arr2.length + matches);
                     return Math.round(similarity * 100) / 100;  // 返回0-1之间的值
                 }
 
                 sanitizeAiResponse(text) {
                     if (!text) return '';
-                    
-                    // ===== 第一阶段：移除所有不应该在口头对话中出现的格式化描述 =====
+
                     let cleaned = text
                         // 移除所有 [语音...] 类型的描述
                         .replace(/\[语音[\s\S]*?\]/g, '')
-                        // 移除所有 【...】 类型的标记（可能含有系统描述）
+                        // 移除所有 【...】 类型的标记
                         .replace(/【[\s\S]*?】/g, '')
-                        // 移除所有 (...) 类型的补充说明
+                        // 移除所有括号
                         .replace(/\([^\)]*\)/g, '')
-                        // 移除所有 （...）类型的补充说明
                         .replace(/（[^）]*）/g, '')
                         // 移除多余空格
                         .replace(/\s{2,}/g, ' ')
                         .trim();
-                    
-                    // ===== 第二阶段：检查残留的关键词并进一步清理 =====
-                    // 如果仍然包含"语音"、"声音"等说明性词汇且不是自然对话的一部分
+
                     const hasVoiceMarkers = /^\[|^\【|语音时长|秒：|语音\s*\d+秒/.test(cleaned);
                     if (hasVoiceMarkers) {
-                        // 这是格式化的说明文本，不是对话
                         cleaned = cleaned
-                            .replace(/^.*?：/, '') // 移除前面的"语音 XXs："之类
-                            .replace(/^\s*\[.*?\]\s*/, '') // 移除开头的格式标记
+                            .replace(/^.*?：/, '')
+                            .replace(/^\s*\[.*?\]\s*/, '')
                             .trim();
                     }
-                    
-                    // ===== 第三阶段：移除锁符号、加密标识等前缀标记 =====
-                    const finalCleaned = cleaned
-                        .replace(/^[\s🔒🔐]+/, '')
+
+                    // 移除开头的emoji和加密标识
+                    let finalCleaned = cleaned
+                        .replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '')
                         .replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '')
+                        // 移除开头的角色名前缀
+                        .replace(/^[^：:。！？\n]{1,12}[：:]\s*/, '')
                         .trim();
+
+                    // 限制省略号：... 和 …… 都简化为最多1个……
+                    finalCleaned = finalCleaned.replace(/\.{2,}|…{2,}/g, '……');
                     
-                    return finalCleaned;
+                    // 如果有多个省略号，只保留1个
+                    const ellipsisMatches = finalCleaned.match(/……/g);
+                    if (ellipsisMatches && ellipsisMatches.length > 1) {
+                        finalCleaned = finalCleaned.replace(/(?:……)+/g, '……');
+                    }
+
+                    return finalCleaned.trim();
                 }
 
                 splitSentences(text) {
                     if (!text) return [];
-                    
+
                     // ===== 预处理：在分割前移除所有格式化文本 =====
                     let preprocessed = text
                         // 移除所有 [语音...] 类型的描述
@@ -9128,10 +9152,10 @@
                         // 移除包含"秒："的格式化行（如"15秒：...")
                         .replace(/\d+秒：[^\n。！？]*[\n。！？]?/g, '')
                         .trim();
-                    
+
                     // 如果预处理后为空，返回空数组
                     if (!preprocessed) return [];
-                    
+
                     // ===== 分割逻辑 =====
                     const sentences = preprocessed.split(/([。！？\n]+)/);
                     const result = [];
@@ -9157,37 +9181,25 @@
                     const sentences = this.splitSentences(response);
                     const validSentences = sentences.filter(s => s.trim());
 
-                    const maxCount = Math.max(1, Math.min(10, validSentences.length));
-                    const minCount = Math.min(2, maxCount);
+                    // 技术性限制：最多20条（防止崩溃），最少1条（AI自主决定）
+                    const maxCount = Math.max(1, Math.min(20, validSentences.length));
+                    const minCount = 1;  // 让AI自然根据人设、世界书和当前对话决定，不强制最少条数
                     const weighted = Math.random();
                     let messageCount = Math.round(minCount + weighted * (maxCount - minCount));
                     if (messageCount < minCount) messageCount = minCount;
                     if (messageCount > maxCount) messageCount = maxCount;
 
-                    let voiceProbability = 0.4; // 基础概率40%
-
-                    if (persona) {
-                        const personaLower = persona.toLowerCase();
-                        
-                        // 由AI根据完整人设语义判断语音倾向，此处仅保留性格特征微调
-                        if (personaLower.includes('话多') || personaLower.includes('健谈')) {
-                            voiceProbability = 0.55;
-                        } else if (personaLower.includes('沉默') || personaLower.includes('寡言')) {
-                            voiceProbability = 0.25;
-                        } else if (personaLower.includes('活泼') || personaLower.includes('开朗')) {
-                            voiceProbability = 0.60;
-                        } else if (personaLower.includes('冷淡') || personaLower.includes('冷酷')) {
-                            voiceProbability = 0.20;
-                        }
-                        // 都不符合则保持基础0.4
-                    }
+                    // 语音概率：由AI根据人设、世界书和当前对话自然决定，前端保持基础随机性
+                    const voiceProbability = 0.4;
 
                     const messages = [];
 
                     if (validSentences.length <= messageCount) {
                         for (const sentence of validSentences) {
+                            // 单条消息技术性限制80字（防止界面撑爆）
+                            const content = sentence.length > 80 ? sentence.substring(0, 77) + '...' : sentence;
                             messages.push({
-                                content: sentence,
+                                content: content,
                                 isVoice: Math.random() < voiceProbability
                             });
                         }
@@ -9196,17 +9208,20 @@
                         while (index < validSentences.length) {
                             const remaining = validSentences.length - index;
                             const maxChunk = remaining > 4 ? 2 : 1;
-                            const chunkSize = Math.min(remaining, Math.random() < 0.35 ? 1 : maxChunk);
+                            const chunkSize = Math.min(remaining, Math.random() < 0.5 ? 1 : maxChunk);
                             const chunk = validSentences.slice(index, index + chunkSize).join('');
+                            // 单条消息技术性限制80字（防止界面撑爆）
+                            const content = chunk.trim().length > 80 ? chunk.trim().substring(0, 77) + '...' : chunk.trim();
                             messages.push({
-                                content: chunk.trim(),
+                                content: content,
                                 isVoice: Math.random() < voiceProbability
                             });
                             index += chunkSize;
                         }
                     }
 
-                    return messages.slice(0, 10);
+                    // 技术性上限：最多返回20条消息
+                    return messages.slice(0, 20);
                 }
 
                 getSharedState(key, defaultValue) {
@@ -9295,7 +9310,7 @@
 
                     const seedText = text || String(aiResponse || '');
                     const seed = Math.max(0, seedText.length);
-                    
+
                     const line1 = `特写：${parts[seed % parts.length]}${actions[seed % actions.length]}，${scenes[seed % scenes.length]}，${details[seed % details.length]}。`;
                     const line2 = `画面：${background[seed % background.length]}。`;
 
@@ -9468,7 +9483,7 @@
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
 
                     try {
-                        let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；禁止使用锁符号(🔒🔐)、加密标识或任何会话类型标记；情绪必须通过语言本身表达。对话要自然，像真实聊天。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
+                        let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号；禁止动作说明或旁白；绝对禁止在回复开头加角色名或冒号前缀，直接开始说话；禁止使用锁符号、加密标识；情绪用语言表达；省略号不要滥用，最多1-2次。对话自然，像真实聊天。\n\n【人设融合】即将获得的人设信息（身份、性格、状态、关键关系）是你理解当前角色和事情的核心。你必须将这些信息贯穿于整个对话中，记住你的身份、你的关系、你的状态。\n\n【深度理解】你必须深入理解用户说的每一句话：理解字面意思、情绪、暗示、弦外之音；结合完整对话历史推理用户的真实意图和诉求；不要流于表面，要有洞察力和共情能力；捕捉细节、语气变化、情绪波动，给出贴切的回应。\n\n【回复详细程度】深入理解角色的完整人设和世界书设定后，自主决定回复的详细程度和语句数量，不要受任何固定模式限制。\n\n【语音消息】根据角色习惯和当前场景自然决定是否使用语音：如果角色喜欢语音或当前场景适合，就用语音；否则用文字。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
 
                         // ========== 统一获取人设和背景设定 ==========
                         // 一次性读取所有必需数据，避免重复读取
@@ -9480,7 +9495,7 @@
                         let personaProfile = null;  // 用于最后的验证清单
                         let friends = [];  // 一次读取，整个函数复用
                         let personaInfo = null;  // 一次读取，整个函数复用
-                        
+
                         if (targetFriendId) {
                             // 1. 一次性获取所有好友数据
                             friends = this.friendSystem ? this.friendSystem.getFriends() : [];
@@ -9495,10 +9510,10 @@
                             if (mountedContent.worldBooks.length > 0) {
                                 hasMountedWorldBooks = true;
                                 worldBookTitles = mountedContent.worldBooks.map(b => b.title);
-                                
+
                                 // 只在开头做简洁提示，不列举详细内容（节省tokens）
                                 mountedContentContext = `\n\n【已挂载的世界书约束】你将遵守以下已挂载的世界书设定：【${worldBookTitles.join('】【')}】。详细内容将在生成回复前给出。`;
-                                
+
                                 // 保存完整内容，仅在最后验证清单中使用
                                 worldBooksFullContent = '\n\n【回复前必读：已挂载的世界书约束详情】\n';
                                 mountedContent.worldBooks.forEach(book => {
@@ -9518,7 +9533,12 @@
                                     emotion: '用语言表达情绪，不用任何括号',
                                     memory: '牢记最近对话并连贯回应'
                                 };
-                                systemPrompt = `你将扮演以下角色并自然聊天，不要像剧本：\n角色资料JSON：${JSON.stringify(personaProfile)}\n硬性规则：禁止使用任何括号，包括英文与中文括号；禁止动作说明或旁白；情绪必须通过语言本身表达。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。请记住并参考最近对话内容。${mountedContentContext}`;
+                                // 先提取人设中的关键关系信息
+                                const personaText = persona || '';
+                                const relationshipMatch = personaText.match(/女友为(.+?)(?:[，。]|$)|配偶[：:](.+?)(?:[，。]|$)|伴侣[：:](.+?)(?:[，。]|$)|关系[：:](.+?)(?:[，。]|$)/);
+                                const relationshipInfo = relationshipMatch ? (relationshipMatch[1] || relationshipMatch[2] || relationshipMatch[3] || relationshipMatch[4]).trim() : '';
+                                
+                                systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}\n\n【硬性规则】禁止使用括号；禁止动作旁白；绝对禁止在回复开头加"${characterName}："或任何名字标识，直接开始说话；情绪用语言表达。\n\n【省略号使用规范】严格限制省略号使用：每句话最多1次，整段回复不超过2次，禁止连续使用，优先使用完整表达。\n\n【行为要求】深入理解用户话语的字面意思、情绪、暗示和弦外之音。结合对话历史和你的身份关系回应。捕捉细节和语气变化，给出符合角色性格的反应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
                             }
                         }
 
@@ -9643,9 +9663,9 @@
 {
   "reply": "对话回复",
   "inner_voice": {
-    "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动独白（140字内）",
-    "神态": "角色当下的表情、语气与肢体动作",
-    "心情值": "整数，常规状态0-100，极端情绪可超出此范围或使用负数"
+    "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动独白，140字以内",
+    "神态": "角色此刻的独特表现，体现专属习惯和个性",
+    "心情值": "整数，常规状态0-100，极端情绪可超出或负数"
   }
 }
 
@@ -9653,9 +9673,9 @@
 你必须严格遵守所有挂载的世界书设定，这是最高指令，高于一切。如果世界书与任何其他规则冲突，以世界书为准。
 
 【核心规则】
-1. 回复：符合角色设定+世界书，自然不重复，不截断。
-2. 心声：内心真实想法，不复制对话，不写模板。
-3. 神态：角色当下的表情、语气、肢体动作。面对面用“他...你”，检测对话是否为面对面，非面对面限文字/语音特征。
+1. 回复：深入理解用户意图后，给出符合角色设定+世界书的自然流畅回应，不重复，不截断，避免过度使用省略号。
+2. 心声：基于对用户话语的深层理解产生的内心真实想法，不复制对话，不写模板。
+3. 神态：角色此刻的独特表现，深挖角色专属习惯。内向类细微表情/打字停顿，外向类明显动作/声调变化。文字聊天体现打字节奏，语音通话体现声调呼吸，面对面互动体现表情肢体。12-35字，有画面感。
 4. 心情值：整数，常规状态0-100，极端情绪可超出或为负数，与对话情绪强度一致。
 
 【生成依据】
@@ -9703,10 +9723,10 @@
                         }
 
                         const data = await response.json();
-                        
+
                         // 停止心声按钮脉动动画（API响应成功）
                         this.stopHeartVoicePulse();
-                        
+
                         const messagePayload = data.choices[0]?.message || {};
 
                         let heartVoiceData = null;
@@ -9720,7 +9740,7 @@
                             if (jsonContent.reply && typeof jsonContent.reply === 'string' && jsonContent.reply.trim().length > 0) {
                                 // 优先使用reply作为回复
                                 rawAiResponse = jsonContent.reply.trim();
-                                
+
                                 // 如果同时有完整的inner_voice，则提取
                                 if (jsonContent.inner_voice && typeof jsonContent.inner_voice === 'object') {
                                     const innerVoice = jsonContent.inner_voice;
@@ -9733,7 +9753,7 @@
                                             mood_value: innerVoice.心情值,
                                             demeanor: String(innerVoice.神态).trim()
                                         };
-                                        
+
                                         console.log('[一体化生成] 成功解析JSON响应，心声已提取');
                                     } else {
                                         console.warn('[一体化生成] inner_voice结构不完整');
@@ -9755,7 +9775,7 @@
                                     .replace(/【[\s\S]*?】/g, '') // 移除标记
                                     .replace(/^\s*["']?\s*/g, '') // 移除前缀空格和引号
                                     .trim();
-                                
+
                                 // ==== 强化清理：移除所有可能的心声相关关键词 ====
                                 plainText = plainText
                                     .replace(/心声[：:].*/g, '') // 移除"心声："开头的所有内容
@@ -9763,12 +9783,12 @@
                                     .replace(/心情值[：:].*/g, '') // 移除"心情值："开头的所有内容
                                     .replace(/["""].*?["""]/g, '') // 移除引号中的内容（可能是JSON格式残留）
                                     .trim();
-                                
+
                                 // 最后检查：如果内容仍然看起来像包含心声数据，清空它
                                 if (plainText.includes('心声') || plainText.includes('神态') || plainText.includes('心情值')) {
                                     plainText = '';
                                 }
-                                
+
                                 if (plainText && plainText.length >= 10) {
                                     rawAiResponse = plainText;
                                     console.log('[一体化生成] 提取纯文本部分作为回复');
@@ -9791,7 +9811,7 @@
                             console.warn('[防御] 检测到心声关键词混入rawAiResponse，本条消息已丢弃');
                             return;
                         }
-                        
+
                         // 如果仍然包含JSON结构，说明提取失败，丢弃此消息
                         if (rawAiResponse.includes('{') && rawAiResponse.includes('}')) {
                             console.warn('[防御] 检测到JSON结构混入rawAiResponse，本条消息已丢弃');
@@ -9802,13 +9822,13 @@
 
                         // ========== 二次防御清理：确保对话内容纯净 ==========
                         // 如果清理后仍然包含不自然的描述文本，则放弃此消息
-                        if (aiResponse.includes('[') || aiResponse.includes(']') || 
+                        if (aiResponse.includes('[') || aiResponse.includes(']') ||
                             aiResponse.includes('【') || aiResponse.includes('】') ||
                             aiResponse.includes('秒：') || /语音\s*\d+秒/.test(aiResponse)) {
                             console.warn('[二次防御] 检测到格式化文本仍残留，本条消息已丢弃');
                             return;
                         }
-                        
+
                         // 验证回复长度（去除空格后）
                         if (!aiResponse.replace(/\s/g, '').length) {
                             console.warn('[二次防御] 清理后无有效内容');
@@ -9831,7 +9851,7 @@
                         // 复用之前一次读取的数据，避免重复读取
                         const currentFriend = friends.find(f => f.id === targetFriendId);
                         const currentPersona = personaInfo?.raw ?? currentFriend?.persona ?? '';
-                        
+
                         // 一体化生成：心声数据已由API直接返回，无需降级处理
                         const aiMessages = this.generateAIMessages(aiResponse, currentPersona || '');
                         const aiBase = Date.now().toString();
@@ -9846,7 +9866,7 @@
                             if (currentFriend) {
                                 // 检查是否在当前好友的聊天页面
                                 const isChatActive = chatModal && chatModal.style.display !== 'none' && this.currentFriendId === targetFriendId;
-                                
+
                                 // 如果不在当前聊天页面，才显示通知
                                 if (!isChatActive) {
                                     const notifText = aiMsg.isVoice ? '[语音]' : aiMsg.content;
@@ -9875,7 +9895,7 @@
                             const heartVoiceText = String(heartVoiceData.heart_voice || '').trim();
                             const heartDemeanor = String(heartVoiceData.demeanor || '').trim();
                             let moodValue = Number(heartVoiceData.mood_value);
-                            
+
                             // 如果 moodValue 是 NaN，设置为默认值 50
                             if (!Number.isFinite(moodValue)) {
                                 moodValue = 50;
@@ -9901,13 +9921,13 @@
                             if (isValidVoice && isValidMood && isValidDemeanor) {
                                 const oldData = heartVoiceSystem.getData(targetFriendId) || {};
                                 const oldHistory = Array.isArray(oldData.history) ? oldData.history : [];
-                                
+
                                 // 防止高度相似的重复：只检查心声本身的相似度（不包括神态）
                                 const lastEntry = oldHistory.length > 0 ? oldHistory[oldHistory.length - 1] : null;
-                                
+
                                 let shouldUpdate = true;
                                 let updateReason = '新心声';
-                                
+
                                 if (lastEntry) {
                                     // 完全相同检查（最严格）
                                     if (lastEntry.voice === heartVoiceText) {
@@ -9916,19 +9936,19 @@
                                     } else {
                                         // 只检查心声的相似度（不检查神态），要求 > 0.95（95%）才认为不更新
                                         const voiceSimilarity = this.calculateTextSimilarity(heartVoiceText, lastEntry.voice);
-                                        
+
                                         console.log('[心声相似度检查]', {
                                             voiceSimilarity: (voiceSimilarity * 100).toFixed(1) + '%',
                                             threshold: '50%'
                                         });
-                                        
+
                                         if (voiceSimilarity > 0.80) {
                                             shouldUpdate = false;
                                             updateReason = `心声极度相似（${(voiceSimilarity * 100).toFixed(0)}%）`;
                                         }
                                     }
                                 }
-                                
+
                                 if (shouldUpdate) {
                                     const newData = {
                                         lastUpdate: Date.now(),
@@ -10031,17 +10051,17 @@
                     } catch (error) {
                         console.error('发送消息失败:', error);
                         this.stopHeartVoicePulse();  // 错误时也停止脉动
-                        
+
                         // 提取错误信息并显示自定义错误弹窗
                         let errorMessage = error.message || '未知错误';
-                        
+
                         // 如果是HTTP错误，提取状态码
                         if (error.message && error.message.includes('请求失败:')) {
                             errorMessage = error.message.replace('请求失败:', '').trim();
                         } else if (error.statusCode) {
                             errorMessage = error.statusCode.toString();
                         }
-                        
+
                         showCustomErrorModal(errorMessage);
                         // 不生成备用心声，保持之前的心声显示
                     } finally {
@@ -10395,7 +10415,7 @@
                 // 获取保存的配置
                 const config = apiService ? apiService.getConfig() : {};
                 const savedCount = config.memoryChatCount || 50;
-                
+
                 // 设置输入框的值
                 memoryChatCountInput.value = savedCount;
 
@@ -10534,18 +10554,18 @@
                             apiService.showApiStatus('请输入预设名称', 'error');
                             return;
                         }
-                        
+
                         const currentConfig = {
                             apiUrl: apiUrlInput.value.trim(),
                             apiKey: apiKeyInput.value.trim(),
                             model: modelSelect.value
                         };
-                        
+
                         if (!currentConfig.apiUrl || !currentConfig.apiKey) {
                             apiService.showApiStatus('请先配置API地址和密钥', 'error');
                             return;
                         }
-                        
+
                         apiService.savePreset(name, currentConfig);
                         apiService.showApiStatus(`已保存预设: ${name}`, 'success');
                         presetNameInput.value = '';
@@ -10594,7 +10614,7 @@
 
                 // ========== 虚拟键盘自适应功能 ==========
                 // 使用 visualViewport API 动态调整容器高度，确保键盘弹出时输入框始终可见
-                (function() {
+                (function () {
                     const chatModalContent = document.querySelector('#chatModal .modal-content');
                     if (!chatModalContent) return;
 
@@ -10679,10 +10699,15 @@
 
     <!-- Custom Error Modal -->
     <div id="customErrorModal" class="modal" style="display: none; background-color: rgba(0, 0, 0, 0.5);">
-        <div class="modal-content" style="width: 90%; max-width: 320px; border-radius: 18px; padding: 28px; text-align: center; background-color: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
-            <h3 style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px; line-height: 1.4;">出现错误：</h3>
-            <p id="customApiErrorText" style="font-size: 14px; color: #666; margin-bottom: 28px; word-break: break-word; line-height: 1.5; min-height: 40px;"></p>
-            <button id="customErrorOkButton" class="btn btn-primary" style="width: 100%; height: 44px; border-radius: 12px;">确定</button>
+        <div class="modal-content"
+            style="width: 90%; max-width: 320px; border-radius: 18px; padding: 28px; text-align: center; background-color: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <h3 style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px; line-height: 1.4;">出现错误：
+            </h3>
+            <p id="customApiErrorText"
+                style="font-size: 14px; color: #666; margin-bottom: 28px; word-break: break-word; line-height: 1.5; min-height: 40px;">
+            </p>
+            <button id="customErrorOkButton" class="btn btn-primary"
+                style="width: 100%; height: 44px; border-radius: 12px;">确定</button>
         </div>
     </div>
 
@@ -10699,7 +10724,8 @@
                 </div>
             </div>
             <div class="settings-nav">
-                <button id="worldbookBack" class="settings-back" onclick="document.getElementById('worldbookModal').style.display='none'">
+                <button id="worldbookBack" class="settings-back"
+                    onclick="document.getElementById('worldbookModal').style.display='none'">
                     <i class="fas fa-chevron-left"></i>
                     返回
                 </button>
