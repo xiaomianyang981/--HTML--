@@ -2109,7 +2109,6 @@
             transform: scale(0.98);
         }
 
-        /* 世界书卡片列表项样式 */
         .worldbook-mount-item {
             display: flex;
             align-items: center;
@@ -3917,226 +3916,6 @@
         </div>
     </div>
 
-    <!-- 创世书全屏页面 -->
-    <div class="modal" id="worldbookModal" style="display:none;">
-        <!-- 创世书主页面 -->
-        <div id="worldbookMainPage" class="settings-screen" style="display: flex; flex-direction: column;">
-            <!-- 状态栏 -->
-            <div class="status-bar">
-                <div id="worldbookStatusTime" class="time">14:30</div>
-                <div class="status-icons">
-                    <i id="worldbookStatusSignal" class="fas fa-signal"></i>
-                    <i id="worldbookStatusWifi" class="fas fa-wifi"></i>
-                    <i id="worldbookStatusBattery" class="fas fa-battery-three-quarters"></i>
-                </div>
-            </div>
-            <div class="settings-nav">
-                <button id="worldbookBack" class="settings-back">
-                    <i class="fas fa-chevron-left"></i>
-                    返回
-                </button>
-                <div class="settings-title">创世书</div>
-                <span style="width: 42px;"></span>
-            </div>
-            <div class="settings-scroll" style="padding: 20px 16px; display: flex; flex-direction: column;">
-                <!-- 世界书和游戏按钮区域 -->
-                <div style="display: flex; gap: 25px; justify-content: center; margin-top: 24px; padding: 0 12px;">
-                    <!-- 世界书按钮 -->
-                    <button id="worldbookBtn"
-                        style="flex: 1; max-width: 140px; padding: 20px 16px; border-radius: 28px; background: linear-gradient(135deg, rgba(240, 214, 215, 0.3) 0%, rgba(200, 220, 240, 0.2) 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);">
-                        <i class="fas fa-book" style="font-size: 30px; color: #888;"></i>
-                        <span style="font-size: 15px; font-weight: 600; color: #888; letter-spacing: 0.5px;">世界书</span>
-                    </button>
-                    <!-- HTML游戏按钮 -->
-                    <button id="htmlGameBtn"
-                        style="flex: 1; max-width: 140px; padding: 20px 16px; border-radius: 28px; background: linear-gradient(135deg, rgba(240, 214, 215, 0.25) 0%, rgba(200, 220, 240, 0.25) 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);">
-                        <i class="fas fa-gamepad" style="font-size: 30px; color: #888;"></i>
-                        <span style="font-size: 15px; font-weight: 600; color: #888; letter-spacing: 0.5px;">HTML
-                            游戏</span>
-                    </button>
-                </div>
-
-                <!-- 按钮添加交互效果样式 -->
-                <style>
-                    #worldbookBtn:hover,
-                    #htmlGameBtn:hover {
-                        transform: translateY(-3px);
-                        box-shadow: 0 10px 24px rgba(120, 119, 133, 0.15) !important;
-                    }
-
-                    #worldbookBtn:active,
-                    #htmlGameBtn:active {
-                        transform: translateY(-1px);
-                    }
-                </style>
-
-                <!-- 提示语区域 -->
-                <div
-                    style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 28px; margin-bottom: 0; padding: 0;">
-                    <p
-                        style="font-size: 13px; color: #787785; margin: 0 0 6px 0; font-weight: 500; letter-spacing: 0.3px;">
-                        世界书挂越少越好</p>
-                    <p style="font-size: 13px; color: #787785; margin: 0; font-weight: 500; letter-spacing: 0.3px;">
-                        小游戏不玩时勿挂</p>
-                </div>
-
-                <!-- 底部留白 -->
-                <div style="flex: 1;"></div>
-            </div>
-        </div>
-
-        <!-- 世界书列表页面 -->
-        <div id="worldbookListPage" class="settings-screen" style="display: none; flex-direction: column;">
-            <!-- 状态栏 -->
-            <div class="status-bar">
-                <div id="wbListStatusTime" class="time">14:30</div>
-                <div class="status-icons">
-                    <i id="wbListStatusSignal" class="fas fa-signal"></i>
-                    <i id="wbListStatusWifi" class="fas fa-wifi"></i>
-                    <i id="wbListStatusBattery" class="fas fa-battery-three-quarters"></i>
-                </div>
-            </div>
-            <div class="settings-nav">
-                <button id="wbListBack" class="settings-back">
-                    <i class="fas fa-chevron-left"></i>
-                    返回
-                </button>
-                <div class="settings-title">世界书</div>
-                <button id="wbAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
-                    <i class="fas fa-plus" style="font-size: 18px; color: #888;"></i>
-                </button>
-            </div>
-            <!-- 内容区域 -->
-            <div class="settings-scroll" style="flex: 1;">
-                <!-- 提示条 -->
-                <div class="page-hint">别挂太多哦</div>
-                <!-- 世界书列表 -->
-                <div id="wbListContainer" class="page-content-list">
-                    <!-- 世界书卡片将动态插入 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- 世界书编辑页面 -->
-        <div id="worldbookEditPage" class="settings-screen" style="display: none; flex-direction: column;">
-            <!-- 状态栏 -->
-            <div class="status-bar">
-                <div id="wbEditStatusTime" class="time">14:30</div>
-                <div class="status-icons">
-                    <i id="wbEditStatusSignal" class="fas fa-signal"></i>
-                    <i id="wbEditStatusWifi" class="fas fa-wifi"></i>
-                    <i id="wbEditStatusBattery" class="fas fa-battery-three-quarters"></i>
-                </div>
-            </div>
-            <div class="settings-nav">
-                <button id="wbEditBack" class="settings-back">
-                    <i class="fas fa-chevron-left"></i>
-                    返回
-                </button>
-                <div id="wbEditTitle" class="settings-title">新建世界书</div>
-                <span style="width: 42px;"></span>
-            </div>
-            <!-- 编辑表单 -->
-            <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
-                <div style="margin-bottom: 12px;">
-                    <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
-                    <input id="wbEditTitleInput" type="text" placeholder="输入世界书标题"
-                        style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
-                </div>
-                <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
-                    <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">内容</label>
-                    <textarea id="wbEditContentInput" placeholder="输入世界书内容"
-                        style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: inherit;"></textarea>
-                </div>
-            </div>
-            <!-- 保存按钮 -->
-            <div style="padding: 16px; display: flex; justify-content: center;">
-                <button id="wbSaveBtn" class="wb-glass-btn"
-                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
-                    保存
-                </button>
-            </div>
-        </div>
-
-        <!-- HTML游戏列表页面 -->
-        <div id="htmlGameListPage" class="settings-screen" style="display: none; flex-direction: column;">
-            <!-- 状态栏 -->
-            <div class="status-bar">
-                <div id="hgListStatusTime" class="time">14:30</div>
-                <div class="status-icons">
-                    <i id="hgListStatusSignal" class="fas fa-signal"></i>
-                    <i id="hgListStatusWifi" class="fas fa-wifi"></i>
-                    <i id="hgListStatusBattery" class="fas fa-battery-three-quarters"></i>
-                </div>
-            </div>
-            <div class="settings-nav">
-                <button id="hgListBack" class="settings-back">
-                    <i class="fas fa-chevron-left"></i>
-                    返回
-                </button>
-                <div class="settings-title">HTML 游戏</div>
-                <button id="hgAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
-                    <i class="fas fa-plus" style="font-size: 18px; color: #888;"></i>
-                </button>
-            </div>
-            <!-- 内容区域 -->
-            <div class="settings-scroll" style="flex: 1;">
-                <!-- 提示条 -->
-                <div class="page-hint">不玩时请取消挂载</div>
-                <!-- HTML游戏列表 -->
-                <div id="hgListContainer" class="page-content-list">
-                    <!-- HTML游戏卡片将动态插入 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- HTML游戏编辑页面 -->
-        <div id="htmlGameEditPage" class="settings-screen" style="display: none; flex-direction: column;">
-            <!-- 状态栏 -->
-            <div class="status-bar">
-                <div id="hgEditStatusTime" class="time">14:30</div>
-                <div class="status-icons">
-                    <i id="hgEditStatusSignal" class="fas fa-signal"></i>
-                    <i id="hgEditStatusWifi" class="fas fa-wifi"></i>
-                    <i id="hgEditStatusBattery" class="fas fa-battery-three-quarters"></i>
-                </div>
-            </div>
-            <div class="settings-nav">
-                <button id="hgEditBack" class="settings-back">
-                    <i class="fas fa-chevron-left"></i>
-                    返回
-                </button>
-                <div id="hgEditTitle" class="settings-title">新建HTML游戏</div>
-                <span style="width: 42px;"></span>
-            </div>
-            <!-- 编辑表单 -->
-            <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
-                <div style="margin-bottom: 12px;">
-                    <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
-                    <input id="hgEditTitleInput" type="text" placeholder="输入游戏名称"
-                        style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
-                </div>
-                <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
-                    <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">HTML
-                        代码</label>
-                    <textarea id="hgEditContentInput" placeholder="输入HTML代码"
-                        style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: 'Courier New', monospace; line-height: 1.5;"></textarea>
-                </div>
-            </div>
-            <!-- 保存按钮 -->
-            <div style="padding: 16px; display: flex; justify-content: center;">
-                <button id="hgSaveBtn" class="hg-glass-btn"
-                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
-                    保存
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- 设置全屏页面 -->
     <div class="modal" id="settingsModal">
         <div class="settings-screen" style="display: flex; flex-direction: column;">
@@ -5319,14 +5098,6 @@
                 settingsModal.style.display = 'none';
             });
 
-            // 世界书返回按钮
-            const worldbookBackBtn = document.getElementById('worldbookBack');
-            if (worldbookBackBtn) {
-                worldbookBackBtn.addEventListener('click', () => {
-                    const wbModal = document.getElementById('worldbookModal');
-                    if (wbModal) wbModal.style.display = 'none';
-                });
-            }
 
             if (settingsApiCard) {
                 settingsApiCard.addEventListener('click', () => {
@@ -10916,58 +10687,200 @@
     </div>
 
     <!-- 世界书 Modal Start -->
-    <div id="worldbookModal" class="modal" style="display: none; background-color: transparent;">
-        <div class="modal-content"
-            style="width: 100%; max-width: 430px; height: 90vh; max-height: 932px; border-radius: 40px; background-color: #f8f5f9; display: flex; flex-direction: column; overflow: hidden; animation: modalSlideIn 0.3s ease-out;">
-            <!-- Status Bar -->
-            <div class="status-bar" style="background-color: #f8f5f9; color: #333;">
-                <div class="time" style="font-weight: 600;">9:41</div>
+    <div id="worldbookModal" class="modal" style="display: none;">
+        <div id="worldbookMainPage" class="settings-screen" style="display: flex; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time">14:30</div>
                 <div class="status-icons">
                     <i class="fas fa-signal"></i>
                     <i class="fas fa-wifi"></i>
-                    <i class="fas fa-battery-full"></i>
+                    <i class="fas fa-battery-three-quarters"></i>
                 </div>
             </div>
-            <!-- Header -->
-            <div class="settings-nav"
-                style="background-color: #f8f5f9; border-bottom: none; padding: 0 16px 10px; justify-content: space-between;">
-                <button onclick="closeModal('worldbookModal')" class="settings-back"
-                    style="font-size: 18px; color: #333;">
-                    <i class="fas fa-arrow-left"></i>
+            <div class="settings-nav">
+                <button id="worldbookBack" class="settings-back" onclick="document.getElementById('worldbookModal').style.display='none'">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
                 </button>
-                <h3 class="settings-title" style="color: #333; font-weight: 600; text-align: center; flex-grow: 1;">世界书
-                </h3>
-                <div style="width: 40px; height: 40px;"></div> <!-- Spacer to center title -->
+                <div class="settings-title">创世书</div>
+                <span style="width: 42px;"></span>
             </div>
-            <!-- Main Content -->
-            <div
-                style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 28px 50px; gap: 24px;">
-                <!-- Buttons Container -->
-                <div style="display: flex; justify-content: center; align-items: stretch; gap: 20px; width: 100%;">
-                    <div class="worldbook-button" style="background-color: #F2EBF5;">
+            <div class="settings-scroll" style="padding: 20px 16px; display: flex; flex-direction: column;">
+                <!-- 世界书和游戏按钮区域 -->
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 24px; padding: 0 12px;">
+                    <div id="worldbookBtn" class="worldbook-button" style="background-color: #F2EBF5;">
                         <div class="worldbook-icon">
                             <i class="fas fa-book" style="font-size: 28px;"></i>
                         </div>
                         <span>世界书</span>
                     </div>
-                    <div class="worldbook-button" style="background-color: #EAE4F2;">
+                    <div id="htmlGameBtn" class="worldbook-button" style="background-color: #EAE4F2;">
                         <div class="worldbook-icon">
                             <i class="fas fa-gamepad" style="font-size: 28px;"></i>
                         </div>
                         <span>HTML 游戏</span>
                     </div>
                 </div>
-                <!-- Hint Text -->
-                <div style="text-align: center; line-height: 1.7;">
-                    <p style="font-size: 13px; color: #888; font-family: -apple-system, sans-serif; font-weight: 500;">
-                        世界书挂载越少越好</p>
-                    <p
-                        style="font-size: 13px; color: #b0b0b0; font-family: -apple-system, sans-serif; font-weight: 500;">
-                        小游戏不玩时别挂载</p>
+                <!-- 提示语区域 -->
+                <div style="text-align: center; margin-top: 28px; line-height: 1.7;">
+                    <p style="font-size: 13px; color: #888; font-weight: 500;">世界书挂载越少越好</p>
+                    <p style="font-size: 13px; color: #b0b0b0; font-weight: 500;">小游戏不玩时别挂载</p>
+                </div>
+                <!-- 底部留白 -->
+                <div style="flex: 1;"></div>
+            </div>
+        </div>
+
+        <!-- 世界书列表页面 -->
+        <div id="worldbookListPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="wbListStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="wbListStatusSignal" class="fas fa-signal"></i>
+                    <i id="wbListStatusWifi" class="fas fa-wifi"></i>
+                    <i id="wbListStatusBattery" class="fas fa-battery-three-quarters"></i>
                 </div>
             </div>
-            <!-- Bottom Spacer -->
-            <div style="height: 130px; min-height: 130px; flex-shrink: 0; background-color: #f8f5f9;"></div>
+            <div class="settings-nav">
+                <button id="wbListBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div class="settings-title">世界书</div>
+                <button id="wbAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
+                    <i class="fas fa-plus" style="font-size: 18px; color: #888;"></i>
+                </button>
+            </div>
+            <!-- 内容区域 -->
+            <div class="settings-scroll" style="flex: 1;">
+                <!-- 提示条 -->
+                <div class="page-hint">别挂太多哦</div>
+                <!-- 世界书列表 -->
+                <div id="wbListContainer" class="page-content-list">
+                    <!-- 世界书卡片将动态插入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 世界书编辑页面 -->
+        <div id="worldbookEditPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="wbEditStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="wbEditStatusSignal" class="fas fa-signal"></i>
+                    <i id="wbEditStatusWifi" class="fas fa-wifi"></i>
+                    <i id="wbEditStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="wbEditBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div id="wbEditTitle" class="settings-title">新建世界书</div>
+                <span style="width: 42px;"></span>
+            </div>
+            <!-- 编辑表单 -->
+            <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
+                <div style="margin-bottom: 12px;">
+                    <label
+                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
+                    <input id="wbEditTitleInput" type="text" placeholder="输入世界书标题"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
+                </div>
+                <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
+                    <label
+                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">内容</label>
+                    <textarea id="wbEditContentInput" placeholder="输入世界书内容"
+                        style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: inherit;"></textarea>
+                </div>
+            </div>
+            <!-- 保存按钮 -->
+            <div style="padding: 16px; display: flex; justify-content: center;">
+                <button id="wbSaveBtn" class="wb-glass-btn"
+                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
+                    保存
+                </button>
+            </div>
+        </div>
+
+        <!-- HTML游戏列表页面 -->
+        <div id="htmlGameListPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="hgListStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="hgListStatusSignal" class="fas fa-signal"></i>
+                    <i id="hgListStatusWifi" class="fas fa-wifi"></i>
+                    <i id="hgListStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="hgListBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div class="settings-title">HTML 游戏</div>
+                <button id="hgAddNewBtn" class="settings-back" style="width: 42px; padding: 8px 10px;">
+                    <i class="fas fa-plus" style="font-size: 18px; color: #888;"></i>
+                </button>
+            </div>
+            <!-- 内容区域 -->
+            <div class="settings-scroll" style="flex: 1;">
+                <!-- 提示条 -->
+                <div class="page-hint">不玩时请取消挂载</div>
+                <!-- HTML游戏列表 -->
+                <div id="hgListContainer" class="page-content-list">
+                    <!-- HTML游戏卡片将动态插入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- HTML游戏编辑页面 -->
+        <div id="htmlGameEditPage" class="settings-screen" style="display: none; flex-direction: column;">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="hgEditStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="hgEditStatusSignal" class="fas fa-signal"></i>
+                    <i id="hgEditStatusWifi" class="fas fa-wifi"></i>
+                    <i id="hgEditStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button id="hgEditBack" class="settings-back">
+                    <i class="fas fa-chevron-left"></i>
+                    返回
+                </button>
+                <div id="hgEditTitle" class="settings-title">新建HTML游戏</div>
+                <span style="width: 42px;"></span>
+            </div>
+            <!-- 编辑表单 -->
+            <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
+                <div style="margin-bottom: 12px;">
+                    <label
+                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
+                    <input id="hgEditTitleInput" type="text" placeholder="输入游戏名称"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
+                </div>
+                <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
+                    <label
+                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">HTML
+                        代码</label>
+                    <textarea id="hgEditContentInput" placeholder="输入HTML代码"
+                        style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: 'Courier New', monospace; line-height: 1.5;"></textarea>
+                </div>
+            </div>
+            <!-- 保存按钮 -->
+            <div style="padding: 16px; display: flex; justify-content: center;">
+                <button id="hgSaveBtn" class="hg-glass-btn"
+                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
+                    保存
+                </button>
+            </div>
         </div>
     </div>
     <!-- 世界书 Modal End -->
