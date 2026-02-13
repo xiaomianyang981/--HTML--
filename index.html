@@ -3087,6 +3087,22 @@
         }
     </style>
     <style>
+        /* 图片描述弹窗文本区域滚动条美化 */
+        #imageDescText::-webkit-scrollbar {
+            width: 4px;
+        }
+        #imageDescText::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 4px;
+        }
+        #imageDescText::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+        }
+        #imageDescText::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+
         .worldbook-button {
             flex: 1;
             display: flex;
@@ -3831,6 +3847,10 @@
                 <i class="fas fa-check-double"></i>
                 <span>多选</span>
             </button>
+            <button class="message-action-item" id="messageActionRegenerate" type="button">
+                <i class="fas fa-magic"></i>
+                <span>修正</span>
+            </button>
         </div>
     </div>
 
@@ -3901,21 +3921,21 @@
     <!-- 图片内容弹窗 -->
     <div class="modal" id="imageDescModal" style="display: none; z-index: 2000; background-color: rgba(0, 0, 0, 0.5);">
         <div
-            style="background-color: white; border-radius: 18px; width: 90%; max-width: 340px; padding: 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; display: flex; flex-direction: column; gap: 20px;">
+            style="background-color: white; border-radius: 18px; width: 90%; max-width: 380px; max-height: 80vh; padding: 24px 24px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; display: flex; flex-direction: column; gap: 16px;">
             <button id="closeImageDescModal"
-            style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 24px; color: #ccc; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"
+            style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 20px; color: #ccc; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; z-index: 1;"
                 class="hover-text-style">
                 <i class="fas fa-times"></i>
             </button>
 
-            <h3 style="margin: 0; color: #333; font-size: 16px; font-weight: 600;">图片描述</h3>
+            <h3 style="margin: 0; color: #333; font-size: 17px; font-weight: 600; flex-shrink: 0;">图片描述</h3>
 
             <div id="imageDescText"
-                style="color: #555; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; padding: 12px; background-color: #f9f9f9; border-radius: 12px; border: 1px solid #eee;">
+                style="color: #333; font-size: 14.5px; line-height: 1.8; white-space: pre-wrap; word-break: break-word; overflow-y: auto; padding: 16px; background-color: #f9f9f9; border-radius: 12px; border: 1px solid #eee; flex: 1; min-height: 60px; max-height: calc(80vh - 140px); -webkit-overflow-scrolling: touch; overscroll-behavior: contain;">
             </div>
 
             <button id="imageDescOkBtn" class="btn btn-primary"
-                style="width: 100%; height: 44px; border-radius: 12px; margin-top: 8px;">确定</button>
+                style="width: 100%; height: 44px; border-radius: 12px; flex-shrink: 0;">确定</button>
         </div>
     </div>
 
@@ -8606,6 +8626,12 @@
                     if (multiSelectBtn) {
                         multiSelectBtn.addEventListener('click', () => this.handleMessageAction('multiSelect'));
                     }
+
+                    // 修正按钮事件监听
+                    const regenerateBtn = document.getElementById('messageActionRegenerate');
+                    if (regenerateBtn) {
+                        regenerateBtn.addEventListener('click', () => this.handleMessageAction('regenerate'));
+                    }
                 }
 
                 initMultiSelect() {
@@ -9046,6 +9072,12 @@
                             requestAnimationFrame(() => this.toggleMultiSelectMessage(messageWrapper));
                         }
                         return;
+                    } else if (action === 'regenerate') {
+                        if (role === 'ai' || role === 'assistant') {
+                            this.regenerateMessage(messageWrapper, msgId);
+                        } else {
+                            console.warn('[修正] 只能修正AI的回复');
+                        }
                     }
 
                     this.hideMessageActionMenu();
@@ -9452,11 +9484,18 @@
                 }
 
                 generateAIMessages(response, persona) {
-                    // 防御：确保response是有效字符串
-                    if (!response || typeof response !== 'string' || response.trim().length === 0) {
-                        console.error('[generateAIMessages] 输入为空——这不应该发生');
-                        return [{ content: response || '...', isVoice: false }];
+                    // 确保response是有效字符串，如果不是就直接用原始值
+                    if (!response || typeof response !== 'string') {
+                        console.error('[generateAIMessages] 输入类型异常，强制转为字符串');
+                        response = String(response || '');
                     }
+                    
+                    // 如果清理后为空，直接返回原始文本作为单条消息
+                    if (response.trim().length === 0) {
+                        console.error('[generateAIMessages] 输入为空字符串');
+                        return [{ content: '（内容解析异常，请查看控制台）', isVoice: false }];
+                    }
+                    
                     const sentences = this.splitSentences(response);
                     let validSentences = sentences.filter(s => s.trim());
                     // 如果分割/预处理后变空了，用原始文本作为唯一句子（绝不丢弃）
@@ -9479,8 +9518,10 @@
 
                     if (validSentences.length <= messageCount) {
                         for (const sentence of validSentences) {
-                            // 单条消息技术性限制80字（防止界面撑爆）
-                            const content = sentence.length > 80 ? sentence.substring(0, 77) + '...' : sentence;
+                            // 跳过过短的无效内容
+                            if (sentence.trim().length < 2) continue;
+                            // 单条消息限制200字（现代手机屏幕足够大）
+                            const content = sentence.length > 200 ? sentence.substring(0, 197) + '...' : sentence;
                             messages.push({
                                 content: content,
                                 isVoice: Math.random() < voiceProbability
@@ -9493,14 +9534,25 @@
                             const maxChunk = remaining > 4 ? 2 : 1;
                             const chunkSize = Math.min(remaining, Math.random() < 0.5 ? 1 : maxChunk);
                             const chunk = validSentences.slice(index, index + chunkSize).join('');
-                            // 单条消息技术性限制80字（防止界面撑爆）
-                            const content = chunk.trim().length > 80 ? chunk.trim().substring(0, 77) + '...' : chunk.trim();
+                            // 跳过过短的无效内容
+                            if (chunk.trim().length < 2) {
+                                index += chunkSize;
+                                continue;
+                            }
+                            // 单条消息限制200字
+                            const content = chunk.trim().length > 200 ? chunk.trim().substring(0, 197) + '...' : chunk.trim();
                             messages.push({
                                 content: content,
                                 isVoice: Math.random() < voiceProbability
                             });
                             index += chunkSize;
                         }
+                    }
+                    
+                    // 【关键保底】如果没有生成任何消息，直接返回原始文本
+                    if (messages.length === 0) {
+                        console.warn('[generateAIMessages] 未生成任何有效消息，返回原始文本');
+                        return [{ content: response, isVoice: false }];
                     }
 
                     // 技术性上限：最多返回20条消息
@@ -9560,45 +9612,17 @@
                     return null;
                 }
 
-                ensureConcreteImageDesc(desc, aiResponse = '') {
+                ensureConcreteImageDesc(desc) {
                     let text = String(desc || '').trim();
                     if (!text) return '';
-
-                    // 移除所有可能的前缀
                     text = text
                         .replace(/^\[图片\]/, '')
                         .replace(/^（图片）/, '')
                         .replace(/^(图片描述|描述|画面|场景|特写)：/g, '')
                         .trim();
-
-                    const abstractWords = ['感觉', '情绪', '氛围', '心情', '美好', '温柔', '治愈', '抽象', '朦胧', '意境', '梦', '思念', '浪漫'];
-                    const hasConcreteMarks = /特写|近景|中景|远景|侧脸|背影|手|眼|发|衣|光|影|雨|街|窗|灯|桌|椅|车|路|树|花|草|云|海|山|猫|狗/.test(text);
-                    const isAbstract = abstractWords.some(w => text.includes(w));
-                    const looksLikeDialogue = /[“”"']|说|问|回复|聊天|对话|表示|喊|发给你|你看|这是|我拍的|给你看/.test(text);
-
-                    if (hasConcreteMarks && !isAbstract && !looksLikeDialogue) {
-                        // 如果文本具体，直接返回，但确保前面加上“特写：”或“画面：”
-                        if (!/^(特写|画面)/.test(text)) {
-                            return `特写：${text}`;
-                        }
-                        return text;
-                    }
-
-                    // 如果文本不具体，生成一个全新的、完整的描述
-                    const parts = ['手指', '眼睛', '发梢', '侧脸', '肩颈', '锁骨', '背影'];
-                    const actions = ['轻轻抬起', '缓慢合拢', '微微倾斜', '正对镜头停住', '轻轻触碰'];
-                    const scenes = ['窗边的柔光里', '昏黄的室内灯光下', '雨后的街灯下', '清晨的自然光中', '安静的室内背景前'];
-                    const details = ['指节纹理清晰可见', '睫毛投下细小阴影', '发丝贴在颈侧', '衣料褶皱被光线勾勒出立体的层次感', '皮肤细小纹理清晰'];
-                    const background = ['床沿被略微压出凹陷', '枕头边缘露出一角', '背景虚化的书架上摆放着几本翻开的书籍', '窗外的夜景模糊成一片光斑'];
-
-                    const seedText = text || String(aiResponse || '');
-                    const seed = Math.max(0, seedText.length);
-
-                    const line1 = `特写：${parts[seed % parts.length]}${actions[seed % actions.length]}，${scenes[seed % scenes.length]}，${details[seed % details.length]}。`;
-                    const line2 = `画面：${background[seed % background.length]}。`;
-
-                    // 返回一个完整的多行文本
-                    return `${line1}\n${line2}`;
+                    if (text.length < 50) return '';
+                    if (text.length > 300) text = text.slice(0, 300).trim();
+                    return text;
                 }
 
                 addLoadingMessage(id) {
@@ -9614,6 +9638,70 @@
                     const loadingElement = document.getElementById(id);
                     if (loadingElement) {
                         loadingElement.remove();
+                    }
+                }
+
+                async regenerateMessage(messageWrapper, msgId) {
+                    if (!messageWrapper || !msgId) return;
+                    
+                    console.log('[修正] 开始重新生成消息:', msgId);
+                    
+                    // 获取当前好友ID
+                    const targetFriendId = this.currentFriendId;
+                    if (!targetFriendId) {
+                        this.showChatStatus('修正失败：未找到好友ID', 'error');
+                        return;
+                    }
+                    
+                    try {
+                        // 【关键修复】删除该消息及其之后的所有消息
+                        // 因为后续消息都是基于这条错误消息生成的，必须一起删除
+                        if (this.friendSystem) {
+                            const chatHistory = this.friendSystem.getFriendChatHistory(targetFriendId);
+                            
+                            // 找到要修正的消息的索引位置
+                            const targetIndex = chatHistory.findIndex(msg => msg.id === msgId);
+                            
+                            if (targetIndex !== -1) {
+                                // 只保留该消息之前的历史，删除该消息及其之后的所有内容
+                                const filteredHistory = chatHistory.slice(0, targetIndex);
+                                
+                                this.friendSystem.saveFriendChatHistory(targetFriendId, filteredHistory);
+                                console.log(`[修正] 已删除消息 ${msgId} 及其之后的所有消息，保留 ${filteredHistory.length} 条，删除 ${chatHistory.length - filteredHistory.length} 条`);
+                                
+                                // 同时删除DOM中该消息之后的所有消息
+                                const allMessageWrappers = Array.from(chatMessages.querySelectorAll('[data-msg-id]'));
+                                let foundTarget = false;
+                                allMessageWrappers.forEach(wrapper => {
+                                    if (foundTarget || wrapper.dataset.msgId === msgId) {
+                                        wrapper.remove();
+                                        foundTarget = true;
+                                    }
+                                });
+                            } else {
+                                console.warn('[修正] 未找到目标消息，仅删除DOM元素');
+                                if (messageWrapper) messageWrapper.remove();
+                            }
+                        } else {
+                            // 没有friendSystem时，只删除DOM元素
+                            if (messageWrapper) messageWrapper.remove();
+                        }
+                        
+                        // 清除AI回复缓存，避免防重复检测影响新回复
+                        window._previousAIContent = '';
+                        
+                        // 重新调用AI生成（强制回复模式，基于完整对话历史）
+                        await this.triggerAI(null, true);
+                        
+                        console.log('[修正] 完成');
+                    } catch (error) {
+                        console.error('[修正] 执行失败:', error);
+                        // 只有HTTP错误才显示弹窗
+                        if (error.message && error.message.includes('请求失败:')) {
+                            const errorCode = error.message.replace('请求失败:', '').trim();
+                            showCustomErrorModal(errorCode);
+                        }
+                        // 其他错误只记录日志，不打断
                     }
                 }
 
@@ -9772,7 +9860,7 @@
                     }
                 }
 
-                async triggerAI(targetMsgId = null) {
+                async triggerAI(targetMsgId = null, forceReply = false) {
                     if (this.isProcessing) return;
                     this.isProcessing = true;
 
@@ -9830,14 +9918,14 @@
                                 mountedContent.worldBooks.forEach(book => {
                                     if (wbTotalChars >= WB_TOTAL_LIMIT) return;
                                     const raw = String(book.content || '');
-                                    const clipped = raw.length > WB_SINGLE_LIMIT ? (raw.slice(0, WB_SINGLE_LIMIT) + '\n[该世界书内容已截断，请优先遵守已显示部分]') : raw;
+                                    const clipped = raw.length > WB_SINGLE_LIMIT ? raw.slice(0, WB_SINGLE_LIMIT) : raw;
                                     const block = `\n【${book.title}】\n${clipped}`;
                                     const remain = WB_TOTAL_LIMIT - wbTotalChars;
                                     if (block.length <= remain) {
                                         worldBooksFullContent += block;
                                         wbTotalChars += block.length;
                                     } else {
-                                        worldBooksFullContent += block.slice(0, Math.max(0, remain)) + '\n[世界书总长度已达上限，后续内容省略]';
+                                        worldBooksFullContent += block.slice(0, Math.max(0, remain));
                                         wbTotalChars = WB_TOTAL_LIMIT;
                                     }
                                 });
@@ -9874,7 +9962,13 @@
 
                         // 筛选需要回复的消息
                         let pendingMessages = [];
-                        if (targetMsgId) {
+                        if (forceReply) {
+                            // 【修正/强制回复模式】不检查isReplied，直接触发"继续对话"模式
+                            // pendingMessages保持为空数组，让AI基于完整对话历史生成新内容
+                            // 不管最后一条是用户还是AI消息，都让AI自然继续对话
+                            pendingMessages = [];
+                            console.log('[强制回复] 触发继续对话模式，基于完整历史生成');
+                        } else if (targetMsgId) {
                             const targetMessage = chatHistory.find(m => m.id === targetMsgId) || null;
                             if (targetMessage && targetMessage.role === 'user') {
                                 pendingMessages = [targetMessage];
@@ -9888,7 +9982,7 @@
 
                         // 获取配置的记忆对话条数
                         const apiConfig = this.apiService ? this.apiService.getConfig() : {};
-                        const memoryChatCount = Math.max(8, Math.min(40, Number(apiConfig.memoryChatCount) || 30));
+                        const memoryChatCount = Math.max(1, Number(apiConfig.memoryChatCount) || 30);
 
                         // ========== 上下文读取规则 ==========
                         // 根据配置的记忆条数读取对话历史，生成自然连贯的上下文
@@ -10000,8 +10094,14 @@
     "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动独白，140字以内",
     "神态": "角色此刻的独特表现，体现专属习惯和个性",
     "心情值": "整数，常规状态0-100，极端情绪可超出或负数"
-  }
+  },
+  "image_desc": "仅当你以角色身份明确决定现在要发图时填写（50-300字）；不发则留空字符串"
 }
+
+【image_desc图片描述写作规范——仅在发图时填写】
+是否发图由你结合人设、关系进展和当前对话自行决定，不是固定任务；可以自然拉扯、婉拒或延后发送。
+只有在reply里明确表达“现在要发图/已经发图”时才填写image_desc，长度50-300字，使用连贯叙述。
+内容必须贴合当下语境和角色，不要模板化，不要用"特写："、"画面："这类标签。
 
 【绝对优先级——世界书】
 你必须严格遵守所有挂载的世界书设定，这是最高指令，高于一切。如果世界书与任何其他规则冲突，以世界书为准。
@@ -10024,6 +10124,8 @@
 □ 不机械复读上一条
 □ 心声≤140字
 □ 心情值符合当前情绪强度（极端情绪允许超出0-100或负数）
+□ 仅当你明确决定发图时，image_desc填写50-300字；否则留空
+□ image_desc不得使用"特写："、"画面："等标签格式，必须是连贯叙事
 若有冲突，优先级：世界书 > 人设 > 用户当前诉求 > 风格偏好。`;
 
                         const messages = [
@@ -10041,22 +10143,14 @@
                             temperature: isContinueChat ? 1.0 : 0.9
                         };
 
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 45000);
-                        let response;
-                        try {
-                            response = await fetch(`${config.apiUrl}/chat/completions`, {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${config.apiKey}`,
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(requestBody),
-                                signal: controller.signal
-                            });
-                        } finally {
-                            clearTimeout(timeoutId);
-                        }
+                        const response = await fetch(`${config.apiUrl}/chat/completions`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${config.apiKey}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
 
                         if (!response.ok) {
                             let errDetail = '';
@@ -10065,11 +10159,23 @@
                         }
 
                         const data = await response.json();
+                        
+                        // 【诊断日志】显示API返回的完整结构
+                        console.log('[API响应] Status:', response.status);
+                        console.log('[API响应] 完整数据结构:', JSON.stringify(data).substring(0, 300));
 
                         // 停止心声按钮脉动动画（API响应成功）
                         this.stopHeartVoicePulse();
 
-                        const messagePayload = data.choices[0]?.message || {};
+                        const messagePayload = data.choices?.[0]?.message || {};
+                        
+                        // 【诊断日志】检查message结构（仅记录，不中断）
+                        if (!data.choices || data.choices.length === 0) {
+                            console.error('[API响应] 无choices数组，数据结构异常');
+                        }
+                        if (!messagePayload || !messagePayload.content) {
+                            console.error('[API响应] message为空或无content字段');
+                        }
 
                         let heartVoiceData = null;
                         let rawContent = messagePayload.content || '';
@@ -10100,10 +10206,11 @@
                         }
 
                         // ===== 心声关键词黑名单（用于最终防线） =====
-                        const heartVoiceBlacklist = /(?:"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice)"?\s*[：:\{])/;
+                        const heartVoiceBlacklist = /(?:"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice|image_desc)"?\s*[：:\{])/;
 
                         // ===== 第1步：尝试JSON结构化提取（最可靠） =====
                         let aiResponse = '';
+                        let aiImageDesc = ''; // AI生成的沉浸式图片描述
                         const jsonContent = JSONCleaningLayer.cleanAndParse(rawContent);
 
                         if (jsonContent && typeof jsonContent === 'object') {
@@ -10127,6 +10234,15 @@
                                         demeanor: hvDemeanor
                                     };
                                     console.log('[解析-L1] 心声数据已提取并隔离');
+                                }
+                            }
+                            // 1c. 提取图片描述（AI生成的沉浸式画面描述）
+                            if (jsonContent.image_desc) {
+                                aiImageDesc = String(jsonContent.image_desc).trim();
+                                if (aiImageDesc.length >= 50) {
+                                    console.log('[解析-L1] 图片描述已提取，长度:', aiImageDesc.length);
+                                } else {
+                                    aiImageDesc = ''; // 太短的描述不使用
                                 }
                             }
                         }
@@ -10153,6 +10269,18 @@
                             }
                         }
 
+                        // ===== 第2.5步：正则提取image_desc（如果JSON提取未成功获取） =====
+                        if (!aiImageDesc) {
+                            const imgDescMatch = originalResponse.match(/"image_desc"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+                            if (imgDescMatch?.[1]) {
+                                const extracted = imgDescMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim();
+                                if (extracted.length >= 50) {
+                                    aiImageDesc = extracted;
+                                    console.log('[解析-L2] 正则提取image_desc成功，长度:', aiImageDesc.length);
+                                }
+                            }
+                        }
+
                         // ===== 第3步：前两步都失败，从原始文本精确剥离所有JSON块 =====
                         if (!aiResponse || aiResponse.trim().length < 2) {
                             console.log('[解析-L3] 从原始文本剥离JSON');
@@ -10173,9 +10301,10 @@
                                 .replace(/\[[\s\S]*?\]/g, '')
                                 .replace(/【[\s\S]*?】/g, '')
                                 .replace(/```[\s\S]*?```/gi, '')
-                                .replace(/心声[：:][^\n]*|神态[：:][^\n]*|心情值[：:][^\n]*/g, '')
+                                .replace(/心声[：:][^\n]*|神态[：:][^\n]*|心情值[：:][^\n]*|image_desc[：:][^\n]*/g, '')
                                 .replace(/inner_voice[^\n]*/g, '')
                                 .replace(/mood_value[^\n]*/g, '')
+                                .replace(/image_desc[^\n]*/g, '')
                                 .trim();
                             if (stripped.length >= 2) {
                                 aiResponse = stripped;
@@ -10205,8 +10334,9 @@
                             if (heartVoiceBlacklist.test(aiResponse)) {
                                 const beforeClean = aiResponse;
                                 aiResponse = aiResponse
-                                    .replace(/"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice)"?\s*[：:][^\n]*/g, '')
+                                    .replace(/"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice|image_desc)"?\s*[：:][^\n]*/g, '')
                                     .replace(/"?inner_voice"?\s*:\s*\{[^}]*\}/g, '')
+                                    .replace(/"?image_desc"?\s*:\s*"[^"]*"/g, '')
                                     .replace(/[{}\[\]]/g, '')
                                     .trim();
                                 // 保护：清理后变空则恢复
@@ -10231,7 +10361,22 @@
                         // ===== 绝对保底：原始内容兜底（永远不输出空内容）=====
                         if (!aiResponse || aiResponse.trim().length === 0) {
                             console.error('[绝对保底] 清理后为空，恢复原始响应');
-                            aiResponse = originalResponse.trim();
+                            aiResponse = originalResponse;
+                        }
+                        
+                        // ===== 智能验证：检测解析是否过度删减 =====
+                        const originalLength = originalResponse.length;
+                        const parsedLength = aiResponse.length;
+                        if (originalLength > 0 && parsedLength < originalLength * 0.2) {
+                            console.warn(`[智能验证] 解析后内容过短（${parsedLength}字 vs 原始${originalLength}字），可能误删，使用原始响应`);
+                            aiResponse = originalResponse;
+                        }
+                        
+                        // ===== 检测纯符号内容 =====
+                        const onlySymbols = /^[\s\p{P}\p{S}]+$/u.test(aiResponse);
+                        if (onlySymbols && aiResponse.length < 10) {
+                            console.warn('[智能验证] 内容只有标点符号，使用原始响应');
+                            aiResponse = originalResponse;
                         }
 
                         // ===== 重复检测：仅记录日志，绝不重调API =====
@@ -10244,6 +10389,15 @@
                         window._previousAIContent = aiResponse;
 
                         console.log('[最终输出] aiResponse:', aiResponse.substring(0, 80));
+
+                        // 【关键保底】如果解析后内容异常，直接使用原始响应
+                        if (!aiResponse || aiResponse.trim().length === 0 || aiResponse.trim() === '...' || aiResponse.trim() === '…') {
+                            console.error('[解析异常] 内容被清空或为省略号，使用原始响应');
+                            console.error('[原始响应完整内容]:', originalResponse);
+                            // 直接使用原始响应，不做任何修改
+                            aiResponse = originalResponse || JSON.stringify(messagePayload);
+                            console.log('[保底] 使用原始响应，长度:', aiResponse.length);
+                        }
 
                         // 复用之前一次读取的数据，避免重复读取
                         const currentFriend = friends.find(f => f.id === targetFriendId);
@@ -10283,7 +10437,15 @@
                             if (targetFriendId) {
                                 chatHistory.push({ role: 'assistant', content: aiMsg.content, isVoice: aiMsg.isVoice, id: aiMsg.id });
                             }
-                            await new Promise(resolve => setTimeout(resolve, 900));
+                            
+                            // ===== 真人打字节奏模拟 =====
+                            // 基础延迟 + 字数延迟 + 随机抖动
+                            const baseDelay = 300; // 基础延迟 (ms)
+                            const charDelay = aiMsg.content.length * 20; // 每个字平均20ms
+                            const randomJitter = Math.random() * 200 - 100; // -100 到 +100ms 的随机波动
+                            const totalDelay = Math.max(250, baseDelay + charDelay + randomJitter);
+                            
+                            await new Promise(resolve => setTimeout(resolve, totalDelay));
                         }
 
                         // 一体化心声存储与刷新（一次API调用同时生成）
@@ -10384,22 +10546,21 @@
                             }
                         }
 
-                        const shouldTriggerImage = /(发照片|发图|发给你|给你看|发一张|给你发|给你看看|我发你|我拍的|这是我拍的|看图|看照片)/.test(aiResponse);
-                        const randomTrigger = Math.random() < 0.02;
-                        const shouldGenerateImage = (shouldTriggerImage || randomTrigger) && !!aiResponse;
+                        const explicitImageIntent = /(我(?:这就|现在|马上)?发(?:你|给你)|给你发(?:一张|个)?|我把(?:照片|图片|自拍|图)发你|发你看看|给你看(?:看)?(?:照片|图片|自拍|图)?)/.test(aiResponse);
+                        const normalizedAiImageDesc = this.ensureConcreteImageDesc(aiImageDesc || '');
+                        const hasAiImageDesc = normalizedAiImageDesc.length >= 50;
+                        const shouldGenerateImage = explicitImageIntent && hasAiImageDesc && !!aiResponse;
 
                         if (shouldGenerateImage) {
-                            const fallbackText = this.ensureConcreteImageDesc(aiResponse || '', aiResponse || '');
-                            const imageDecision = fallbackText ? { description: fallbackText } : null;
-                            if (!imageDecision || !imageDecision.description) {
-                                // 无合适内容则跳过
-                            } else {
+                            let imageText = normalizedAiImageDesc;
+                            console.log('[图片描述] 使用AI生成描述，长度:', imageText.length);
+                            // ===== 防护：严格验证内容有效性，不发送不足的内容 =====
+                            if (imageText && imageText.trim().length >= 50) {
                                 const imageId = `ai-img-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
                                 const imageData = typeof getImageDescPlaceholderData === 'function'
                                     ? getImageDescPlaceholderData()
                                     : '';
-                                const imageText = this.ensureConcreteImageDesc(imageDecision.description, aiResponse);
-                                const imageType = shouldTriggerImage ? '图片' : '描述图';
+                                const imageType = '图片';
                                 this.addMessageToChat(imageText, 'ai', false, imageId, '', '', imageData, imageType, targetFriendId);
                                 if (targetFriendId) {
                                     const imagePayload = {
@@ -10459,20 +10620,15 @@
                         console.error('发送消息失败:', error);
                         this.stopHeartVoicePulse();  // 错误时也停止脉动
 
-                        // 提取错误信息并显示自定义错误弹窗
-                        let errorMessage = error.message || '未知错误';
-                        if (error.name === 'AbortError') {
-                            errorMessage = '请求超时，请稍后重试或减少上下文长度';
-                        }
-
-                        // 如果是HTTP错误，提取状态码
+                        // 【只处理真正的HTTP/网络错误】
+                        // 只有请求失败（网络错误、状态码错误）时才显示错误弹窗
                         if (error.message && error.message.includes('请求失败:')) {
-                            errorMessage = error.message.replace('请求失败:', '').trim();
+                            const errorCode = error.message.replace('请求失败:', '').trim();
+                            showCustomErrorModal(errorCode);  // 显示HTTP错误码
                         } else if (error.statusCode) {
-                            errorMessage = error.statusCode.toString();
+                            showCustomErrorModal(error.statusCode.toString());
                         }
-
-                        showCustomErrorModal(errorMessage);
+                        // 其他错误（解析错误等）只在控制台显示，不打断用户体验
                         // 不生成备用心声，保持之前的心声显示
                     } finally {
                         this.isProcessing = false;
@@ -10513,7 +10669,7 @@
 
             // 聊天相关按钮
             sendMessageBtn.addEventListener('click', () => chatSession && chatSession.sendMessage());
-            if (triggerAiBtn) triggerAiBtn.addEventListener('click', () => chatSession && chatSession.triggerAI());
+            if (triggerAiBtn) triggerAiBtn.addEventListener('click', () => chatSession && chatSession.triggerAI(null, true));
 
             function closeChatExtraPanel() {
                 if (!chatExtraPanel) return;
@@ -12107,7 +12263,7 @@ ${recent}`;
                     console.warn('[自动总结] 返回内容过短:', text?.length || 0);
                     return;
                 }
-                showSummaryConfirm(friendId, text, chatHistory.length);
+                showSummaryConfirm(friendId, text, getCounter(friendId));
             } catch(e) {
                 console.error('[自动总结] API 调用异常:', e.message);
                 recordSummaryFailureTime(friendId, 'small');
