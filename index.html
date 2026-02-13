@@ -10016,38 +10016,52 @@
                         }
 
                         if (!rawAiResponse || rawAiResponse.length < 2) {
-                            return;
+                            rawAiResponse = '...';
+                            console.warn('[降级处理] 响应过短，使用降级回复');
                         }
 
                         // ========== 防御性清理：确保不会有心声混入 ==========
-                        // 这是最后一道防线，确保即使前面的步骤出现问题，
-                        // 也不会让心声内容显示在对话中
+                        // 检测到心声关键词时进行清理，而不是丢弃整条消息
                         if (rawAiResponse.includes('心声') || rawAiResponse.includes('心情值') || rawAiResponse.includes('神态')) {
-                            console.warn('[防御] 检测到心声关键词混入rawAiResponse，本条消息已丢弃');
-                            return;
+                            console.warn('[防御] 检测到心声关键词，尝试清理');
+                            rawAiResponse = rawAiResponse
+                                .replace(/心声[：:].*/g, '')
+                                .replace(/神态[：:].*/g, '')
+                                .replace(/心情值[：:].*/g, '')
+                                .trim();
                         }
 
-                        // 如果仍然包含JSON结构，说明提取失败，丢弃此消息
+                        // 如果包含JSON结构，尝试提取文本内容而不是直接丢弃
                         if (rawAiResponse.includes('{') && rawAiResponse.includes('}')) {
-                            console.warn('[防御] 检测到JSON结构混入rawAiResponse，本条消息已丢弃');
-                            return;
+                            console.warn('[防御] 检测到JSON结构，尝试清理');
+                            const beforeJson = rawAiResponse.split('{')[0].trim();
+                            if (beforeJson.length > 5) {
+                                rawAiResponse = beforeJson;
+                            } else {
+                                rawAiResponse = rawAiResponse.replace(/\{[\s\S]*?\}/g, '').trim();
+                            }
                         }
 
-                        const aiResponse = this.sanitizeAiResponse(rawAiResponse);
+                        let aiResponse = this.sanitizeAiResponse(rawAiResponse);
 
                         // ========== 二次防御清理：确保对话内容纯净 ==========
-                        // 如果清理后仍然包含不自然的描述文本，则放弃此消息
+                        // 检测到格式化文本时进行额外清理，而不是丢弃
                         if (aiResponse.includes('[') || aiResponse.includes(']') ||
                             aiResponse.includes('【') || aiResponse.includes('】') ||
                             aiResponse.includes('秒：') || /语音\s*\d+秒/.test(aiResponse)) {
-                            console.warn('[二次防御] 检测到格式化文本仍残留，本条消息已丢弃');
-                            return;
+                            console.warn('[二次防御] 检测到格式化文本，进行清理');
+                            aiResponse = aiResponse
+                                .replace(/\[.*?\]/g, '')
+                                .replace(/【.*?】/g, '')
+                                .replace(/\d+秒[：:]/g, '')
+                                .replace(/语音\s*\d+秒/g, '')
+                                .trim();
                         }
 
-                        // 验证回复长度（去除空格后）
+                        // 验证回复长度（去除空格后），如果为空则使用降级回复
                         if (!aiResponse.replace(/\s/g, '').length) {
-                            console.warn('[二次防御] 清理后无有效内容');
-                            return;
+                            console.warn('[二次防御] 清理后无有效内容，使用降级回复');
+                            aiResponse = '...';
                         }
 
                         // ========== 重复检测：与前一条回复比较 ==========
