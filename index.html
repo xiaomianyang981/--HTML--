@@ -9711,7 +9711,7 @@
                                 personaProfile = {
                                     name: friend.name,
                                     persona: persona,
-                                    goals: '以真实自然的聊天风格交流，体现角色背景与性格，严格遵守所有世界书约束',
+                                    goals: '以真实自然的聊天风格交流，体现角色人设背景与性格，严格遵守所有世界书约束',
                                     style: '像真实人类聊天，不做旁白或动作说明',
                                     emotion: '用语言表达情绪，不用任何括号',
                                     memory: '牢记最近对话并连贯回应'
@@ -9721,7 +9721,7 @@
                                 const relationshipMatch = personaText.match(/女友为(.+?)(?:[，。]|$)|配偶[：:](.+?)(?:[，。]|$)|伴侣[：:](.+?)(?:[，。]|$)|关系[：:](.+?)(?:[，。]|$)/);
                                 const relationshipInfo = relationshipMatch ? (relationshipMatch[1] || relationshipMatch[2] || relationshipMatch[3] || relationshipMatch[4]).trim() : '';
                                 
-                                systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}\n\n【硬性规则】禁止使用括号；禁止动作旁白；绝对禁止在回复开头加"${characterName}："或任何名字标识，直接开始说话；情绪用语言表达。\n\n【省略号使用规范】严格限制省略号使用：每句话最多1次，整段回复不超过2次，禁止连续使用，优先使用完整表达。\n\n【行为要求】深入理解用户话语的字面意思、情绪、暗示和弦外之音。结合对话历史和你的身份关系回应。捕捉细节和语气变化，给出符合角色性格的反应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
+                                systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}\n\n【硬性规则】禁止使用括号；禁止动作旁白；绝对禁止在回复开头加"${characterName}："或任何名字标识，直接开始说话；情绪用语言表达。\n\n【省略号使用规范】严格限制省略号使用：每句话最多1次，整段回复不超过2次，禁止连续使用，优先使用完整表达。\n\n【行为要求】根据实时人设信息的全部内容，和当前语境（对话历史、角色主动性），深入理解用户话语的字面意思、情绪、暗示和弦外之音。动态判断并调整语气、句子长短、语气词和礼貌、疏离程度，给出符合角色性格背景和语境的回应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
                             }
                         }
 
@@ -9745,7 +9745,7 @@
                             pendingMessages = chatHistory.filter(m => m.role === 'user' && m.isReplied === false);
                         }
 
-                        // 即使没有未回复消息，只要用户点击了，也允许触发（例如继续生成）
+                        // 即使没有未回复消息，只要用户点击了，也允许触发（例如继续生成）但不能知道是用户调动，只能基于历史（空白就找话题）
 
                         // 获取配置的记忆对话条数
                         const apiConfig = this.apiService ? this.apiService.getConfig() : {};
