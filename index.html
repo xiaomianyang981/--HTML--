@@ -25,6 +25,12 @@
             /* 计算内容区和底部区的高度 */
             --total-header-height: calc(var(--status-bar-height) + var(--header-height-normal));
             --total-header-height-hidden: calc(var(--status-bar-height-hidden) + var(--header-height-hidden));
+
+            /* ========== 颜色和样式变量 ========== */
+            --color-background: #f8f5f9;
+            --color-text: #787785;
+            --color-widget-bg: #f6f2f1;
+            --box-shadow: 0 12px 30px rgba(120, 119, 133, 0.08);
         }
 
         * {
@@ -57,6 +63,14 @@
 
         .animate-fade-in-scale {
             animation: fade-in-scale 0.3s ease-out forwards;
+            will-change: transform, opacity;
+        }
+
+        .widget {
+            border-radius: 26px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: var(--box-shadow);
         }
 
         .iphone-container {
@@ -123,15 +137,15 @@
         .frost-widget {
             width: 88%;
             height: 120px;
-            background: #f6f2f1;
-            border-radius: 26px;
+            background: var(--color-widget-bg);
             padding: 16px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-radius: 26px;
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
-            box-shadow: 0 12px 30px rgba(120, 119, 133, 0.08);
+            box-shadow: var(--box-shadow);
         }
 
         .widget-left {
@@ -2445,7 +2459,8 @@
             top: 91px;
             right: 12px;
             width: 320px;
-            height: 520px;
+            height: auto;
+            max-height: 520px;
             max-width: calc(100% - 24px);
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(12px);
@@ -2495,14 +2510,15 @@
             display: flex;
         }
 
-        /* 核心叙事面板 - 占约70%高度 */
+        /* 核心叙事面板 - 自适应高度 */
         .heart-voice-core-panel {
-            flex: 1;
+            flex: 0 0 auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
             padding: 24px 24px 0 24px;
             background: linear-gradient(180deg, rgba(250, 245, 248, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%);
+            max-height: 320px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -2569,15 +2585,14 @@
             display: none;
         }
 
-        /* 次要信息面板 - 占约30%高度 */
+        /* 次要信息面板 - 占约20%高度 */
         .heart-voice-footer-panel {
             flex: 0 0 auto;
             padding: 20px 24px 24px 24px;
-            border-top: 1px solid rgba(240, 214, 215, 0.3);
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(250, 245, 248, 0.5) 100%);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 6px;
         }
 
         /* 心情值包装器 */
@@ -2780,6 +2795,20 @@
             letter-spacing: 0.02em;
         }
 
+        /* 超小屏幕适配 */
+        @media (max-width: 375px) {
+            .iphone-container {
+                max-width: 100%;
+                height: 100vh;
+            }
+
+            .frost-widget {
+                width: 95%;
+                height: auto;
+                padding: 12px;
+            }
+        }
+
         /* 移动端全屏适配 (PWA/Add to Home Screen) */
         @media screen and (max-width: 500px) {
             body {
@@ -2888,15 +2917,6 @@
         body.hide-status-bar .status-bar {
             display: none !important;
             /* 完全不占位空间 */
-        }
-
-        /* 主页面隐藏状态栏时的调整 */
-        body.hide-status-bar .iphone-container {
-            /* 确保容器仍然填满可用空间 */
-        }
-
-        body.hide-status-bar .main-content {
-            /* flex: 1 自动扩展到可用空间 */
         }
 
         /* ========== 统一页面适配逻辑 ========== */
@@ -3061,6 +3081,10 @@
             border-radius: 50% !important;
             padding: 6px !important;
         }
+
+        .hover-text-style:hover {
+            color: #999;
+        }
     </style>
     <style>
         .worldbook-button {
@@ -3162,6 +3186,7 @@
             margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -3232,6 +3257,7 @@
             margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -3462,7 +3488,6 @@
                 <div id="apiStatus" class="status-message"></div>
 
                 <div class="form-actions">
-                    <button id="testApi" class="btn btn-secondary">测试连接</button>
                     <button id="saveApi" class="btn btn-primary">保存配置</button>
                 </div>
 
@@ -3590,7 +3615,7 @@
 
                 <div class="form-group">
                     <label for="friendPersona">人设</label>
-                    <textarea id="friendPersona" class="form-control" placeholder="示例：温柔但有点毒舌的学姐，喜欢猫和甜食，遇事会先嘴硬后关心人。"
+                    <textarea id="friendPersona" class="form-control" placeholder="比如：傲娇还有点毒舌的青梅竹马，喜欢吃甜食却不承认，遇事会先嘴硬后关心人。"
                         rows="3" style="resize: vertical;" minlength="0" maxlength="5000"></textarea>
                     <div class="input-hint">0-5000字，描述性格、背景或说话风格</div>
                 </div>
@@ -3878,7 +3903,8 @@
         <div
             style="background-color: white; border-radius: 18px; width: 90%; max-width: 340px; padding: 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); position: relative; display: flex; flex-direction: column; gap: 20px;">
             <button id="closeImageDescModal"
-                style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 24px; color: #ccc; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; hover: color #999;">
+            style="position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 24px; color: #ccc; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"
+                class="hover-text-style">
                 <i class="fas fa-times"></i>
             </button>
 
@@ -4827,7 +4853,6 @@
             const modelPickerButton = document.getElementById('modelPickerButton');
             const modelPickerText = document.getElementById('modelPickerText');
             const modelPickerList = document.getElementById('modelPickerList');
-            const testApiBtn = document.getElementById('testApi');
             const saveApiBtn = document.getElementById('saveApi');
             const apiStatus = document.getElementById('apiStatus');
 
@@ -6675,50 +6700,6 @@
                         fetchBtnText.textContent = '拉取模型列表';
                         fetchLoading.style.display = 'none';
                         fetchModelsBtn.disabled = false;
-                    }
-                }
-
-                async testConnection() {
-                    const apiUrl = apiUrlInput.value.trim();
-                    const apiKey = apiKeyInput.value.trim();
-
-                    if (!apiUrl) {
-                        this.showApiStatus('请输入API地址', 'error');
-                        return;
-                    }
-
-                    if (!apiKey) {
-                        this.showApiStatus('请输入API密钥', 'error');
-                        return;
-                    }
-
-                    testApiBtn.textContent = '测试中...';
-                    testApiBtn.disabled = true;
-
-                    try {
-                        const response = await fetch(`${apiUrl}/models`, {
-                            headers: {
-                                'Authorization': `Bearer ${apiKey}`,
-                                'Content-Type': 'application/json'
-                            }
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`连接失败: ${response.status} ${response.statusText}`);
-                        }
-
-                        this.showApiStatus('API连接成功！', 'success');
-                    } catch (error) {
-                        console.error('测试连接失败:', error);
-                        let errorMessage = error.message;
-                        if (error.message && error.message.includes('连接失败:')) {
-                            // 提取HTTP状态码
-                            errorMessage = error.message.replace('连接失败:', '').trim();
-                        }
-                        showCustomErrorModal(errorMessage);
-                    } finally {
-                        testApiBtn.textContent = '测试连接';
-                        testApiBtn.disabled = false;
                     }
                 }
 
@@ -9937,7 +9918,7 @@
 
                         // 一体化JSON格式解析（优化版）
                         const jsonContent = JSONCleaningLayer.cleanAndParse(rawAiResponse);
-                        if (jsonContent?.reply) {
+                        if (jsonContent?.reply && typeof jsonContent.reply === 'string') {
                             rawAiResponse = jsonContent.reply.trim();
                             
                             // 提取心声数据（如果完整）
@@ -9952,6 +9933,10 @@
                                 };
                                 console.log('[解析] JSON结构完整，心声已提取');
                             }
+                        } else if (jsonContent?.reply) {
+                            // reply存在但不是字符串，转换为字符串
+                            rawAiResponse = String(jsonContent.reply).trim();
+                            console.log('[解析] reply字段已转换为字符串');
                         } else if (rawAiResponse.includes('reply')) {
                             // 尝试正则提取reply字段
                             const match = rawAiResponse.match(/"reply"\s*:\s*"([^"]+)"/);
@@ -10012,6 +9997,12 @@
                                     ? segments.reduce((a, b) => a.length > b.length ? a : b).trim() 
                                     : originalResponse.trim();
                             }
+                        }
+
+                        // 最终保底：确保一定有内容返回（不能因为解析问题就不显示）
+                        if (!aiResponse || aiResponse.trim().length === 0) {
+                            console.warn('[保底] 所有提取都失败，使用原始API响应');
+                            aiResponse = originalResponse.trim() || '（响应内容为空）';
                         }
 
                         // ========== 重复检测：与前一条回复比较 ==========
@@ -10270,7 +10261,6 @@
 
             // API相关按钮
             fetchModelsBtn.addEventListener('click', () => apiService && apiService.fetchModels());
-            testApiBtn.addEventListener('click', () => apiService && apiService.testConnection());
             saveApiBtn.addEventListener('click', () => apiService && apiService.saveConfiguration());
 
             // 模型选择器交互（自定义下拉）
@@ -10745,7 +10735,6 @@
 
                 // API相关按钮
                 fetchModelsBtn.addEventListener('click', () => apiService && apiService.fetchModels());
-                testApiBtn.addEventListener('click', () => apiService && apiService.testConnection());
                 saveApiBtn.addEventListener('click', () => apiService && apiService.saveConfiguration());
 
                 // API预设管理
