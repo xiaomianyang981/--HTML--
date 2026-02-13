@@ -4545,77 +4545,45 @@
                 const heartVoiceBlacklist = /(?:"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice)"?\s*[：:\{])/;
 
                 const testCases = [
-                    {
-                        name: '标准JSON格式',
-                        input: '{"reply": "没什么安排。", "inner_voice": {"心声": "情人节她要约我", "神态": "打字动作顿了下", "心情值": 65}}',
-                        expectedReply: '没什么安排。',
-                        expectNoHeartVoice: true
-                    },
-                    {
-                        name: 'reply是数组格式',
-                        input: '{"reply": [{"type": "text", "content": "没什么安排。"}], "inner_voice": {"心声": "情人节她要约我", "神态": "微笑", "心情值": 50}}',
-                        expectedReply: '没什么安排。',
-                        expectNoHeartVoice: true
-                    },
-                    {
-                        name: 'reply是对象格式',
-                        input: '{"reply": {"text": "今天天气不错"}, "inner_voice": {"心声": "好无聊", "神态": "发呆", "心情值": 30}}',
-                        expectedReply: '今天天气不错',
-                        expectNoHeartVoice: true
-                    },
-                    {
-                        name: 'markdown包裹的JSON',
-                        input: '```json\n{"reply": "吃饭了吗？", "inner_voice": {"心声": "好饿", "神态": "揉肚子", "心情值": 40}}\n```',
-                        expectedReply: '吃饭了吗？',
-                        expectNoHeartVoice: true
-                    },
-                    {
-                        name: '纯文本（无JSON）',
-                        input: '今天过得怎么样？',
-                        expectedReply: '今天过得怎么样？',
-                        expectNoHeartVoice: true
-                    },
-                    {
-                        name: '混合文本+JSON',
-                        input: '好的呀~\n{"inner_voice": {"心声": "开心", "神态": "笑", "心情值": 80}}',
-                        expectedReply: '好的呀~',
-                        expectNoHeartVoice: true
-                    }
+                    { name: '标准JSON', input: '{"reply": "没什么安排。", "inner_voice": {"心声": "她要约我", "神态": "顿了下", "心情值": 65}}', expected: '没什么安排。' },
+                    { name: 'reply数组', input: '{"reply": [{"type": "text", "content": "没什么安排。"}], "inner_voice": {"心声": "她要约我", "神态": "微笑", "心情值": 50}}', expected: '没什么安排。' },
+                    { name: 'reply对象', input: '{"reply": {"text": "天气不错"}, "inner_voice": {"心声": "好无聊", "神态": "发呆", "心情值": 30}}', expected: '天气不错' },
+                    { name: 'markdown包裹', input: '```json\n{"reply": "吃饭了吗？", "inner_voice": {"心声": "好饿", "神态": "揉肚子", "心情值": 40}}\n```', expected: '吃饭了吗？' },
+                    { name: '纯文本', input: '今天过得怎么样？', expected: '今天过得怎么样？' },
+                    { name: '混合文本+JSON', input: '好的呀~\n{"inner_voice": {"心声": "开心", "神态": "笑", "心情值": 80}}', expected: '好的呀~' },
+                    // ===== 新增：空响应防护测试 =====
+                    { name: '短回复不被误删', input: '{"reply": "嗯。", "inner_voice": {"心声": "无聊", "神态": "低头", "心情值": 30}}', expected: '嗯。' },
+                    { name: '含冒号的短回复', input: '{"reply": "什么安排：你说呢", "inner_voice": {"心声": "好奇", "神态": "歪头", "心情值": 55}}', expected: '什么安排：你说呢' },
+                    { name: '含中文括号的回复', input: '{"reply": "好吧（叹气）", "inner_voice": {"心声": "无奈", "神态": "叹气", "心情值": 20}}', expected: '好吧（叹气）' },
+                    { name: '单字回复', input: '{"reply": "哦", "inner_voice": {"心声": "不想聊", "神态": "敷衍", "心情值": 15}}', expected: '哦' },
                 ];
 
                 let passed = 0, failed = 0;
                 for (const tc of testCases) {
-                    let rawContent = tc.input;
                     let aiResponse = '';
 
-                    // 模拟第1步
-                    const jsonContent = JSONCleaningLayer.cleanAndParse(rawContent);
+                    // L1: JSON提取
+                    const jsonContent = JSONCleaningLayer.cleanAndParse(tc.input);
+                    let jsonExtracted = false;
                     if (jsonContent && typeof jsonContent === 'object') {
                         if (jsonContent.reply !== undefined && jsonContent.reply !== null) {
                             aiResponse = extractPlainText(jsonContent.reply);
+                            jsonExtracted = true;
                         }
                     }
 
-                    // 模拟第2步
+                    // L2: 正则提取
                     if (!aiResponse || aiResponse.trim().length < 2) {
-                        const replyMatch = rawContent.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)"/);
-                        if (replyMatch?.[1]) {
-                            aiResponse = replyMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim();
-                        }
-                        if (!aiResponse || aiResponse.trim().length < 2) {
-                            const arrayMatch = rawContent.match(/"reply"\s*:\s*\[([\s\S]*?)\]/);
-                            if (arrayMatch?.[1]) {
-                                try { aiResponse = extractPlainText(JSON.parse('[' + arrayMatch[1] + ']')); } catch(_e) {}
-                            }
-                        }
+                        const m = tc.input.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+                        if (m?.[1]) aiResponse = m[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim();
                     }
 
-                    // 模拟第3步
+                    // L3: 剥离JSON
                     if (!aiResponse || aiResponse.trim().length < 2) {
                         let stripped = '';
                         let depth = 0, inStr = false, esc = false;
-                        for (let i = 0; i < rawContent.length; i++) {
-                            const ch = rawContent[i];
+                        for (let i = 0; i < tc.input.length; i++) {
+                            const ch = tc.input[i];
                             if (esc) { esc = false; if (depth === 0) stripped += ch; continue; }
                             if (ch === '\\') { esc = true; if (depth === 0) stripped += ch; continue; }
                             if (ch === '"' && !esc) { inStr = !inStr; if (depth === 0) stripped += ch; continue; }
@@ -4625,33 +4593,41 @@
                             if (depth === 0) stripped += ch;
                         }
                         stripped = stripped.replace(/\[[\s\S]*?\]/g, '').replace(/【[\s\S]*?】/g, '').replace(/```[\s\S]*?```/gi, '')
-                            .replace(/心声[：:][^\n]*|神态[：:][^\n]*|心情值[：:][^\n]*/g, '').replace(/inner_voice[^\n]*/g, '').trim();
+                            .replace(/心声[：:][^\n]*/g, '').replace(/inner_voice[^\n]*/g, '').trim();
                         if (stripped.length >= 2) aiResponse = stripped;
                     }
 
-                    if (!aiResponse || aiResponse.trim().length < 2) aiResponse = rawContent;
+                    // L4: 保底
+                    if (!aiResponse || aiResponse.trim().length < 2) aiResponse = tc.input.replace(/\{[\s\S]*\}/g, '').replace(/[{}\[\]"]/g, '').trim();
+                    if (!aiResponse || aiResponse.trim().length === 0) aiResponse = tc.input.trim();
 
-                    // 最终防线
+                    // 心声清理（保护性）
                     if (heartVoiceBlacklist.test(aiResponse)) {
+                        const before = aiResponse;
                         aiResponse = aiResponse
-                            .replace(/"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice)"?\s*[：:][^\n]*/g, '')
-                            .replace(/"?inner_voice"?\s*:\s*\{[^}]*\}/g, '').trim();
+                            .replace(/"?(?:inner_voice|心声|神态|心情值)"?\s*[：:][^\n]*/g, '')
+                            .replace(/"?inner_voice"?\s*:\s*\{[^}]*\}/g, '')
+                            .replace(/[{}\[\]]/g, '').trim();
+                        if (!aiResponse || aiResponse.trim().length < 2) aiResponse = before;
                     }
-                    aiResponse = aiResponse.replace(/[{}\[\]]/g, '').replace(/```[a-z]*\n?|```|`/gi, '')
-                        .replace(/^["|'|"|']+|["|'|"|']+$/g, '').replace(/^\s*,|,\s*$/g, '').replace(/\n{3,}/g, '\n\n').trim();
+
+                    // 轻量格式清理（JSON路径只做最少清理）
+                    aiResponse = aiResponse.replace(/```[a-z]*\n?|```|`/gi, '')
+                        .replace(/^["']+|["']+$/g, '').trim();
 
                     // 验证
-                    const replyOk = aiResponse === tc.expectedReply;
-                    const noHV = tc.expectNoHeartVoice ? !heartVoiceBlacklist.test(aiResponse) : true;
-                    const ok = replyOk && noHV;
+                    const replyOk = aiResponse === tc.expected;
+                    const noHV = !heartVoiceBlacklist.test(aiResponse);
+                    const notEmpty = aiResponse.length > 0;
+                    const ok = replyOk && noHV && notEmpty;
                     if (ok) { passed++; } else { failed++; }
                     console.log(`${ok ? '✅' : '❌'} [${tc.name}]`,
-                        ok ? '' : `\n  期望: "${tc.expectedReply}"\n  实际: "${aiResponse}"\n  含心声: ${heartVoiceBlacklist.test(aiResponse)}`);
+                        ok ? '' : `\n  期望: "${tc.expected}"\n  实际: "${aiResponse}"\n  空: ${!notEmpty}, 含心声: ${!noHV}`);
                 }
                 console.log(`\n===== 测试结果: ${passed}/${passed + failed} 通过 =====`);
-                return { passed, failed };
+                return { passed, failed, total: passed + failed };
             };
-            console.log('[测试] 解析测试已注册，运行 window.__testReplyParser() 进行验证');
+            console.log('[测试] 运行 window.__testReplyParser() 测试解析逻辑');
 
             // 可爱提示框函数
             function showCuteToast(message = '等我⌯･3･⌯ಣ', type = 'default') {
@@ -9405,25 +9381,33 @@
                  * @param {string} text - 原始文本
                  * @param {boolean} aggressive - 是否激进清理（用于心声残留）
                  */
+                /**
+                 * 轻量清洗器：只清理明确的格式标记，绝不删除可能是正常对话的内容
+                 * @param {string} text - 文本
+                 * @param {boolean} aggressive - 是否清理心声关键词残留
+                 */
                 sanitizeAiResponse(text, aggressive = false) {
                     if (!text) return '';
 
-                    // 合并多个正则操作，减少遍历次数
                     let cleaned = text
-                        .replace(/\[语音[\s\S]*?\]|【[\s\S]*?】|\([^\)]{0,30}\)|（[^）]{0,30}）/g, '')
-                        .replace(/\d+秒[：:]|语音\s*\d+秒|\|\|\|\|/g, '')
-                        .replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '')
-                        .replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '')
-                        .replace(/^[^：:。！？\n]{1,12}[：:]\s*/, '')
+                        // 只移除明确的格式标记，不动正常对话
+                        .replace(/\[语音[\s\S]*?\]/g, '')          // [语音...]
+                        .replace(/【[\s\S]*?】/g, '')               // 【标记】
+                        .replace(/\d+秒[：:]|语音\s*\d+秒/g, '')    // 语音时长标记
+                        .replace(/\|\|\|\|/g, '')                   // 分隔符
+                        .replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '')  // 开头emoji
+                        .replace(/^(?:encrypted|ENCRYPTED|locked|LOCKED|加密|锁定)[\s：:]*/, '')  // 加密标记
                         .replace(/\.{2,}|…{2,}/g, '……')
                         .replace(/(?:……){2,}/g, '……')
                         .replace(/\s{2,}/g, ' ')
                         .trim();
-                    
-                    // 激进模式：额外清理心声残留
+
+                    // 激进模式：只清理明确的心声字段标记
                     if (aggressive) {
                         cleaned = cleaned
                             .replace(/心声[：:][^\n]*|神态[：:][^\n]*|心情值[：:][^\n]*/g, '')
+                            .replace(/inner_voice[：:][^\n]*/g, '')
+                            .replace(/mood_value[：:][^\n]*/g, '')
                             .trim();
                     }
 
@@ -9468,8 +9452,17 @@
                 }
 
                 generateAIMessages(response, persona) {
+                    // 防御：确保response是有效字符串
+                    if (!response || typeof response !== 'string' || response.trim().length === 0) {
+                        console.error('[generateAIMessages] 输入为空——这不应该发生');
+                        return [{ content: response || '...', isVoice: false }];
+                    }
                     const sentences = this.splitSentences(response);
-                    const validSentences = sentences.filter(s => s.trim());
+                    let validSentences = sentences.filter(s => s.trim());
+                    // 如果分割/预处理后变空了，用原始文本作为唯一句子（绝不丢弃）
+                    if (validSentences.length === 0) {
+                        validSentences = [response.trim()];
+                    }
 
                     // 技术性限制：最多20条（防止崩溃），最少1条（AI自主决定）
                     const maxCount = Math.max(1, Math.min(20, validSentences.length));
@@ -10027,14 +10020,11 @@
                         // 一体化生成：所有回复都包含JSON格式的reply和inner_voice
                         // 注意：不使用 response_format 参数以保障最大兼容性
                         // 而是通过 system prompt 中的明确指令让 AI 输出 JSON
-                        // 重试时提高temperature，增加多样性
-                        const retryCount = window._aiRetryCount || 0;
-                        const baseTemp = isContinueChat ? 1.0 : 0.9;
                         const requestBody = {
                             model: config.model,
                             messages: messages,
                             max_tokens: 1200,
-                            temperature: Math.min(1.5, baseTemp + retryCount * 0.2)
+                            temperature: isContinueChat ? 1.0 : 0.9
                         };
 
                         const response = await fetch(`${config.apiUrl}/chat/completions`, {
@@ -10171,67 +10161,73 @@
                             }
                         }
 
-                        // ===== 第4步：最终保底 =====
-                        if (!aiResponse || aiResponse.trim().length < 2) {
-                            console.warn('[解析-L4] 所有提取失败，使用原始响应');
-                            aiResponse = originalResponse.trim() || '（响应内容为空）';
+                        // ===== 第4步：保底——从原始响应兜底 =====
+                        if (!aiResponse || aiResponse.trim().length < 1) {
+                            console.warn('[解析-L4] 提取不足，直接使用原始API响应文本');
+                            aiResponse = originalResponse.trim();
                         }
 
-                        // ===== 最终防线：无论经过哪条路径，都清除心声/JSON残留 =====
-                        if (heartVoiceBlacklist.test(aiResponse)) {
-                            console.warn('[最终防线] 检测到心声关键词残留，执行清理');
+                        // ===== 后处理：只做最小限度的清理 =====
+                        // 原则：API已经返回了有效内容，绝不能把它清成空的
+                        const jsonExtracted = !!(jsonContent && jsonContent.reply);
+
+                        if (jsonExtracted) {
+                            // JSON提取成功：reply已经是纯对话文本，只做最轻量的格式清理
                             aiResponse = aiResponse
-                                .replace(/"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice)"?\s*[：:][^\n]*/g, '')
-                                .replace(/"?inner_voice"?\s*:\s*\{[^}]*\}/g, '')
+                                .replace(/```[a-z]*\n?|```|`/gi, '')
+                                .replace(/^["']+|["']+$/g, '')
                                 .trim();
-                        }
-                        aiResponse = aiResponse
-                            .replace(/[{}\[\]]/g, '')
-                            .replace(/```[a-z]*\n?|```|`/gi, '')
-                            .replace(/^["|'|"|']+|["|'|"|']+$/g, '')
-                            .replace(/^\s*,|,\s*$/g, '')
-                            .replace(/\n{3,}/g, '\n\n')
-                            .trim();
-
-                        // 应用统一清洗器（激进模式）
-                        aiResponse = this.sanitizeAiResponse(aiResponse, true);
-
-                        if (!aiResponse || aiResponse.trim().length === 0) {
-                            aiResponse = '（响应内容为空）';
-                        }
-
-                        // ========== 重复检测：与前一条回复比较，重复时阻止并重试 ==========
-                        if (window._previousAIContent && aiResponse && aiResponse !== '（响应内容为空）') {
-                            const similarity = this.calculateTextSimilarity(aiResponse, window._previousAIContent);
-                            console.log(`[重复检测] 相似度: ${(similarity * 100).toFixed(1)}%`);
-
-                            if (similarity > 0.7) {
-                                const retryCount = window._aiRetryCount || 0;
-                                if (retryCount < 2) {
-                                    // 还可以重试：增加计数器，重新调用API
-                                    window._aiRetryCount = retryCount + 1;
-                                    console.warn(`[重复检测] 相似度${(similarity * 100).toFixed(1)}%，触发重试（第${retryCount + 1}次）`);
-                                    this.isProcessing = false;
-                                    this.stopHeartVoicePulse();
-                                    return this.triggerAI(targetMsgId);
-                                } else {
-                                    // 已重试2次仍重复，放行但记录警告
-                                    console.warn(`[重复检测] 重试${retryCount}次后仍重复，放行`);
-                                    window._aiRetryCount = 0;
+                            console.log('[后处理] JSON提取路径，轻量清理完成');
+                        } else {
+                            // JSON提取失败：可能有心声残留，做定向清理
+                            if (heartVoiceBlacklist.test(aiResponse)) {
+                                const beforeClean = aiResponse;
+                                aiResponse = aiResponse
+                                    .replace(/"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice)"?\s*[：:][^\n]*/g, '')
+                                    .replace(/"?inner_voice"?\s*:\s*\{[^}]*\}/g, '')
+                                    .replace(/[{}\[\]]/g, '')
+                                    .trim();
+                                // 保护：清理后变空则恢复
+                                if (!aiResponse || aiResponse.trim().length < 1) {
+                                    aiResponse = beforeClean;
                                 }
-                            } else {
-                                window._aiRetryCount = 0;  // 不重复，重置计数
+                            }
+                            // 非JSON路径使用轻量清洗器
+                            const sanitized = this.sanitizeAiResponse(aiResponse, true);
+                            // 保护：清洗后变空则保留原文
+                            if (sanitized && sanitized.trim().length > 0) {
+                                aiResponse = sanitized;
+                            }
+                            aiResponse = aiResponse
+                                .replace(/```[a-z]*\n?|```|`/gi, '')
+                                .replace(/^["']+|["']+$/g, '')
+                                .replace(/\n{3,}/g, '\n\n')
+                                .trim();
+                            console.log('[后处理] 非JSON路径，定向清理完成');
+                        }
+
+                        // ===== 绝对保底：原始内容兜底（永远不输出空内容）=====
+                        if (!aiResponse || aiResponse.trim().length === 0) {
+                            console.error('[绝对保底] 清理后为空，恢复原始响应');
+                            aiResponse = originalResponse.trim();
+                        }
+
+                        // ===== 重复检测：仅记录日志，绝不重调API =====
+                        if (window._previousAIContent) {
+                            const similarity = this.calculateTextSimilarity(aiResponse, window._previousAIContent);
+                            if (similarity > 0.7) {
+                                console.warn(`[重复检测] 相似度${(similarity * 100).toFixed(1)}%，仍然发送（不浪费API额度重试）`);
                             }
                         }
-
-                        // 保存本次回复，供下次参考
                         window._previousAIContent = aiResponse;
+
+                        console.log('[最终输出] aiResponse:', aiResponse.substring(0, 80));
 
                         // 复用之前一次读取的数据，避免重复读取
                         const currentFriend = friends.find(f => f.id === targetFriendId);
                         const currentPersona = personaInfo?.raw ?? currentFriend?.persona ?? '';
 
-                        // 一体化生成：心声数据已由API直接返回，无需降级处理
+                        // 一体化生成
                         const aiMessages = this.generateAIMessages(aiResponse, currentPersona || '');
                         const aiBase = Date.now().toString();
                         const aiMessagePayloads = aiMessages.map((aiMsg, index) => ({
