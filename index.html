@@ -9060,6 +9060,11 @@
                         return;
                     }
 
+                    // 防御性处理：如果content是对象而非字符串，尝试提取文本
+                    if (typeof content === 'object' && content !== null) {
+                        content = content.text || content.content || content.message ||
+                            Object.values(content).find(v => typeof v === 'string' && v.trim().length > 0) || '';
+                    }
                     // 清洗消息内容：移除开头的emoji、前缀标记、加密标识等
                     content = String(content || '').replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '').trim();
 
@@ -9914,6 +9919,17 @@
 
                         let heartVoiceData = null;
                         let rawAiResponse = messagePayload.content || '';
+                        // 防御性处理：确保rawAiResponse是字符串（某些API可能返回数组或对象）
+                        if (typeof rawAiResponse !== 'string') {
+                            if (Array.isArray(rawAiResponse)) {
+                                rawAiResponse = rawAiResponse.map(c => typeof c === 'string' ? c : (c?.text || c?.content || '')).join('');
+                            } else if (typeof rawAiResponse === 'object' && rawAiResponse !== null) {
+                                rawAiResponse = rawAiResponse.text || rawAiResponse.content || JSON.stringify(rawAiResponse);
+                            } else {
+                                rawAiResponse = String(rawAiResponse);
+                            }
+                            console.log('[防御] messagePayload.content非字符串，已转换');
+                        }
                         const originalResponse = rawAiResponse; // 保存原始响应作为最后的备份
 
                         // 一体化JSON格式解析（优化版）
@@ -9934,9 +9950,17 @@
                                 console.log('[解析] JSON结构完整，心声已提取');
                             }
                         } else if (jsonContent?.reply) {
-                            // reply存在但不是字符串，转换为字符串
-                            rawAiResponse = String(jsonContent.reply).trim();
-                            console.log('[解析] reply字段已转换为字符串');
+                            // reply存在但不是字符串，尝试从对象中提取文本内容
+                            if (typeof jsonContent.reply === 'object' && jsonContent.reply !== null) {
+                                const r = jsonContent.reply;
+                                const extracted = r.text || r.content || r.message || r.reply ||
+                                    Object.values(r).find(v => typeof v === 'string' && v.trim().length > 0);
+                                rawAiResponse = extracted ? String(extracted).trim() : JSON.stringify(r);
+                                console.log('[解析] reply为对象，已提取文本内容');
+                            } else {
+                                rawAiResponse = String(jsonContent.reply).trim();
+                                console.log('[解析] reply字段已转换为字符串');
+                            }
                         } else if (rawAiResponse.includes('reply')) {
                             // 尝试正则提取reply字段
                             const match = rawAiResponse.match(/"reply"\s*:\s*"([^"]+)"/);
