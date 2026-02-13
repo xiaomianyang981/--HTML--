@@ -11,6 +11,112 @@
     <title>芋圆机</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!--
+    ============================================================
+    项目架构说明 - UI主题管理系统
+    ============================================================
+    
+    【当前UI主题】iPhone风格模拟器
+    
+    【全局UI管理】
+    - UI_CONFIG: 位于 <script> 顶部，集中配置UI主题和类名
+    - UIManager: 全局UI管理器，提供统一的UI元素生成方法
+    - CSS变量系统: :root 中定义了30+个颜色变量
+    - CSS分段注释: 按功能模块分段（iPhone特定/通用组件/聊天消息等）
+    
+    【页面/视图列表】（11个弹窗 + 1个主屏幕）
+    1. 主屏幕 (home-screen) - 好友卡片、天气小部件
+    2. API设置 (apiModal) - API配置和模型选择
+    3. API预设 (apiPresetModal) - 保存和加载API预设
+    4. 好友列表 (friendListModal) - 好友管理
+    5. 添加好友 (addFriendModal) - 创建新好友
+    6. 聊天界面 (chatModal) - 主要对话界面
+    7. 语音输入 (voiceModal) - 语音转文本
+    8. 相机描述 (cameraDescModal) - 上传图片描述
+    9. 图片查看 (imageDescModal) - 查看AI生成图片
+    10. 删除确认 (confirmDeleteModal) - 删除好友确认
+    11. 心声历史 (heartVoiceHistoryModal) - 查看历史心声
+    12. 心声删除 (hvDeleteModal) - 删除心声确认
+    
+    【如何添加新页面】
+    使用 UIManager 创建统一的UI组件：
+    
+    ```javascript
+    // 1. 创建状态栏（永远保持现有格式）
+    const statusBar = UIManager.createStatusBar();
+    
+    // 2. 创建各种按钮
+    const primaryButton = UIManager.createButton('确认', { type: 'primary' });
+    const backButton = UIManager.createBackButton({ onclick: 'goBack()' });
+    const closeButton = UIManager.createCloseButton({ onclick: 'closeModal()' });
+    const iconButton = UIManager.createIconButton('fas fa-heart', '喜欢');
+    
+    // 3. 创建输入框
+    const textInput = UIManager.createInput({ placeholder: '请输入内容', id: 'myInput' });
+    const chatInput = UIManager.createInput({ style: 'chat', placeholder: '发送消息...' });
+    const textarea = UIManager.createTextarea({ placeholder: '多行文本', rows: 5 });
+    
+    // 4. 创建卡片
+    const settingsCard = UIManager.createCard('设置内容', { type: 'settings' });
+    const friendCard = UIManager.createCard('好友信息', { type: 'friend' });
+    const gameCard = UIManager.createCard('游戏内容', { type: 'game' });
+    
+    // 5. 创建列表
+    const friendsList = UIManager.createList(friendItems, { type: 'friends' });
+    const modelPickerList = UIManager.createList(modelItems, { type: 'model-picker' });
+    const listItem = UIManager.createListItem('列表项内容', { type: 'friend' });
+    
+    // 6. 创建桌面图标
+    const appIcon = UIManager.createDesktopIcon('fas fa-chat', '聊天', { onclick: 'openChat()' });
+    const dockIcon = UIManager.createDesktopIcon('fas fa-home', '', { type: 'dock' });
+    
+    // 示例：创建完整页面
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            ${UIManager.createStatusBar()}
+            <div class="modal-header">
+                ${UIManager.createBackButton({ onclick: 'closeModal()' })}
+                <h1>页面标题</h1>
+                ${UIManager.createCloseButton()}
+            </div>
+            <div class="modal-body">
+                ${UIManager.createInput({ placeholder: '搜索...', id: 'searchInput' })}
+                ${UIManager.createCard('卡片内容', { type: 'settings' })}
+            </div>
+            <div class="modal-footer">
+                ${UIManager.createButton('取消', { type: 'secondary' })}
+                ${UIManager.createButton('确认', { type: 'primary' })}
+            </div>
+        </div>
+    `;
+    ```
+    
+    【支持的组件类型】
+    - 状态栏：createStatusBar() - 永远保持现有格式不变
+    - 按钮：createButton(), createIconButton(), createBackButton(), createCloseButton()
+    - 输入框：createInput(), createTextarea() - 支持default和chat样式
+    - 卡片：createCard() - 支持settings/friend/game/summary/worldbook等类型
+    - 列表：createList(), createListItem() - 支持friends/model-picker等类型  
+    - 桌面：createDesktopIcon() - 支持app/dock两种类型
+    
+    【如何切换UI主题】（例如：iPhone → Android）
+    步骤1: 修改 UI_CONFIG.theme = 'android'
+    步骤2: 找到CSS中的 "iPhone特定UI样式" 分段注释
+    步骤3: 替换/禁用iPhone特定样式（.notch, .iphone-container等）
+    步骤4: 添加Android风格样式（状态栏、导航栏等）
+    步骤5: UIManager 会自动应用新配置
+    
+    【代码组织】
+    - 第1-3500行: HTML结构和CSS样式
+    - 第3500-4400行: 所有弹窗的HTML模板
+    - 第4400-12450行: JavaScript逻辑（UI_CONFIG在最开头）
+    
+    ============================================================
+    -->
+    
     <style>
         :root {
             /* ========== 全局高度适配变量 ========== */
@@ -26,70 +132,90 @@
             --total-header-height: calc(var(--status-bar-height) + var(--header-height-normal));
             --total-header-height-hidden: calc(var(--status-bar-height-hidden) + var(--header-height-hidden));
 
-            /* ========== 颜色和样式变量 ========== */
-            /* 品牌/主题色 */
-            --color-primary: #ebd8d9;           /* 粉色主色 */
-            --color-secondary: #e9d2f1;         /* 淡紫色次要色 */
-            --color-accent: #eedcba;            /* 金色强调色 */
+            /* ========== 低饱和度冷色调配色方案 ========== */
+            /* 品牌/主题色 - 低饱和冷调 */
+            --color-primary: #d4e3f0;           /* 浅蓝主色 */
+            --color-secondary: #dfe8f0;         /* 浅灰蓝次要色 */
+            --color-accent: #c8dce8;            /* 浅青强调色 */
 
-            /* 背景色 */
-            --color-background: #f8f5f9;        /* 主背景 */
-            --color-bg-white: #FFFFFF;          /* 白色背景 */
-            --color-widget-bg: #f6f2f1;         /* 小部件背景 */
-            --color-bg-hover: #fafafa;          /* 悬停背景 */
-            --color-bg-active: #ede5e3;         /* 激活背景 */
-            --color-bg-pressed: #e3d9d5;        /* 按下背景 */
-            --color-bg-light: #f5f5f5;          /* 浅背景 */
-            --color-bg-input: #f3f4f6;          /* 输入框背景 */
-            --color-bg-selected: #fef8f8;       /* 选中背景 */
-            --color-bg-disabled: #E8E4E9;       /* 禁用背景 */
-            --color-bg-user-msg: #f3ecf2;       /* 用户消息背景 */
-            --color-bg-ai-msg: #e6eeee;         /* AI消息背景 */
+            /* 背景色 - 干净冷调 */
+            --color-background: #f5f8fa;        /* 主背景：极浅灰蓝 */
+            --color-bg-white: #fafbfc;          /* 白色背景：微带蓝调 */
+            --color-widget-bg: #f0f4f7;         /* 小部件背景 */
+            --color-bg-hover: #eef2f5;          /* 悬停背景 */
+            --color-bg-active: #e5ebf0;         /* 激活背景 */
+            --color-bg-pressed: #dce3e8;        /* 按下背景 */
+            --color-bg-light: #f7f9fb;          /* 浅背景 */
+            --color-bg-input: #f3f6f9;          /* 输入框背景 */
+            --color-bg-selected: #eef5fa;       /* 选中背景 */
+            --color-bg-disabled: #e8ecf0;       /* 禁用背景 */
+            --color-bg-user-msg: #e8f2f7;       /* 用户消息背景 */
+            --color-bg-ai-msg: #e6f0f5;         /* AI消息背景 */
 
-            /* 文字颜色 */
-            --color-text: #787785;              /* 主文字 */
-            --color-text-darker: #1a1a1a;       /* 最深文字 */
-            --color-text-dark: #333;            /* 深色文字 */
-            --color-text-medium: #666;          /* 中性文字 */
-            --color-text-light: #999;           /* 浅灰文字 */
-            --color-text-lighter: #aaa;         /* 更浅文字 */
-            --color-text-muted: #bbb;           /* 最淡文字 */
-            --color-text-placeholder: #888;     /* 占位符文字 */
+            /* 文字颜色 - 柔和不刺眼 */
+            --color-text: #6b7d8f;              /* 主文字：柔和灰蓝 */
+            --color-text-darker: #3d4d5c;       /* 最深文字 */
+            --color-text-dark: #4a5968;         /* 深色文字 */
+            --color-text-medium: #7a8a9a;       /* 中性文字 */
+            --color-text-light: #9aa8b5;        /* 浅灰文字 */
+            --color-text-lighter: #b5c1cc;      /* 更浅文字 */
+            --color-text-muted: #c5d0da;        /* 最淡文字 */
+            --color-text-placeholder: #8b99a8;  /* 占位符文字 */
 
-            /* 边框/分割线 */
-            --color-border: #ddd;               /* 标准边框 */
-            --color-border-light: #eee;         /* 浅边框 */
-            --color-border-lighter: #f0f0f0;    /* 更浅边框/分割线 */
-            --color-border-widget: #f6f2f1;     /* 小部件边框 */
-            --color-border-input: #d0cdd5;      /* 输入框边框 */
+            /* 边框/分割线 - 轻盈纤细 */
+            --color-border: #e0e7ed;            /* 标准边框 */
+            --color-border-light: #eaeef2;      /* 浅边框 */
+            --color-border-lighter: #f0f3f6;    /* 更浅边框/分割线 */
+            --color-border-widget: #e8edf2;     /* 小部件边框 */
+            --color-border-input: #dce3e9;      /* 输入框边框 */
 
-            /* 状态色 */
-            --color-success: #48bb78;           /* 成功绿色 */
-            --color-error: #f56565;             /* 错误红色 */
-            --color-danger: #d32f2f;            /* 危险红色 */
-            --color-warning-bg: #fff3cd;        /* 警告背景 */
-            --color-warning-border: #ffc107;    /* 警告边框 */
-            --color-warning-text: #856404;      /* 警告文字 */
+            /* 状态色 - 低饱和度版本 */
+            --color-success: #7fbf9f;           /* 成功绿色 */
+            --color-error: #d89595;             /* 错误红色 */
+            --color-danger: #c58585;            /* 危险红色 */
+            --color-warning-bg: #faf5e6;        /* 警告背景 */
+            --color-warning-border: #e5d9b3;    /* 警告边框 */
+            --color-warning-text: #998866;      /* 警告文字 */
 
-            /* 阴影 */
-            --box-shadow: 0 12px 30px rgba(120, 119, 133, 0.08);
+            /* 柔和阴影 - 玻璃拟态 */
+            --box-shadow: 0 8px 32px rgba(107, 125, 143, 0.06);
+            --box-shadow-hover: 0 12px 40px rgba(107, 125, 143, 0.08);
+            --box-shadow-light: 0 4px 16px rgba(107, 125, 143, 0.04);
+            
+            /* 玻璃拟态效果 */
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-blur: blur(20px);
         }
+
+        /* ============================================================
+           全局基础样式
+           ============================================================ */
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
-            background: var(--color-bg-white);
+            background: linear-gradient(135deg, 
+                #f5f8fa 0%, 
+                #eef4f8 50%, 
+                #f0f6fa 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
+
+        /* ============================================================
+           动画效果定义
+           ============================================================ */
 
         @keyframes fade-in-scale {
             from {
@@ -115,6 +241,11 @@
             box-shadow: var(--box-shadow);
         }
 
+        /* ============================================================
+           iPhone特定UI样式 - 刘海、圆角、状态栏等
+           如需切换到其他UI风格，重点修改此部分
+           ============================================================ */
+
         .iphone-container {
             width: 100%;
             max-width: 430px;
@@ -131,20 +262,28 @@
 
         .status-bar {
             height: 50px;
-            background-color: var(--color-background);
+            background: rgba(250, 251, 252, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 0 26px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--color-text);
+            color: #6b7d8f;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(224, 231, 237, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 101;
         }
 
-        /* 非主屏幕页面的状态栏统一与返回栏保持白色 */
-        /* 使用通用选择器确保所有弹窗页面的状态栏都是白色，无需手动添加 */
+        /* 非主屏幕页面的状态栏统一与返回栏保持玻璃拟态 */
+        /* 使用通用选择器确保所有弹窗页面的状态栏都是玻璃拟态，无需手动添加 */
         .modal .status-bar {
-            background-color: var(--color-bg-white);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
         }
 
         .time {
@@ -473,6 +612,11 @@
         .forum-icon {
             background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
         }
+
+        /* ============================================================
+           通用组件样式 - 模态窗口、弹窗、小部件等
+           这些样式可跨UI主题复用
+           ============================================================ */
 
         /* 模态窗口样式 */
         .modal {
@@ -882,29 +1026,52 @@
 
         .form-control {
             width: 100%;
-            height: 44px;
-            padding: 0 15px;
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
+            height: 48px;
+            padding: 0 18px;
+            border: 1.5px solid rgba(224, 231, 237, 0.6);
+            border-radius: 16px;
             font-size: 14px;
-            transition: border-color 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: #4a5968;
+            font-weight: 400;
         }
 
         textarea.form-control {
             height: auto;
-            padding: 12px 15px;
-            min-height: 44px;
+            padding: 14px 18px;
+            min-height: 48px;
+            resize: none;
         }
 
         #modelSelect {
-            height: 44px;
-            background-color: var(--color-bg-white);
+            height: 48px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 2px rgba(240, 214, 215, 0.1);
+            border-color: rgba(212, 227, 240, 0.8);
+            box-shadow: 0 4px 16px rgba(107, 125, 143, 0.08);
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        /* 占位符样式 */
+        .form-control::placeholder,
+        .form-control::-webkit-input-placeholder {
+            color: #9aa8b5;
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        .form-control::-moz-placeholder {
+            color: #9aa8b5;
+            opacity: 0.7;
+            font-weight: 300;
         }
 
         .input-hint {
@@ -914,36 +1081,49 @@
         }
 
         .btn {
-            padding: 12px 20px;
-            height: 48px;
-            border: none;
-            border-radius: 16px;
-            font-weight: 600;
+            padding: 14px 24px;
+            height: 50px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            font-weight: 500;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
+            letter-spacing: 0.3px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
-            color: white;
+            background: linear-gradient(135deg, 
+                rgba(200, 220, 240, 0.7) 0%, 
+                rgba(212, 227, 240, 0.7) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: rgba(74, 89, 104, 0.9);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(240, 214, 215, 0.3);
+            box-shadow: 0 6px 20px rgba(107, 125, 143, 0.12);
+            background: linear-gradient(135deg, 
+                rgba(200, 220, 240, 0.85) 0%, 
+                rgba(212, 227, 240, 0.85) 100%);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .btn-secondary {
-            background-color: var(--color-widget-bg);
-            color: var(--color-text);
+            background: rgba(240, 244, 247, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: #7a8a9a;
         }
 
         .btn-secondary:hover {
-            background-color: var(--color-primary);
+            background: rgba(240, 244, 247, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(107, 125, 143, 0.08);
         }
 
         .btn-small {
@@ -1023,6 +1203,11 @@
             -ms-user-select: none;
             -webkit-touch-callout: none;
         }
+
+        /* ============================================================
+           聊天消息样式
+           消息气泡、图片、语音等核心聊天功能样式
+           ============================================================ */
 
         .message {
             margin-bottom: 15px;
@@ -1800,16 +1985,22 @@
             align-items: center;
             justify-content: space-between;
             padding-right: 16px;
-            border-bottom: 1px solid var(--color-widget-bg);
-            background: var(--color-bg-white);
+            border-bottom: 1px solid rgba(224, 231, 237, 0.35);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             /* padding-top、padding-left、height、min-height由统一适配逻辑控制 */
         }
 
         .settings-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--color-text);
+            font-size: 17px;
+            font-weight: 600;
+            color: #4a5968;
+            letter-spacing: 0.3px;
         }
 
         /* ========== 返回按钮统一标准（强制规范） ========== */
@@ -1820,15 +2011,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--color-text);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 18px;
+            color: #7a8a9a;
             cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
             padding: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .settings-back:hover {
+            background: rgba(255, 255, 255, 0.7);
+            transform: translateX(-2px);
+            box-shadow: 0 4px 12px rgba(107, 125, 143, 0.08);
+            color: #6b7d8f;
         }
 
 
@@ -2908,6 +3109,7 @@
             #chatModal .modal-content,
             .friend-settings-screen,
             #apiModal .modal-content,
+            #profileModal .modal-content,
             .settings-screen {
                 width: 100%;
                 max-width: 100%;
@@ -2958,6 +3160,7 @@
             #chatModal .modal-content,
             .friend-settings-screen,
             #apiModal .modal-content,
+            #profileModal .modal-content,
             .settings-screen {
                 width: 100%;
                 max-width: 430px;
@@ -3139,6 +3342,421 @@
 
         .hover-text-style:hover {
             color: #999;
+        }
+
+        /* ========== 个人资料页面样式 - 清透玻璃拟态 ========== */
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - var(--status-bar-height) - 50px);
+            background: linear-gradient(135deg, 
+                #f5f8fa 0%, 
+                #eef4f8 35%, 
+                #e8f2f7 65%, 
+                #f0f6fa 100%);
+            overflow-y: auto;
+        }
+
+        .profile-header {
+            position: relative;
+            width: 100%;
+            padding: 48px 24px 32px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .profile-bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(212, 227, 240, 0.15) 0%,
+                rgba(200, 220, 232, 0.2) 25%,
+                rgba(224, 240, 248, 0.15) 50%,
+                rgba(232, 242, 247, 0.2) 75%,
+                rgba(240, 248, 252, 0.15) 100%);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+
+        .profile-avatar-section {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, 
+                rgba(200, 220, 240, 0.5) 0%, 
+                rgba(220, 235, 245, 0.5) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: rgba(107, 125, 143, 0.7);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(107, 125, 143, 0.08),
+                        0 2px 8px rgba(107, 125, 143, 0.04);
+        }
+
+        .profile-avatar:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(107, 125, 143, 0.12),
+                        0 4px 12px rgba(107, 125, 143, 0.06);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .avatar-edit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(107, 125, 143, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.95);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-avatar:hover .avatar-edit-overlay {
+            opacity: 1;
+        }
+
+        .profile-level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #8b4513;
+            box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .profile-basic-info {
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-name-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .profile-name-section h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
+            color: #4a5968;
+            letter-spacing: 0.3px;
+        }
+
+        .profile-gender-icon {
+            font-size: 20px;
+            color: #9aa8b5;
+            opacity: 0.8;
+        }
+
+        .profile-id {
+            font-size: 14px;
+            color: #7a8a9a;
+            margin-bottom: 14px;
+            font-weight: 400;
+        }
+
+        .profile-signature {
+            font-size: 14px;
+            color: #8b99a8;
+            font-style: normal;
+            max-width: 300px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* 编辑表单样式 - 玻璃拟态 */
+        .profile-edit-form {
+            padding: 28px 24px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 32px 32px 0 0;
+            margin-top: -10px;
+            position: relative;
+            z-index: 3;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: none;
+        }
+
+        .profile-form-section {
+            margin-bottom: 24px;
+        }
+
+        .profile-form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7d8f;
+            margin-bottom: 10px;
+            letter-spacing: 0.2px;
+        }
+
+        .profile-gender-selector {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .gender-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 14px;
+            border-radius: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gender-option:hover {
+            background: rgba(212, 227, 240, 0.15);
+        }
+
+        .gender-option input[type="radio"] {
+            display: none;
+        }
+
+        .gender-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gender-icon.female {
+            background: linear-gradient(135deg, 
+                rgba(180, 200, 220, 0.65) 0%, 
+                rgba(200, 215, 230, 0.65) 100%);
+        }
+
+        .gender-icon.male {
+            background: linear-gradient(135deg, 
+                rgba(160, 190, 215, 0.65) 0%, 
+                rgba(180, 205, 225, 0.65) 100%);
+        }
+
+        .gender-icon.other {
+            background: linear-gradient(135deg, 
+                rgba(170, 185, 210, 0.65) 0%, 
+                rgba(190, 200, 220, 0.65) 100%);
+        }
+
+        .gender-option input[type="radio"]:checked + .gender-icon {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(107, 125, 143, 0.12);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-help-text {
+            font-size: 12px;
+            color: #9aa8b5;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+
+        .profile-form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(212, 227, 240, 0.25);
+        }
+
+        .profile-form-actions .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 28px;
+            font-weight: 500;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        /* 功能卡片样式 - 玻璃拟态 */
+        .profile-cards-section {
+            padding: 0 24px 32px;
+            background: transparent;
+            position: relative;
+            z-index: 3;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 4px 16px rgba(107, 125, 143, 0.05);
+        }
+
+        .profile-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(107, 125, 143, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 19px;
+            color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-card:nth-child(1) .card-icon {
+            background: linear-gradient(135deg, 
+                rgba(180, 200, 220, 0.7) 0%, 
+                rgba(200, 215, 230, 0.7) 100%);
+        }
+
+        .profile-card:nth-child(2) .card-icon {
+            background: linear-gradient(135deg, 
+                rgba(160, 195, 210, 0.7) 0%, 
+                rgba(180, 210, 225, 0.7) 100%);
+        }
+
+        .profile-card:nth-child(3) .card-icon {
+            background: linear-gradient(135deg, 
+                rgba(170, 200, 220, 0.7) 0%, 
+                rgba(190, 215, 235, 0.7) 100%);
+        }
+
+        .profile-card:nth-child(4) .card-icon {
+            background: linear-gradient(135deg, 
+                rgba(190, 205, 220, 0.7) 0%, 
+                rgba(205, 220, 230, 0.7) 100%);
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #4a5968;
+            margin-bottom: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #7a8a9a;
+            font-weight: 300;
+        }
+
+        .profile-card i.fa-chevron-right {
+            color: #b5c1cc;
+            font-size: 13px;
+        }
+
+        /* 顶部编辑按钮样式 */
+        .profile-edit-btn {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #7a8a9a;
+            font-size: 17px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-edit-btn:hover {
+            background: rgba(255, 255, 255, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 125, 143, 0.1);
+            color: #6b7d8f;
+        }
+
+        /* 个人资料页按“页面切换”呈现，不使用弹窗动画 */
+        #profileModal {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #profileModal .modal-content {
+            animation: none;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 400px) {
+            .profile-content {
+                height: calc(100vh - var(--status-bar-height) - 45px);
+            }
+            
+            .profile-header {
+                padding: 40px 20px 28px;
+            }
+            
+            .profile-avatar {
+                width: 95px;
+                height: 95px;
+                font-size: 45px;
+            }
+            
+            .profile-name-section h2 {
+                font-size: 22px;
+            }
+            
+            .profile-cards-section {
+                padding: 0 20px 28px;
+            }
         }
     </style>
     <style>
@@ -4375,6 +4993,170 @@
         </div>
     </div>
 
+    <!-- 个人资料页面弹窗 -->
+    <div class="modal" id="profileModal" style="display: none;">
+        <div class="modal-content">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div id="profileStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="profileStatusSignal" class="fas fa-signal"></i>
+                    <i id="profileStatusWifi" class="fas fa-wifi"></i>
+                    <i id="profileStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+
+            <!-- 顶部导航 -->
+            <div class="settings-nav">
+                <button class="settings-back" id="closeProfileModal">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="settings-title">个人资料</div>
+                <button class="profile-edit-btn" id="profileEditBtn">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+
+            <!-- 个人资料内容 -->
+            <div class="profile-content">
+                <!-- 头部背景区域 -->
+                <div class="profile-header">
+                    <div class="profile-bg-gradient"></div>
+                    
+                    <!-- 头像区域 -->
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="avatar-edit-overlay" id="avatarEditOverlay" style="display: none;">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 基本信息 -->
+                    <div class="profile-basic-info">
+                        <div class="profile-name-section">
+                            <h2 id="profileDisplayName">芋圆</h2>
+                            <span class="profile-gender-icon">
+                                <i class="fas fa-venus" id="profileGenderIcon"></i>
+                            </span>
+                        </div>
+                        <div class="profile-id">QQ号：<span id="profileIdDisplay">1234567890</span></div>
+                        <div class="profile-signature" id="profileSignatureDisplay">这个人很懒，什么都没有留下~</div>
+                    </div>
+                </div>
+
+                <!-- 编辑表单区域 -->
+                <div class="profile-edit-form" id="profileEditForm" style="display: none;">
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">昵称</label>
+                        <input type="text" id="profileNameInput" class="form-control" placeholder="请输入昵称" maxlength="20">
+                    </div>
+
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">甜聊号</label>
+                        <input type="text" id="profileIdInput" class="form-control" placeholder="请输入甜聊号" maxlength="15">
+                    </div>
+
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">性别</label>
+                        <div class="profile-gender-selector">
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="female" checked>
+                                <span class="gender-icon female"><i class="fas fa-venus"></i></span>
+                                <span>女</span>
+                            </label>
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="male">
+                                <span class="gender-icon male"><i class="fas fa-mars"></i></span>
+                                <span>男</span>
+                            </label>
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="other">
+                                <span class="gender-icon other"><i class="fas fa-genderless"></i></span>
+                                <span>其他</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">个性签名</label>
+                        <textarea id="profileSignatureInput" class="form-control" rows="3" placeholder="写点什么吧..." maxlength="100"></textarea>
+                    </div>
+
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">角色人设</label>
+                        <textarea id="profilePersonalityInput" class="form-control" rows="5" placeholder="描述一下你的性格、爱好、特点等..." maxlength="500"></textarea>
+                        <div class="form-help-text">用于AI更好地理解你的个性</div>
+                    </div>
+
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">生日</label>
+                        <input type="date" id="profileBirthdayInput" class="form-control">
+                    </div>
+
+                    <div class="profile-form-section">
+                        <label class="profile-form-label">所在地</label>
+                        <input type="text" id="profileLocationInput" class="form-control" placeholder="你在哪个城市呢？" maxlength="50">
+                    </div>
+
+                    <!-- 保存按钮 -->
+                    <div class="profile-form-actions">
+                        <button class="btn btn-secondary" id="profileCancelBtn">取消</button>
+                        <button class="btn btn-primary" id="profileSaveBtn">保存</button>
+                    </div>
+                </div>
+
+                <!-- 功能卡片区域 -->
+                <div class="profile-cards-section" id="profileCardsSection">
+                    <div class="profile-card" onclick="alert('收藏功能开发中...')">
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">我的收藏</div>
+                            <div class="card-desc">保存喜欢的内容</div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="profile-card" onclick="alert('相册功能开发中...')">
+                        <div class="card-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">我的相册</div>
+                            <div class="card-desc">美好回忆存储</div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="profile-card" onclick="alert('钱包功能开发中...')">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">我的钱包</div>
+                            <div class="card-desc">余额和消费记录</div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="profile-card" onclick="openSettingsModal()">
+                        <div class="card-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">设置</div>
+                            <div class="card-desc">应用设置和偏好</div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { appManager } from './app-manager.js';
         window.appManager = appManager;
@@ -4382,6 +5164,613 @@
 
     <script>
         (() => {
+            /**
+             * UI配置对象 - 便于未来切换不同UI风格
+             * @type {Object}
+             */
+            const UI_CONFIG = {
+                theme: 'iphone',  // 当前主题：iphone | android | desktop
+                classes: {
+                    // 设备特定UI元素
+                    notch: 'notch',
+                    statusBar: 'status-bar',
+                    homeIndicator: 'home-indicator',
+                    // 容器类
+                    screen: 'screen',
+                    container: 'container',
+                    // 聊天相关
+                    message: 'message',
+                    messageUser: 'user',
+                    messageAi: 'ai',
+                    // 按钮类
+                    btnPrimary: 'btn btn-primary',
+                    btnSecondary: 'btn btn-secondary',
+                    btnSmall: 'btn btn-small',
+                    btnGlass: 'wb-glass-btn',
+                    btnClose: 'modal-close',
+                    btnBack: 'settings-back',
+                    // 输入框类
+                    formInput: 'form-control',
+                    textArea: 'form-control',
+                    chatInput: 'chat-input',
+                    // 卡片类
+                    cardBase: 'card',
+                    cardSettings: 'settings-card',
+                    cardFriend: 'friend-settings-card',
+                    cardSummary: 'summary-card',
+                    cardWorldbook: 'wb-card',
+                    cardGame: 'hg-card',
+                    cardInfo: 'info-card',
+                    cardProfile: 'profile-widget-card',
+                    // 列表类
+                    listBase: 'list',
+                    listFriends: 'friend-list',
+                    listItems: 'list-items',
+                    listModelPicker: 'model-picker-list',
+                    listDataManage: 'data-manage-list',
+                    listPageContent: 'page-content-list',
+                    // 列表项类
+                    itemBase: 'item',
+                    itemFriend: 'friend-item',
+                    itemMessage: 'message-action-item',
+                    itemExtra: 'chat-extra-item',
+                    itemNavigation: 'friend-list-nav-item',
+                    // 桌面/图标类
+                    dockIcon: 'dock-icon',
+                    appGrid: 'app-grid',
+                    appIcon: 'app-icon',
+                    // 可在此扩展更多类名...
+                },
+                layout: {
+                    // 布局相关配置
+                    showNotch: true,           // 是否显示刘海
+                    showHomeIndicator: true,   // 是否显示Home指示器
+                    roundedCorners: true,      // 是否启用圆角
+                },
+                // 状态栏配置 - 永远保持现有格式不变
+                statusBar: {
+                    showTime: true,
+                    showSignal: true,
+                    showWifi: true,
+                    showBattery: true,
+                },
+                // 按钮配置
+                buttons: {
+                    // 按钮尺寸
+                    sizes: {
+                        small: { padding: '8px 15px', fontSize: '13px' },
+                        normal: { padding: '12px 20px', fontSize: '14px' },
+                        large: { padding: '16px 24px', fontSize: '16px' }
+                    },
+                    // 按钮样式
+                    styles: {
+                        primary: { 
+                            background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%)',
+                            color: 'white'
+                        },
+                        secondary: {
+                            background: 'var(--color-widget-bg)',
+                            color: 'var(--color-text)'
+                        },
+                        danger: {
+                            background: 'var(--color-danger)',
+                            color: 'white'
+                        }
+                    }
+                },
+                // 输入框配置
+                inputs: {
+                    styles: {
+                        default: {
+                            borderRadius: '12px',
+                            border: '1px solid var(--color-border)',
+                            padding: '0 15px',
+                            fontSize: '14px'
+                        },
+                        chat: {
+                            borderRadius: '20px', 
+                            border: '1px solid #ddd',
+                            padding: '10px 12px',
+                            fontSize: '14px'
+                        }
+                    },
+                    sizes: {
+                        small: { height: '36px' },
+                        normal: { height: '44px' },
+                        large: { height: '52px' }
+                    }
+                },
+                // 卡片配置
+                cards: {
+                    styles: {
+                        default: {
+                            borderRadius: '16px',
+                            background: 'var(--color-bg-white)',
+                            padding: '16px',
+                            boxShadow: '0 2px 8px rgba(120, 119, 133, 0.05)'
+                        },
+                        settings: {
+                            borderRadius: '16px',
+                            background: 'var(--color-bg-white)',
+                            padding: '16px 20px'
+                        }
+                    }
+                },
+                // 列表配置
+                lists: {
+                    styles: {
+                        default: {
+                            background: 'transparent',
+                            padding: '8px 0'
+                        },
+                        friends: {
+                            maxHeight: '100%',
+                            overflowY: 'auto',
+                            padding: '16px'
+                        }
+                    }
+                }
+            };
+
+            /**
+             * UI管理器 - 全局UI元素生成和控制
+             * 让所有页面/弹窗都能复用统一的UI组件
+             */
+            const UIManager = {
+                config: UI_CONFIG,
+
+                /**
+                 * 生成状态栏HTML - 永远保持现有格式不变
+                 * @param {Object} options - 可选配置 { showTime, showSignal, showWifi, showBattery }
+                 * @returns {string} 状态栏HTML字符串
+                 */
+                createStatusBar(options = {}) {
+                    const { showTime, showSignal, showWifi, showBattery } = {
+                        ...this.config.statusBar,
+                        ...options
+                    };
+                    const now = new Date();
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    const time = `${hours}:${minutes}`;
+
+                    return `
+                        <div class="${this.config.classes.statusBar}">
+                            ${showTime ? `<span class="time">${time}</span>` : '<span></span>'}
+                            <div class="status-icons">
+                                ${showSignal ? '<i class="fas fa-signal"></i>' : ''}
+                                ${showWifi ? '<i class="fas fa-wifi"></i>' : ''}
+                                ${showBattery ? '<i class="fas fa-battery-full"></i>' : ''}
+                            </div>
+                        </div>
+                    `;
+                },
+
+                /**
+                 * 创建按钮HTML
+                 * @param {string} text - 按钮文字
+                 * @param {Object} options - 配置 { type: 'primary'|'secondary'|'danger', size: 'small'|'normal'|'large', id, className, onclick }
+                 * @returns {string} 按钮HTML字符串
+                 */
+                createButton(text, options = {}) {
+                    const { type = 'primary', size = 'normal', id = '', className = '', onclick = '', disabled = false } = options;
+                    
+                    const baseClasses = type === 'close' ? this.config.classes.btnClose : 
+                                       type === 'back' ? this.config.classes.btnBack :
+                                       type === 'glass' ? this.config.classes.btnGlass :
+                                       `btn btn-${type}`;
+                    
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+                    const onclickAttr = onclick ? `onclick="${onclick}"` : '';
+                    const disabledAttr = disabled ? 'disabled' : '';
+
+                    return `<button ${idAttr} class="${allClasses}" ${onclickAttr} ${disabledAttr}>${text}</button>`;
+                },
+
+                /**
+                 * 创建带图标的按钮HTML
+                 * @param {string} icon - Font Awesome图标类名 (如：'fas fa-times')
+                 * @param {string} text - 按钮文字（可选）
+                 * @param {Object} options - 同createButton的配置
+                 * @returns {string} 按钮HTML字符串
+                 */
+                createIconButton(icon, text = '', options = {}) {
+                    const iconHtml = `<i class="${icon}"></i>`;
+                    const content = text ? `${iconHtml} <span>${text}</span>` : iconHtml;
+                    return this.createButton(content, options);
+                },
+
+                /**
+                 * 创建返回按钮
+                 * @param {Object} options - 配置选项
+                 * @returns {string} 返回按钮HTML
+                 */
+                createBackButton(options = {}) {
+                    return this.createIconButton('fas fa-chevron-left', '', { 
+                        type: 'back', 
+                        className: this.config.classes.btnBack,
+                        ...options 
+                    });
+                },
+
+                /**
+                 * 创建关闭按钮
+                 * @param {Object} options - 配置选项
+                 * @returns {string} 关闭按钮HTML
+                 */
+                createCloseButton(options = {}) {
+                    return this.createIconButton('fas fa-times', '', { 
+                        type: 'close', 
+                        className: this.config.classes.btnClose,
+                        ...options 
+                    });
+                },
+
+                /**
+                 * 创建输入框HTML
+                 * @param {Object} options - 配置 { type: 'text'|'password'|'email'|'url', placeholder, value, id, className, size, style }
+                 * @returns {string} 输入框HTML字符串
+                 */
+                createInput(options = {}) {
+                    const { type = 'text', placeholder = '', value = '', id = '', className = '', size = 'normal', style = 'default' } = options;
+                    
+                    const baseClasses = style === 'chat' ? this.config.classes.chatInput : this.config.classes.formInput;
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+                    const placeholderAttr = placeholder ? `placeholder="${placeholder}"` : '';
+                    const valueAttr = value ? `value="${value}"` : '';
+
+                    return `<input type="${type}" ${idAttr} class="${allClasses}" ${placeholderAttr} ${valueAttr} />`;
+                },
+
+                /**
+                 * 创建文本域HTML
+                 * @param {Object} options - 配置 { placeholder, value, id, className, rows, maxlength }
+                 * @returns {string} 文本域HTML字符串
+                 */
+                createTextarea(options = {}) {
+                    const { placeholder = '', value = '', id = '', className = '', rows = 3, maxlength = '' } = options;
+                    
+                    const baseClasses = this.config.classes.textArea;
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+                    const placeholderAttr = placeholder ? `placeholder="${placeholder}"` : '';
+                    const rowsAttr = `rows="${rows}"`;
+                    const maxlengthAttr = maxlength ? `maxlength="${maxlength}"` : '';
+
+                    return `<textarea ${idAttr} class="${allClasses}" ${placeholderAttr} ${rowsAttr} ${maxlengthAttr}>${value}</textarea>`;
+                },
+
+                /**
+                 * 创建卡片HTML
+                 * @param {string} content - 卡片内容
+                 * @param {Object} options - 配置 { type: 'default'|'settings'|'friend', id, className, onclick }
+                 * @returns {string} 卡片HTML字符串
+                 */
+                createCard(content, options = {}) {
+                    const { type = 'default', id = '', className = '', onclick = '' } = options;
+                    
+                    let baseClasses;
+                    switch(type) {
+                        case 'settings': baseClasses = this.config.classes.cardSettings; break;
+                        case 'friend': baseClasses = this.config.classes.cardFriend; break;
+                        case 'summary': baseClasses = this.config.classes.cardSummary; break;
+                        case 'worldbook': baseClasses = this.config.classes.cardWorldbook; break;
+                        case 'game': baseClasses = this.config.classes.cardGame; break;
+                        case 'info': baseClasses = this.config.classes.cardInfo; break;
+                        case 'profile': baseClasses = this.config.classes.cardProfile; break;
+                        default: baseClasses = this.config.classes.cardBase || 'card';
+                    }
+                    
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+                    const onclickAttr = onclick ? `onclick="${onclick}"` : '';
+
+                    return `<div ${idAttr} class="${allClasses}" ${onclickAttr}>${content}</div>`;
+                },
+
+                /**
+                 * 创建列表HTML
+                 * @param {string} items - 列表项内容
+                 * @param {Object} options - 配置 { type: 'default'|'friends', id, className }
+                 * @returns {string} 列表HTML字符串
+                 */
+                createList(items, options = {}) {
+                    const { type = 'default', id = '', className = '' } = options;
+                    
+                    let baseClasses;
+                    switch(type) {
+                        case 'friends': baseClasses = this.config.classes.listFriends; break;
+                        case 'model-picker': baseClasses = this.config.classes.listModelPicker; break;
+                        case 'data-manage': baseClasses = this.config.classes.listDataManage; break;
+                        case 'page-content': baseClasses = this.config.classes.listPageContent; break;
+                        default: baseClasses = this.config.classes.listBase || 'list';
+                    }
+                    
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+
+                    return `<div ${idAttr} class="${allClasses}">${items}</div>`;
+                },
+
+                /**
+                 * 创建列表项HTML
+                 * @param {string} content - 列表项内容
+                 * @param {Object} options - 配置 { type: 'default'|'friend'|'message', id, className, onclick }
+                 * @returns {string} 列表项HTML字符串
+                 */
+                createListItem(content, options = {}) {
+                    const { type = 'default', id = '', className = '', onclick = '' } = options;
+                    
+                    let baseClasses;
+                    switch(type) {
+                        case 'friend': baseClasses = this.config.classes.itemFriend; break;
+                        case 'message': baseClasses = this.config.classes.itemMessage; break;
+                        case 'extra': baseClasses = this.config.classes.itemExtra; break;
+                        case 'navigation': baseClasses = this.config.classes.itemNavigation; break;
+                        default: baseClasses = this.config.classes.itemBase || 'item';
+                    }
+                    
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+                    const onclickAttr = onclick ? `onclick="${onclick}"` : '';
+
+                    return `<div ${idAttr} class="${allClasses}" ${onclickAttr}>${content}</div>`;
+                },
+
+                /**
+                 * 创建桌面图标HTML
+                 * @param {string} icon - Font Awesome图标类名
+                 * @param {string} label - 图标标签
+                 * @param {Object} options - 配置 { type: 'dock'|'app', id, className, onclick }
+                 * @returns {string} 桌面图标HTML字符串
+                 */
+                createDesktopIcon(icon, label, options = {}) {
+                    const { type = 'app', id = '', className = '', onclick = '' } = options;
+                    
+                    const baseClasses = type === 'dock' ? this.config.classes.dockIcon : this.config.classes.appIcon;
+                    const allClasses = `${baseClasses} ${className}`.trim();
+                    const idAttr = id ? `id="${id}"` : '';
+                    const onclickAttr = onclick ? `onclick="${onclick}"` : '';
+
+                    return `
+                        <div ${idAttr} class="${allClasses}" ${onclickAttr}>
+                            <i class="${icon}"></i>
+                            ${label ? `<span>${label}</span>` : ''}
+                        </div>
+                    `;
+                },
+
+                /**
+                 * 更新所有状态栏的时间显示 - 保持原有逻辑不变
+                 */
+                updateAllStatusBarTimes() {
+                    const now = new Date();
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    const time = `${hours}:${minutes}`;
+                    document.querySelectorAll('.time').forEach(el => {
+                        el.textContent = time;
+                    });
+                },
+
+                /**
+                 * 获取UI类名
+                 * @param {string} key - 类名键
+                 * @returns {string} 对应的CSS类名
+                 */
+                getClass(key) {
+                    return this.config.classes[key] || key;
+                },
+
+                /**
+                 * 获取按钮样式配置
+                 * @param {string} type - 按钮类型
+                 * @param {string} size - 按钮尺寸
+                 * @returns {Object} 样式对象
+                 */
+                getButtonStyle(type, size = 'normal') {
+                    return {
+                        ...this.config.buttons.sizes[size],
+                        ...this.config.buttons.styles[type]
+                    };
+                },
+
+                /**
+                 * 获取输入框样式配置
+                 * @param {string} style - 输入框样式类型
+                 * @param {string} size - 输入框尺寸
+                 * @returns {Object} 样式对象
+                 */
+                getInputStyle(style = 'default', size = 'normal') {
+                    return {
+                        ...this.config.inputs.sizes[size],
+                        ...this.config.inputs.styles[style]
+                    };
+                },
+
+                /**
+                 * 获取卡片样式配置
+                 * @param {string} type - 卡片类型
+                 * @returns {Object} 样式对象
+                 */
+                getCardStyle(type = 'default') {
+                    return this.config.cards.styles[type] || this.config.cards.styles.default;
+                },
+
+                /**
+                 * 获取列表样式配置
+                 * @param {string} type - 列表类型
+                 * @returns {Object} 样式对象
+                 */
+                getListStyle(type = 'default') {
+                    return this.config.lists.styles[type] || this.config.lists.styles.default;
+                },
+
+                /**
+                 * 初始化UI管理器
+                 */
+                init() {
+                    // 每分钟更新一次所有状态栏时间
+                    setInterval(() => this.updateAllStatusBarTimes(), 60000);
+                    console.log('[UIManager] 已初始化，当前主题:', this.config.theme);
+                    console.log('[UIManager] 可用组件类型:', Object.keys(this.config.classes));
+                },
+
+                /**
+                 * 显示UI组件测试界面
+                 * 用法：在浏览器控制台输入 UIManager.showUIDemo()
+                 */
+                showUIDemo() {
+                    if (document.getElementById('ui-demo-modal')) {
+                        document.getElementById('ui-demo-modal').style.display = 'block';
+                        return;
+                    }
+
+                    const modal = document.createElement('div');
+                    modal.id = 'ui-demo-modal';
+                    modal.classList.add('modal');
+                    modal.style.display = 'block';
+                    modal.style.zIndex = '10000';
+                    
+                    const demoItems = [
+                        this.createListItem('好友列表项示例', { type: 'friend' }),
+                        this.createListItem('消息操作项示例', { type: 'message' }),
+                        this.createListItem('导航列表项示例', { type: 'navigation' }),
+                    ].join('');
+
+                    const demoCards = [
+                        this.createCard('<h4>设置卡片</h4><p>这是设置类型的卡片</p>', { type: 'settings' }),
+                        this.createCard('<h4>好友卡片</h4><p>这是好友类型的卡片</p>', { type: 'friend' }),
+                        this.createCard('<h4>游戏卡片</h4><p>这是游戏类型的卡片</p>', { type: 'game' }),
+                    ].join('');
+
+                    const demoIcons = [
+                        this.createDesktopIcon('fas fa-message', '聊天'),
+                        this.createDesktopIcon('fas fa-cog', '设置'),
+                        this.createDesktopIcon('fas fa-heart', '收藏'),
+                        this.createDesktopIcon('fas fa-home', '', { type: 'dock' }),
+                        this.createDesktopIcon('fas fa-user', '', { type: 'dock' }),
+                    ].join('');
+
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            ${this.createStatusBar()}
+                            <div class="modal-header">
+                                ${this.createBackButton({ onclick: 'UIManager.hideUIDemo()' })}
+                                <h1>UI组件测试</h1>
+                                ${this.createCloseButton({ onclick: 'UIManager.hideUIDemo()' })}
+                            </div>
+                            <div class="modal-body" style="padding: 20px; max-height: 600px; overflow-y: auto;">
+                                <h3>按钮组件</h3>
+                                <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                    ${this.createButton('主要按钮', { type: 'primary' })}
+                                    ${this.createButton('次要按钮', { type: 'secondary' })}
+                                    ${this.createButton('危险按钮', { type: 'danger' })}
+                                    ${this.createIconButton('fas fa-heart', '图标按钮')}
+                                    ${this.createButton('禁用按钮', { disabled: true })}
+                                </div>
+                                
+                                <h3>输入框组件</h3>
+                                <div style="margin-bottom: 20px;">
+                                    ${this.createInput({ placeholder: '默认输入框', style: 'default' })}
+                                    <br><br>
+                                    ${this.createInput({ placeholder: '聊天输入框', style: 'chat' })}
+                                    <br><br>
+                                    ${this.createTextarea({ placeholder: '多行文本输入框', rows: 3 })}
+                                </div>
+                                
+                                <h3>卡片组件</h3>
+                                <div style="margin-bottom: 20px;">
+                                    ${demoCards}
+                                </div>
+                                
+                                <h3>列表组件</h3>
+                                <div style="margin-bottom: 20px;">
+                                    ${this.createList(demoItems, { type: 'friends' })}
+                                </div>
+                                
+                                <h3>桌面图标组件</h3>
+                                <div style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                                    ${demoIcons}
+                                </div>
+                                
+                                <div style="margin-top: 30px; padding: 15px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+                                    <h4>测试方法</h4>
+                                    <p>在浏览器控制台中可以使用：</p>
+                                    <code style="display: block; background: rgba(0,0,0,0.2); padding: 10px; margin: 5px 0; border-radius: 4px;">
+UIManager.createButton('测试', {type: 'primary'})<br>
+UIManager.createInput({placeholder: '测试输入'})<br>
+UIManager.createCard('内容', {type: 'settings'})<br>
+UIManager.showUIDemo() // 显示此测试页面<br>
+UIManager.hideUIDemo() // 隐藏此测试页面
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.body.appendChild(modal);
+                },
+
+                /**
+                 * 隐藏UI组件测试界面
+                 */
+                hideUIDemo() {
+                    const modal = document.getElementById('ui-demo-modal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        // modal.remove(); // 不删除，下次显示更快
+                    }
+                }
+            };
+
+            /**
+             * ============================================================
+             * UIManager 使用指南
+             * ============================================================
+             * 
+             * 【创建新弹窗页面】
+             * ```javascript
+             * const modal = document.createElement('div');
+             * modal.className = 'modal';
+             * modal.innerHTML = `
+             *     <div class="modal-content">
+             *         ${UIManager.createStatusBar()}
+             *         <div class="modal-header">
+             *             ${UIManager.createBackButton({ id: 'backBtn' })}
+             *             <span>页面标题</span>
+             *             ${UIManager.createCloseButton({ id: 'closeBtn' })}
+             *         </div>
+             *         <div class="modal-body">
+             *             ${UIManager.createButton('保存', { type: 'primary', id: 'saveBtn' })}
+             *             ${UIManager.createButton('取消', { type: 'secondary', id: 'cancelBtn' })}
+             *         </div>
+             *     </div>
+             * `;
+             * ```
+             * 
+             * 【按钮创建方法】
+             * - UIManager.createButton('文字', {type: 'primary|secondary|danger', size: 'small|normal|large'})
+             * - UIManager.createIconButton('fas fa-heart', '喜欢', {type: 'primary'})
+             * - UIManager.createBackButton({id: 'backBtn'}) 
+             * - UIManager.createCloseButton({id: 'closeBtn'})
+             * 
+             * 【获取统一样式】
+             * - element.className = UIManager.getClass('btnPrimary')
+             * - const style = UIManager.getButtonStyle('primary', 'large')
+             * 
+             * 【未来切换UI主题步骤】
+             * 1. 修改 UI_CONFIG.theme 为 android 或 desktop
+             * 2. 修改 UI_CONFIG.buttons 中的样式配置
+             * 3. 在CSS找到 "iPhone特定UI样式" 分段注释
+             * 4. 替换对应的样式（如 .notch, .iphone-container）
+             * 5. UIManager 会自动使用新的类名和配置
+             * 
+             * ============================================================
+             */
+
             let friendSystem;
             let apiService;
             let chatSession;
@@ -4753,6 +6142,10 @@
             const worldbookStatusTime = document.getElementById('worldbookStatusTime');
             const settingsStatusTime = document.getElementById('settingsStatusTime');
             const friendListStatusTime = document.getElementById('friendListStatusTime');
+            const profileStatusTime = document.getElementById('profileStatusTime');
+            const profileStatusSignal = document.getElementById('profileStatusSignal');
+            const profileStatusWifi = document.getElementById('profileStatusWifi');
+            const profileStatusBattery = document.getElementById('profileStatusBattery');
             const apiStatusSignal = document.getElementById('apiStatusSignal');
             const apiStatusWifi = document.getElementById('apiStatusWifi');
             const apiStatusBattery = document.getElementById('apiStatusBattery');
@@ -4780,6 +6173,11 @@
                 setStatusIcon(friendSettingsStatusSignal, status.signal);
                 setStatusIcon(friendSettingsStatusWifi, status.wifi);
                 setStatusIcon(friendSettingsStatusBattery, status.battery);
+
+                // 更新个人资料页状态栏图标
+                setStatusIcon(profileStatusSignal, status.signal);
+                setStatusIcon(profileStatusWifi, status.wifi);
+                setStatusIcon(profileStatusBattery, status.battery);
 
                 // 更新API配置页状态栏图标
                 setStatusIcon(apiStatusSignal, status.signal);
@@ -4884,6 +6282,12 @@
                 const apiStatusTime = document.getElementById('apiStatusTime');
                 if (apiStatusTime) {
                     apiStatusTime.textContent = timeStr;
+                }
+
+                // 更新个人资料页面时间
+                const profileStatusTime = document.getElementById('profileStatusTime');
+                if (profileStatusTime) {
+                    profileStatusTime.textContent = timeStr;
                 }
 
                 if (window.appManager && typeof window.appManager.setStatus === 'function') {
@@ -5396,7 +6800,9 @@
                         } else if (navType === 'moments') {
                             alert('动态功能开发中...');
                         } else if (navType === 'me') {
-                            alert('个人页面开发中...');
+                            // 切页到“我”：隐藏好友列表，避免叠层弹出感
+                            friendListModal.style.display = 'none';
+                            openProfileModal({ from: 'friendList' });
                         }
                     });
                 });
@@ -11066,6 +12472,16 @@
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
+            // 初始化UI管理器（最优先）
+            UIManager.init();
+            // 暴露到全局，方便其他模块使用
+            window.UIManager = UIManager;
+
+            // 提示用户可以使用UI测试功能
+            console.log('%c🎨 UI组件系统已就绪！', 'color: #4CAF50; font-size: 16px; font-weight: bold;');
+            console.log('%c💡 在控制台输入 UIManager.showUIDemo() 查看所有UI组件示例', 'color: #2196F3; font-size: 14px;');
+            console.log('%c📚 支持的组件: 按钮、输入框、卡片、列表、桌面图标 + 永久保持状态栏格式', 'color: #FF9800; font-size: 12px;');
+
             friendSystem = new FriendSystem();
             apiService = new ApiService(friendSystem);
             // 将apiService暴露给总结系统使用
@@ -11549,6 +12965,70 @@
         // 总结系统
         (function () {
             // ===== 公共工具函数（需要提前定义） =====
+            function makeSummaryId(prefix) {
+                return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+            }
+            function isSummaryProcessed(item) {
+                if (!item || typeof item !== 'object') return false;
+                return Boolean(item.processed || item.processedByBigSummaryId);
+            }
+            function normalizeSmallSummaryItem(item) {
+                const normalized = (item && typeof item === 'object') ? { ...item } : {};
+                normalized.id = normalized.id || makeSummaryId('sm');
+                normalized.text = String(normalized.text || '');
+                normalized.time = normalized.time || nowTime();
+                if (normalized.processedByBigSummaryId) normalized.processed = true;
+                return normalized;
+            }
+            function normalizeBigSummaryItem(item) {
+                const normalized = (item && typeof item === 'object') ? { ...item } : {};
+                normalized.id = normalized.id || makeSummaryId('bg');
+                normalized.text = String(normalized.text || '');
+                normalized.time = normalized.time || nowTime();
+                if (!Array.isArray(normalized.sourceSummaryIds)) normalized.sourceSummaryIds = [];
+                return normalized;
+            }
+            function getUnprocessedSmallSummaries(summaries) {
+                return summaries
+                    .filter(s => !isSummaryProcessed(s))
+                    .slice()
+                    .reverse();
+            }
+            const smallSummaryInFlight = new Set();
+            const bigSummaryInFlight = new Set();
+            const MANUAL_SUMMARY_LOADING_ID = 'manualSummaryLoadingOverlay';
+            function ensureManualSummaryLoadingStyle() {
+                if (document.getElementById('manualSummaryLoadingStyle')) return;
+                const style = document.createElement('style');
+                style.id = 'manualSummaryLoadingStyle';
+                style.textContent = '@keyframes manualSummarySpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}';
+                document.head.appendChild(style);
+            }
+            function setManualSummaryLoading(loading) {
+                ensureManualSummaryLoadingStyle();
+                const old = document.getElementById(MANUAL_SUMMARY_LOADING_ID);
+                if (loading) {
+                    if (!old) {
+                        const overlay = document.createElement('div');
+                        overlay.id = MANUAL_SUMMARY_LOADING_ID;
+                        overlay.style.cssText = 'position:fixed;top:16px;right:16px;z-index:10000;pointer-events:none;';
+                        overlay.innerHTML = '<div style="background:rgba(255,255,255,0.96);backdrop-filter:blur(4px);border:1px solid #f2e4e8;border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;border:2px solid #f0d6d7;border-top-color:#d9a9b6;border-radius:50%;animation:manualSummarySpin 0.8s linear infinite;flex:0 0 auto;"></div><div style="font-size:12px;color:#666;font-weight:600;white-space:nowrap;">总结生成中...</div></div>';
+                        document.body.appendChild(overlay);
+                    }
+                    if (summaryHeartBtn) {
+                        summaryHeartBtn.disabled = true;
+                        summaryHeartBtn.style.opacity = '0.6';
+                        summaryHeartBtn.style.pointerEvents = 'none';
+                    }
+                    return;
+                }
+                if (old) old.remove();
+                if (summaryHeartBtn) {
+                    summaryHeartBtn.disabled = false;
+                    summaryHeartBtn.style.opacity = '';
+                    summaryHeartBtn.style.pointerEvents = '';
+                }
+            }
             function getFriendId() {
                 const modal = document.getElementById('summaryModal');
                 return modal ? (modal.dataset.friendId || null) : null;
@@ -11589,7 +13069,7 @@
                     return;
                 }
                 container.innerHTML = list.map((item, i) => {
-                    const isProcessed = item.processed && storagePrefix === 'summaries_';
+                    const isProcessed = storagePrefix === 'summaries_' && isSummaryProcessed(item);
                     const cleanedText = cleanThinkTags(item.text);
                     return `
                 <div class="summary-card${isProcessed ? ' summary-card-processed' : ''}" data-index="${i}">
@@ -11709,7 +13189,7 @@
                             return;
                         }
 
-                        await generateAutoSummary(friendId, chatHistory, apiConfig);
+                        await generateAutoSummary(friendId, chatHistory, apiConfig, 'manual');
                     });
 
                     overlay.addEventListener('click', (e) => {
@@ -11730,7 +13210,7 @@
 
                     // 获取未归档的小结数量
                     const summaries = getList('summaries_', friendId);
-                    const unprocessedCount = summaries.filter(s => !s.processed).length;
+                    const unprocessedCount = getUnprocessedSmallSummaries(summaries).length;
 
                     // 弹窗询问
                     const overlay = document.createElement('div');
@@ -11754,6 +13234,10 @@
 
                     overlay.querySelector('.confirm-btn').addEventListener('click', async () => {
                         document.body.removeChild(overlay);
+                        if (bigSummaryInFlight.has(friendId)) {
+                            showCuteToast('大总结正在生成，请稍候');
+                            return;
+                        }
 
                         // 检查未归档的小结数量
                         if (unprocessedCount < 5) {
@@ -11875,6 +13359,7 @@
 
             function checkAutoSummary(friendId, chatHistory, apiConfig) {
                 if (!friendId || !apiConfig) return;
+                if (smallSummaryInFlight.has(friendId)) return;
                 // 检查上次失败是否还在限流期内
                 if (!canGenerateSummary(friendId, 'small')) return;
                 const count = getCounter(friendId) + 1;
@@ -11882,7 +13367,7 @@
                 setCounter(friendId, count);
                 if (count < threshold) return;
                 // 达到轮数，触发总结（不立即重置，只在成功时才重置）
-                generateAutoSummary(friendId, chatHistory, apiConfig);
+                generateAutoSummary(friendId, chatHistory, apiConfig, 'auto');
             }
 
             function resetSummaryCounter(friendId) {
@@ -11915,10 +13400,11 @@
             // ===== 大总结自动合成 =====
             function checkAndGenerateBigSummary(friendId, apiConfig) {
                 if (!friendId) return;
+                if (bigSummaryInFlight.has(friendId)) return;
                 if (!canGenerateSummary(friendId, 'big')) return;
                 const summaries = getList('summaries_', friendId);
                 // 只统计未被处理过的小结
-                const unprocessed = summaries.filter(s => !s.processed);
+                const unprocessed = getUnprocessedSmallSummaries(summaries);
                 if (unprocessed.length < 15) return;
                 generateBigSummaryAuto(friendId, summaries, apiConfig);
             }
@@ -11929,20 +13415,25 @@
                     console.warn('[大总结] API配置缺失，跳过自动合成');
                     return;
                 }
+                if (bigSummaryInFlight.has(friendId)) return;
+                bigSummaryInFlight.add(friendId);
 
-                // 只取未处理的小结
-                const unprocessed = summaries.filter(s => !s.processed);
-                const selectedCount = Math.min(unprocessed.length, 15);
-                if (selectedCount < 15) return;
-                const wordLimit = 700;
-                const maxTokens = 1000;
+                try {
+                    // 只取未处理的小结
+                    const normalizedSummaries = summaries.map(normalizeSmallSummaryItem);
+                    const unprocessed = getUnprocessedSmallSummaries(normalizedSummaries);
+                    const selectedCount = Math.min(unprocessed.length, 15);
+                    if (selectedCount < 15) return;
+                    const wordLimit = 700;
+                    const maxTokens = 1000;
 
-                showCuteToast('正在自动合成大总结...');
+                    showCuteToast('正在自动合成大总结...');
 
-                // 构建小结素材
-                const summaryTexts = unprocessed.slice(0, selectedCount).map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
+                    // 构建小结素材
+                    const selectedSummaries = unprocessed.slice(0, selectedCount);
+                    const summaryTexts = selectedSummaries.map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
 
-                const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
+                    const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
 
 要求：
 - 字数严格控制在${wordLimit}字以内（越精简越好）
@@ -11954,7 +13445,6 @@
 小结列表：
 ${summaryTexts}`;
 
-                try {
                     const resp = await fetch(`${apiConfig.apiUrl}/chat/completions`, {
                         method: 'POST',
                         headers: { 'Authorization': 'Bearer ' + apiConfig.apiKey, 'Content-Type': 'application/json' },
@@ -11980,13 +13470,24 @@ ${summaryTexts}`;
 
                     // 保存大总结
                     const bigSummaries = getList('bigSummaries_', friendId);
-                    bigSummaries.unshift({ text: text, time: nowTime() });
+                    const bigSummaryId = makeSummaryId('bg');
+                    bigSummaries.unshift(normalizeBigSummaryItem({
+                        id: bigSummaryId,
+                        text: text,
+                        time: nowTime(),
+                        sourceSummaryIds: selectedSummaries.map(s => s.id)
+                    }));
                     saveList('bigSummaries_', friendId, bigSummaries);
 
                     // 标记已处理的小结
-                    const usedTexts = new Set(unprocessed.slice(0, selectedCount).map(s => s.text));
-                    summaries.forEach(s => { if (usedTexts.has(s.text) && !s.processed) s.processed = true; });
-                    saveList('summaries_', friendId, summaries);
+                    const usedIds = new Set(selectedSummaries.map(s => s.id));
+                    normalizedSummaries.forEach(s => {
+                        if (usedIds.has(s.id) && !isSummaryProcessed(s)) {
+                            s.processed = true;
+                            s.processedByBigSummaryId = bigSummaryId;
+                        }
+                    });
+                    saveList('summaries_', friendId, normalizedSummaries);
 
                     renderBigSummaries();
                     renderSummaries();
@@ -11995,6 +13496,8 @@ ${summaryTexts}`;
                     console.warn('[大总结] 自动合成失败:', e);
                     recordSummaryFailureTime(friendId, 'big');
                     showSummaryFailedToast();
+                } finally {
+                    bigSummaryInFlight.delete(friendId);
                 }
             }
 
@@ -12004,25 +13507,33 @@ ${summaryTexts}`;
                     showCuteToast('API 配置不完整，请检查设置');
                     return;
                 }
-
-                // 只对未处理的小结让用户选择
-                const unprocessed = summaries.filter(s => !s.processed);
-                if (unprocessed.length < 5) {
-                    showCuteToast('未归档的小结不足5条');
+                if (bigSummaryInFlight.has(friendId)) {
+                    showCuteToast('大总结正在生成，请稍候');
                     return;
                 }
+                bigSummaryInFlight.add(friendId);
 
-                const selectedCount = await showSummaryCountSelector(unprocessed.length);
-                if (!selectedCount) return;
+                try {
+                    // 只对未处理的小结让用户选择
+                    const normalizedSummaries = summaries.map(normalizeSmallSummaryItem);
+                    const unprocessed = getUnprocessedSmallSummaries(normalizedSummaries);
+                    if (unprocessed.length < 5) {
+                        showCuteToast('未归档的小结不足5条');
+                        return;
+                    }
 
-                const wordLimit = Math.min(700, Math.max(200, selectedCount * 45));
-                const maxTokens = Math.min(1000, Math.max(300, selectedCount * 65));
+                    const selectedCount = await showSummaryCountSelector(unprocessed.length);
+                    if (!selectedCount) return;
 
-                showCuteToast('正在生成大总结...');
+                    const wordLimit = Math.min(700, Math.max(200, selectedCount * 45));
+                    const maxTokens = Math.min(1000, Math.max(300, selectedCount * 65));
 
-                const summaryTexts = unprocessed.slice(0, selectedCount).map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
+                    showCuteToast('正在生成大总结...');
 
-                const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
+                    const selectedSummaries = unprocessed.slice(0, selectedCount);
+                    const summaryTexts = selectedSummaries.map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
+
+                    const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
 
 要求：
 - 字数严格控制在${wordLimit}字以内（越精简越好）
@@ -12034,7 +13545,6 @@ ${summaryTexts}`;
 小结列表：
 ${summaryTexts}`;
 
-                try {
                     const resp = await fetch(`${apiConfig.apiUrl}/chat/completions`, {
                         method: 'POST',
                         headers: { 'Authorization': 'Bearer ' + apiConfig.apiKey, 'Content-Type': 'application/json' },
@@ -12062,13 +13572,24 @@ ${summaryTexts}`;
 
                     // 保存大总结
                     const bigSummaries = getList('bigSummaries_', friendId);
-                    bigSummaries.unshift({ text: text, time: nowTime() });
+                    const bigSummaryId = makeSummaryId('bg');
+                    bigSummaries.unshift(normalizeBigSummaryItem({
+                        id: bigSummaryId,
+                        text: text,
+                        time: nowTime(),
+                        sourceSummaryIds: selectedSummaries.map(s => s.id)
+                    }));
                     saveList('bigSummaries_', friendId, bigSummaries);
 
                     // 标记已处理的小结
-                    const usedTexts = new Set(unprocessed.slice(0, selectedCount).map(s => s.text));
-                    summaries.forEach(s => { if (usedTexts.has(s.text) && !s.processed) s.processed = true; });
-                    saveList('summaries_', friendId, summaries);
+                    const usedIds = new Set(selectedSummaries.map(s => s.id));
+                    normalizedSummaries.forEach(s => {
+                        if (usedIds.has(s.id) && !isSummaryProcessed(s)) {
+                            s.processed = true;
+                            s.processedByBigSummaryId = bigSummaryId;
+                        }
+                    });
+                    saveList('summaries_', friendId, normalizedSummaries);
 
                     renderBigSummaries();
                     renderSummaries();
@@ -12077,6 +13598,8 @@ ${summaryTexts}`;
                     console.error('[大总结] 合成失败:', e.message);
                     recordSummaryFailureTime(friendId, 'big');
                     showCuteToast(`大总结生成失败: ${e.message}`);
+                } finally {
+                    bigSummaryInFlight.delete(friendId);
                 }
             }
 
@@ -12133,31 +13656,42 @@ ${summaryTexts}`;
                 });
             }
 
-            async function generateAutoSummary(friendId, chatHistory, apiConfig) {
+            async function generateAutoSummary(friendId, chatHistory, apiConfig, triggerSource = 'manual') {
                 if (!apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
                     showCuteToast('API 配置不完整，请检查设置');
                     return;
                 }
-
-                showCuteToast('正在生成小结...');
-
-                // 增量总结：只取上次总结之后的新消息
-                const lastIdx = parseInt(localStorage.getItem('lastSummaryIndex_' + friendId)) || 0;
-                const newMessages = chatHistory.slice(lastIdx);
-
-                const recent = newMessages
-                    .filter(m => !m.isDeletedLocal && !m.isRecalled && m.content)
-                    .map(m => {
-                        const role = (m.role === 'ai' || m.role === 'assistant') ? 'AI' : '用户';
-                        return role + '：' + m.content;
-                    }).join('\n');
-
-                if (!recent) {
-                    showCuteToast('没有新的对话内容可供总结');
+                const isManualTrigger = triggerSource === 'manual';
+                if (smallSummaryInFlight.has(friendId)) {
+                    showCuteToast('小结正在生成，请稍候');
                     return;
                 }
+                smallSummaryInFlight.add(friendId);
+                if (isManualTrigger) setManualSummaryLoading(true);
 
-                const prompt = `你是一位文笔精练的总结助手。请根据以下对话记录，生成一段200～450字的精简总结。
+                try {
+                    if (!isManualTrigger) showCuteToast('正在生成小结...');
+
+                    // 增量总结：只取上次总结之后的新消息
+                    const totalCount = Array.isArray(chatHistory) ? chatHistory.length : 0;
+                    const savedCursor = parseInt(localStorage.getItem('lastSummaryIndex_' + friendId));
+                    const lastIdx = Number.isFinite(savedCursor) ? Math.max(0, Math.min(savedCursor, totalCount)) : 0;
+                    const newMessages = chatHistory.slice(lastIdx);
+                    const sourceMessageIds = newMessages.map((m, idx) => m && m.id ? String(m.id) : ('idx:' + String(lastIdx + idx)));
+
+                    const recent = newMessages
+                        .filter(m => !m.isDeletedLocal && !m.isRecalled && m.content)
+                        .map(m => {
+                            const role = (m.role === 'ai' || m.role === 'assistant') ? 'AI' : '用户';
+                            return role + '：' + m.content;
+                        }).join('\n');
+
+                    if (!recent) {
+                        showCuteToast('没有新的对话内容可供总结');
+                        return;
+                    }
+
+                    const prompt = `你是一位文笔精练的总结助手。请根据以下对话记录，生成一段200～450字的精简总结。
 
 要求：
 - 总结对话中的核心内容、关键事件、情感变化和重要结论
@@ -12168,7 +13702,6 @@ ${summaryTexts}`;
 对话记录：
 ${recent}`;
 
-                try {
                     const resp = await fetch(`${apiConfig.apiUrl}/chat/completions`, {
                         method: 'POST',
                         headers: { 'Authorization': 'Bearer ' + apiConfig.apiKey, 'Content-Type': 'application/json' },
@@ -12194,16 +13727,25 @@ ${recent}`;
                         console.warn('[自动总结] 返回内容过短:', text?.length || 0);
                         return;
                     }
-                    showSummaryConfirm(friendId, text, getCounter(friendId));
+                    showSummaryConfirm(friendId, text, {
+                        nextCursor: totalCount,
+                        sourceStart: lastIdx,
+                        sourceEnd: totalCount,
+                        sourceMessageIds,
+                        triggerSource
+                    });
                 } catch (e) {
                     console.error('[自动总结] API 调用异常:', e.message);
                     recordSummaryFailureTime(friendId, 'small');
                     showCuteToast(`总结生成失败: ${e.message}`);
+                } finally {
+                    if (isManualTrigger) setManualSummaryLoading(false);
+                    smallSummaryInFlight.delete(friendId);
                 }
             }
 
             // ===== 确认弹窗 =====
-            function showSummaryConfirm(friendId, text, historyLength) {
+            function showSummaryConfirm(friendId, text, sourceMeta) {
                 const overlay = document.createElement('div');
                 overlay.style.cssText = 'position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;padding:20px;';
                 overlay.innerHTML = `
@@ -12253,15 +13795,24 @@ ${recent}`;
                 confirmBtn.addEventListener('click', () => {
                     const finalText = isEditing ? editArea.value.trim() : display.textContent;
                     if (finalText) {
-                        const list = getList('summaries_', friendId);
-                        list.unshift({ text: finalText, time: nowTime() });
+                        const list = getList('summaries_', friendId).map(normalizeSmallSummaryItem);
+                        const meta = (sourceMeta && typeof sourceMeta === 'object') ? sourceMeta : {};
+                        list.unshift(normalizeSmallSummaryItem({
+                            id: makeSummaryId('sm'),
+                            text: finalText,
+                            time: nowTime(),
+                            sourceStart: Number.isFinite(meta.sourceStart) ? meta.sourceStart : null,
+                            sourceEnd: Number.isFinite(meta.sourceEnd) ? meta.sourceEnd : null,
+                            sourceMessageIds: Array.isArray(meta.sourceMessageIds) ? meta.sourceMessageIds : [],
+                            triggerSource: typeof meta.triggerSource === 'string' ? meta.triggerSource : 'manual'
+                        }));
                         saveList('summaries_', friendId, list);
                         renderSummaries();
                         // 总结保存成功，重置计数器
                         resetSummaryCounter(friendId);
                         // 记录增量总结位置
-                        if (historyLength) {
-                            localStorage.setItem('lastSummaryIndex_' + friendId, historyLength);
+                        if (Number.isFinite(meta.nextCursor)) {
+                            localStorage.setItem('lastSummaryIndex_' + friendId, String(meta.nextCursor));
                         }
                         showCuteToast('已自动生成1条新小结');
                         // 检查是否需要自动合成大总结 - 优先使用全局apiService
@@ -12279,6 +13830,263 @@ ${recent}`;
 
             // 暴露给外部
             window.summarySystem = { getList, saveList, renderSummaries, renderBigSummaries, getFriendId, nowTime, checkAutoSummary };
+        })();
+
+        // ========== 个人资料页面功能 ==========
+        (() => {
+            let isEditMode = false;
+
+            // 个人资料数据默认值
+            const defaultProfile = {
+                name: '芋圆',
+                sweetId: '1234567890',
+                gender: 'female',
+                signature: '小小世界，开心至上',
+                personality: '',
+                birthday: '',
+                location: '',
+                avatar: ''
+            };
+
+            // 打开个人资料页面
+            window.openProfileModal = function(options = {}) {
+                const modal = document.getElementById('profileModal');
+                if (!modal) return;
+
+                modal.dataset.from = options.from || '';
+                loadProfileData();
+                updateStatusBarTime('profile');
+                modal.style.display = 'flex';
+            };
+
+            // 关闭个人资料页面
+            function closeProfileModal() {
+                const modal = document.getElementById('profileModal');
+                if (modal) {
+                    const from = modal.dataset.from || '';
+                    modal.style.display = 'none';
+                    modal.dataset.from = '';
+                    exitEditMode();
+
+                    if (from === 'friendList') {
+                        const friendListModalEl = document.getElementById('friendListModal');
+                        if (friendListModalEl) {
+                            friendListModalEl.style.display = 'flex';
+                        }
+
+                        const navItems = document.querySelectorAll('.friend-list-nav-item');
+                        navItems.forEach(item => item.classList.remove('active'));
+                        const messagesNav = document.querySelector('.friend-list-nav-item[data-nav=\"messages\"]');
+                        if (messagesNav) messagesNav.classList.add('active');
+                    }
+                }
+            }
+
+            // 加载个人资料数据
+            function loadProfileData() {
+                const savedProfile = localStorage.getItem('userProfile');
+                const profile = savedProfile ? { ...defaultProfile, ...JSON.parse(savedProfile) } : defaultProfile;
+
+                // 显示信息
+                document.getElementById('profileDisplayName').textContent = profile.name;
+                document.getElementById('profileIdDisplay').textContent = profile.sweetId;
+                document.getElementById('profileSignatureDisplay').textContent = profile.signature;
+
+                // 设置性别图标
+                const genderIcon = document.getElementById('profileGenderIcon');
+                if (profile.gender === 'male') {
+                    genderIcon.className = 'fas fa-mars';
+                    genderIcon.style.color = '#4169e1';
+                } else if (profile.gender === 'other') {
+                    genderIcon.className = 'fas fa-genderless';
+                    genderIcon.style.color = '#9370db';
+                } else {
+                    genderIcon.className = 'fas fa-venus';
+                    genderIcon.style.color = '#ff69b4';
+                }
+
+                // 填充表单
+                document.getElementById('profileNameInput').value = profile.name;
+                document.getElementById('profileIdInput').value = profile.sweetId;
+                document.getElementById('profileSignatureInput').value = profile.signature;
+                document.getElementById('profilePersonalityInput').value = profile.personality;
+                document.getElementById('profileBirthdayInput').value = profile.birthday;
+                document.getElementById('profileLocationInput').value = profile.location;
+
+                // 设置性别选择
+                const genderRadio = document.querySelector(`input[name="gender"][value="${profile.gender}"]`);
+                if (genderRadio) genderRadio.checked = true;
+            }
+
+            // 保存个人资料数据
+            function saveProfileData() {
+                const profile = {
+                    name: document.getElementById('profileNameInput').value.trim() || defaultProfile.name,
+                    sweetId: document.getElementById('profileIdInput').value.trim() || defaultProfile.sweetId,
+                    gender: document.querySelector('input[name="gender"]:checked')?.value || 'female',
+                    signature: document.getElementById('profileSignatureInput').value.trim() || defaultProfile.signature,
+                    personality: document.getElementById('profilePersonalityInput').value.trim(),
+                    birthday: document.getElementById('profileBirthdayInput').value,
+                    location: document.getElementById('profileLocationInput').value.trim()
+                };
+
+                // 保存到localStorage
+                localStorage.setItem('userProfile', JSON.stringify(profile));
+                
+                // 更新显示
+                loadProfileData();
+                
+                // 显示保存成功提示
+                showCuteToast('个人资料保存成功！✨');
+                
+                exitEditMode();
+            }
+
+            // 进入编辑模式
+            function enterEditMode() {
+                isEditMode = true;
+                document.getElementById('profileEditForm').style.display = 'block';
+                document.getElementById('profileCardsSection').style.display = 'none';
+                
+                const editBtn = document.getElementById('profileEditBtn');
+                editBtn.innerHTML = '<i class="fas fa-times"></i>';
+                editBtn.style.color = '#ff6b6b';
+            }
+
+            // 退出编辑模式
+            function exitEditMode() {
+                isEditMode = false;
+                document.getElementById('profileEditForm').style.display = 'none';
+                document.getElementById('profileCardsSection').style.display = 'block';
+                
+                const editBtn = document.getElementById('profileEditBtn');
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                editBtn.style.color = '#ff69b4';
+            }
+
+            // 更新状态栏时间
+            function updateStatusBarTime(prefix) {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const time = `${hours}:${minutes}`;
+                
+                document.getElementById(`${prefix}StatusTime`).textContent = time;
+            }
+
+            // 可爱的toast提示
+            function showCuteToast(message) {
+                // 创建toast元素
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    z-index: 10000;
+                    box-shadow: 0 8px 25px rgba(255, 154, 158, 0.6);
+                    animation: toastFadeIn 0.3s ease-out;
+                `;
+                toast.textContent = message;
+
+                // 添加动画keyframes
+                if (!document.getElementById('toast-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'toast-styles';
+                    style.textContent = `
+                        @keyframes toastFadeIn {
+                            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                        }
+                        @keyframes toastFadeOut {
+                            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                document.body.appendChild(toast);
+
+                // 2秒后消失
+                setTimeout(() => {
+                    toast.style.animation = 'toastFadeOut 0.3s ease-in';
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 2000);
+            }
+
+            // 绑定事件监听器
+            document.addEventListener('DOMContentLoaded', () => {
+                // 关闭按钮
+                const closeBtn = document.getElementById('closeProfileModal');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closeProfileModal);
+                }
+
+                // 编辑按钮
+                const editBtn = document.getElementById('profileEditBtn');
+                if (editBtn) {
+                    editBtn.addEventListener('click', () => {
+                        if (isEditMode) {
+                            exitEditMode();
+                        } else {
+                            enterEditMode();
+                        }
+                    });
+                }
+
+                // 保存按钮
+                const saveBtn = document.getElementById('profileSaveBtn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', saveProfileData);
+                }
+
+                // 取消按钮
+                const cancelBtn = document.getElementById('profileCancelBtn');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', exitEditMode);
+                }
+
+                // 头像点击编辑
+                const avatar = document.getElementById('profileAvatar');
+                if (avatar) {
+                    avatar.addEventListener('click', () => {
+                        if (isEditMode) {
+                            showCuteToast('头像上传功能开发中... 🎨');
+                        } else {
+                            enterEditMode();
+                        }
+                    });
+                }
+
+                // 模态框点击背景关闭
+                const modal = document.getElementById('profileModal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            closeProfileModal();
+                        }
+                    });
+                }
+            });
+
+            // 暴露给外部
+            window.profileSystem = {
+                openProfileModal,
+                loadProfileData,
+                saveProfileData,
+                showCuteToast
+            };
         })();
     </script>
 </body>
