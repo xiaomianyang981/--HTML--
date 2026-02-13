@@ -9791,7 +9791,7 @@
                     const config = this.apiService ? this.apiService.getConfig() : { apiUrl: '', apiKey: '', model: '' };
 
                     try {
-                        let systemPrompt = '你是一个真正的人类。严格规则：禁止使用任何括号；禁止动作说明或旁白；绝对禁止在回复开头加角色名或冒号前缀，直接开始说话；禁止使用锁符号、加密标识；情绪用语言表达；省略号不要滥用，最多1-2次。对话自然，像真实聊天。\n\n【人设融合】即将获得的人设信息（身份、性格、状态、关键关系）是你理解当前角色和事情的核心。你必须将这些信息贯穿于整个对话中，记住你的身份、你的关系、你的状态。\n\n【深度理解】你必须深入理解用户说的每一句话：理解字面意思、情绪、暗示、弦外之音；结合完整对话历史推理用户的真实意图和诉求；不要流于表面，要有洞察力和共情能力；捕捉细节、语气变化、情绪波动，给出贴切的回应。\n\n【回复详细程度】深入理解角色的完整人设和世界书设定后，自主决定回复的详细程度和语句数量，不要受任何固定模式限制。\n\n【语音消息】根据角色习惯和当前场景自然决定是否使用语音：如果角色喜欢语音或当前场景适合，就用语音；否则用文字。请记住并参考最近对话内容。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
+                        let systemPrompt = '你是一个真实自然的人，不端着、不油腻、不说教。\n\n【行为优先级】\n1) 必须遵守已挂载世界书（最高优先级）\n2) 必须遵守当前角色人设与关系设定\n3) 准确回应用户当下诉求与语气\n4) 在以上前提下自然聊天\n\n【回复风格】\n- 用日常口语表达，像真人当下在聊，不要模板腔\n- 不写动作旁白，不在开头加角色名前缀\n- 允许自然承接上文，避免机械复读\n- 情绪表达要克制、贴合场景，避免油腻和过度暧昧\n- 句子长短可变，优先清晰、具体、有信息量\n\n【理解要求】\n深入理解用户字面意思、情绪和隐含意图，结合完整对话历史给出贴切回应。\n\n【语音消息】\n根据角色习惯与场景自然决定是否使用语音。重要提示：以下是你当前的最新性格设定，用户可能随时修改，你需要始终保持与最新版本一致。';
 
                         // ========== 统一获取人设和背景设定 ==========
                         // 一次性读取所有必需数据，避免重复读取
@@ -9824,8 +9824,22 @@
 
                                 // 保存完整内容，仅在最后验证清单中使用
                                 worldBooksFullContent = '\n\n【回复前必读：已挂载的世界书约束详情】\n';
+                                let wbTotalChars = 0;
+                                const WB_TOTAL_LIMIT = 20000;
+                                const WB_SINGLE_LIMIT = 3000;
                                 mountedContent.worldBooks.forEach(book => {
-                                    worldBooksFullContent += `\n【${book.title}】\n${book.content}`;
+                                    if (wbTotalChars >= WB_TOTAL_LIMIT) return;
+                                    const raw = String(book.content || '');
+                                    const clipped = raw.length > WB_SINGLE_LIMIT ? (raw.slice(0, WB_SINGLE_LIMIT) + '\n[该世界书内容已截断，请优先遵守已显示部分]') : raw;
+                                    const block = `\n【${book.title}】\n${clipped}`;
+                                    const remain = WB_TOTAL_LIMIT - wbTotalChars;
+                                    if (block.length <= remain) {
+                                        worldBooksFullContent += block;
+                                        wbTotalChars += block.length;
+                                    } else {
+                                        worldBooksFullContent += block.slice(0, Math.max(0, remain)) + '\n[世界书总长度已达上限，后续内容省略]';
+                                        wbTotalChars = WB_TOTAL_LIMIT;
+                                    }
                                 });
                                 worldBooksFullContent += '\n\n⚠️ 硬性约束：你的回复必须完全遵守上述所有世界书设定，包括人物身份、地点、时间背景、社会规则、禁止事项等。';
                             }
@@ -9846,7 +9860,7 @@
                                 const relationshipMatch = personaText.match(/女友为(.+?)(?:[，。]|$)|配偶[：:](.+?)(?:[，。]|$)|伴侣[：:](.+?)(?:[，。]|$)|关系[：:](.+?)(?:[，。]|$)/);
                                 const relationshipInfo = relationshipMatch ? (relationshipMatch[1] || relationshipMatch[2] || relationshipMatch[3] || relationshipMatch[4]).trim() : '';
                                 
-                                systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}\n\n【硬性规则】禁止使用括号；禁止动作旁白；绝对禁止在回复开头加"${characterName}："或任何名字标识，直接开始说话；情绪用语言表达。\n\n【省略号使用规范】严格限制省略号使用：每句话最多1次，整段回复不超过2次，禁止连续使用，优先使用完整表达。\n\n【行为要求】根据实时人设信息的全部内容，和当前语境（对话历史、角色主动性），深入理解用户话语的字面意思、情绪、暗示和弦外之音。动态判断并调整语气、句子长短、语气词和礼貌、疏离程度，给出符合角色性格背景和语境的回应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
+                                systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}\n\n【硬约束】\n- 世界书优先级最高，必须遵守\n- 保持角色一致，不要无理由OOC\n- 回应必须贴合用户当前问题与需求\n\n【表达约束】\n- 不写动作旁白\n- 不在回复开头加"${characterName}："或任何名字标识\n- 允许自然承接上文，不要机械重复\n- 避免油腻、过甜、过度表演式表达\n\n【行为要求】根据实时人设信息和当前语境（对话历史、角色主动性），动态调整语气、句子长短、礼貌和疏离程度，给出符合角色背景和语境的回应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
                             }
                         }
 
@@ -9874,7 +9888,7 @@
 
                         // 获取配置的记忆对话条数
                         const apiConfig = this.apiService ? this.apiService.getConfig() : {};
-                        const memoryChatCount = apiConfig.memoryChatCount || 50;
+                        const memoryChatCount = Math.max(8, Math.min(40, Number(apiConfig.memoryChatCount) || 30));
 
                         // ========== 上下文读取规则 ==========
                         // 根据配置的记忆条数读取对话历史，生成自然连贯的上下文
@@ -9935,7 +9949,7 @@
                             const timeStr = new Date().toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' });
                             promptHistory.push({
                                 role: 'system',
-                                content: `【自然延续指令】现在是${timeStr}。过了一会儿，你觉得可以主动再说点什么。请根据之前的对话内容和你的性格，自然地继续聊天——可以追问、补充、分享新想法、转换话题，或表达情绪。要求：(1)绝对不能重复你上一句话"${lastAiMsg}"的意思或措辞；(2)这是你自己想说的话，不是在回应对方的新消息；(3)要像真实的人一样，过了一会儿自然地接着聊。`
+                                content: `【自然延续指令】现在是${timeStr}。过了一会儿，你觉得可以主动再说点什么。请根据之前的对话内容和你的性格，自然地继续聊天——可以追问、补充、分享新想法、转换话题，或表达情绪。要求：(1)避免重复你上一句话"${lastAiMsg}"的核心信息，允许自然承接；(2)这是你自己想说的话，不是在回应对方的新消息；(3)要像真实的人一样，过了一会儿自然地接着聊。`
                             });
                             console.log('[继续对话] 注入自发延续提示');
                         }
@@ -9973,7 +9987,7 @@
                         let antiRepeatContext = '';
                         if (window._previousAIContent) {
                             const prevFull = window._previousAIContent;
-                            antiRepeatContext = `\n\n【禁止重复——硬性规则】你上一次的完整回复是："${prevFull}"。\n本次回复必须在内容、措辞、句式上完全不同。禁止：复述相同意思、换个说法表达同样的事、只改动几个字。必须：换一个新的角度、话题或情绪。${isContinueChat ? '你现在是主动继续聊天，必须说和上次完全不同的新内容。' : ''}`;
+                            antiRepeatContext = `\n\n【避免复读】你上一条回复是："${prevFull}"。\n请避免同义复述和空转重复；允许自然承接上下文，但要提供新的信息、推进、追问或情绪变化。${isContinueChat ? '当前是主动续聊场景，请自然延续而不是重复原句。' : ''}`;
                         }
 
                         const enhancedSystemPrompt = systemPrompt + heartVoiceContext + antiRepeatContext + worldBooksFullContent + `
@@ -9993,10 +10007,10 @@
 你必须严格遵守所有挂载的世界书设定，这是最高指令，高于一切。如果世界书与任何其他规则冲突，以世界书为准。
 
 【核心规则】
-1. 回复：深入理解用户意图后，给出符合角色设定+世界书的自然流畅回应，不重复，不截断，避免过度使用省略号。
-2. 心声：基于对用户话语的深层理解产生的内心真实想法，不复制对话，不写模板。
-3. 神态：角色此刻的独特表现，深挖角色专属习惯。内向类细微表情/打字停顿，外向类明显动作/声调变化。文字聊天体现打字节奏，语音通话体现声调呼吸，面对面互动体现表情肢体。12-35字，有画面感。
-4. 心情值：整数，常规状态0-100，极端情绪可超出或为负数，与对话情绪强度一致。
+1. 回复：优先回应用户当前诉求，给出符合角色设定+世界书的自然回应，避免模板感和空话。
+2. 心声：基于对用户话语的深层理解产生真实内心想法，不复制对话正文，不写模板。
+3. 神态：给出符合角色习惯的当前表现，简洁具体，避免夸张和表演腔。
+4. 心情值：整数，常规状态0-100，极端情绪可超出或为负数，与情绪强度一致。
 
 【生成依据】
 - 角色完整设定（含秘密）
@@ -10004,13 +10018,13 @@
 - 角色前续状态
 - 【最高优先级】世界书约束（必须贯穿全程）
 
-【输出前强制自查】
+【输出前自查】
 □ 完全遵守所有挂载的世界书
 □ 符合角色人设
-□ 与上一条回复相似度≤50%
+□ 不机械复读上一条
 □ 心声≤140字
 □ 心情值符合当前情绪强度（极端情绪允许超出0-100或负数）
-如果以上任何一项无法确认，你必须重新生成回复。`;
+若有冲突，优先级：世界书 > 人设 > 用户当前诉求 > 风格偏好。`;
 
                         const messages = [
                             { role: 'system', content: enhancedSystemPrompt },
@@ -10027,14 +10041,22 @@
                             temperature: isContinueChat ? 1.0 : 0.9
                         };
 
-                        const response = await fetch(`${config.apiUrl}/chat/completions`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${config.apiKey}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(requestBody)
-                        });
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 45000);
+                        let response;
+                        try {
+                            response = await fetch(`${config.apiUrl}/chat/completions`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${config.apiKey}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(requestBody),
+                                signal: controller.signal
+                            });
+                        } finally {
+                            clearTimeout(timeoutId);
+                        }
 
                         if (!response.ok) {
                             let errDetail = '';
@@ -10439,6 +10461,9 @@
 
                         // 提取错误信息并显示自定义错误弹窗
                         let errorMessage = error.message || '未知错误';
+                        if (error.name === 'AbortError') {
+                            errorMessage = '请求超时，请稍后重试或减少上下文长度';
+                        }
 
                         // 如果是HTTP错误，提取状态码
                         if (error.message && error.message.includes('请求失败:')) {
