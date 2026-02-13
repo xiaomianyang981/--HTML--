@@ -9923,16 +9923,28 @@
                                 };
                             });
 
-                        // 仅当历史完全为空时才生成开场话题
-                        // 根据人设和世界书背景自动找话题，显得自然
+                        // ========== 根据场景注入不同的提示 ==========
+                        const isContinueChat = pendingMessages.length === 0 && promptHistory.length > 0;
+
                         if (promptHistory.length === 0) {
-                            // 基于人设和世界书自动生成符合背景的开场提示
+                            // 场景A：历史为空，开场话题
                             let openingPrompt = '用户主动找你说话了';
                             if (personaProfile && personaProfile.persona) {
                                 const persona = personaProfile.persona.substring(0, 200);
                                 openingPrompt = `现在是${new Date().toLocaleString('zh-CN', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}，根据你的性格设定（${persona}），自然地找一个话题。${hasMountedWorldBooks ? '同时要符合世界书背景。' : ''}用户主动和你说话了。`;
                             }
                             promptHistory.push({ role: 'user', content: openingPrompt });
+                        } else if (isContinueChat) {
+                            // 场景B：没有新消息，角色自发继续对话
+                            // 在末尾注入隐式提示，让AI以自己的身份主动说话
+                            // 这条提示使用system角色，不会显示为用户消息
+                            const lastAiMsg = window._previousAIContent ? window._previousAIContent.substring(0, 60) : '';
+                            const timeStr = new Date().toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                            promptHistory.push({
+                                role: 'system',
+                                content: `【自然延续指令】现在是${timeStr}。过了一会儿，你觉得可以主动再说点什么。请根据之前的对话内容和你的性格，自然地继续聊天——可以追问、补充、分享新想法、转换话题，或表达情绪。要求：(1)绝对不能重复你上一句话"${lastAiMsg}"的意思或措辞；(2)这是你自己想说的话，不是在回应对方的新消息；(3)要像真实的人一样，过了一会儿自然地接着聊。`
+                            });
+                            console.log('[继续对话] 注入自发延续提示');
                         }
 
                         // ========== 间隔式人设注入 ==========
@@ -9967,8 +9979,8 @@
                         // ========== 防重复提示：在系统提示中直接告诉AI不要重复前一条 ==========
                         let antiRepeatContext = '';
                         if (window._previousAIContent) {
-                            const prevReplyPreview = window._previousAIContent.substring(0, 80);
-                            antiRepeatContext = `\n\n【重要】你的前一条回复是："${prevReplyPreview}${window._previousAIContent.length > 80 ? '...' : ''}"。本次回复必须完全不同，不能重复相同的内容、表达方式或逻辑。请提供新的角度、情绪或话题。`;
+                            const prevFull = window._previousAIContent;
+                            antiRepeatContext = `\n\n【禁止重复——硬性规则】你上一次的完整回复是："${prevFull}"。\n本次回复必须在内容、措辞、句式上完全不同。禁止：复述相同意思、换个说法表达同样的事、只改动几个字。必须：换一个新的角度、话题或情绪。${isContinueChat ? '你现在是主动继续聊天，必须说和上次完全不同的新内容。' : ''}`;
                         }
 
                         const enhancedSystemPrompt = systemPrompt + heartVoiceContext + antiRepeatContext + worldBooksFullContent + `
@@ -10015,11 +10027,14 @@
                         // 一体化生成：所有回复都包含JSON格式的reply和inner_voice
                         // 注意：不使用 response_format 参数以保障最大兼容性
                         // 而是通过 system prompt 中的明确指令让 AI 输出 JSON
+                        // 重试时提高temperature，增加多样性
+                        const retryCount = window._aiRetryCount || 0;
+                        const baseTemp = isContinueChat ? 1.0 : 0.9;
                         const requestBody = {
                             model: config.model,
                             messages: messages,
                             max_tokens: 1200,
-                            temperature: 0.9
+                            temperature: Math.min(1.5, baseTemp + retryCount * 0.2)
                         };
 
                         const response = await fetch(`${config.apiUrl}/chat/completions`, {
@@ -10185,13 +10200,27 @@
                             aiResponse = '（响应内容为空）';
                         }
 
-                        // ========== 重复检测：与前一条回复比较 ==========
-                        // 注：防重复逻辑已通过systemPrompt提前告知AI，这里仅作为最后防线
-                        if (window._previousAIContent) {
+                        // ========== 重复检测：与前一条回复比较，重复时阻止并重试 ==========
+                        if (window._previousAIContent && aiResponse && aiResponse !== '（响应内容为空）') {
                             const similarity = this.calculateTextSimilarity(aiResponse, window._previousAIContent);
-                            console.log(`[最终检测] 相似度: ${(similarity * 100).toFixed(1)}%`);
+                            console.log(`[重复检测] 相似度: ${(similarity * 100).toFixed(1)}%`);
+
                             if (similarity > 0.7) {
-                                console.warn(`[最终检测] 警告：相似度${(similarity * 100).toFixed(1)}%，接近重复。但已允许发送，因为AI已在systemPrompt中接收防重复指令`);
+                                const retryCount = window._aiRetryCount || 0;
+                                if (retryCount < 2) {
+                                    // 还可以重试：增加计数器，重新调用API
+                                    window._aiRetryCount = retryCount + 1;
+                                    console.warn(`[重复检测] 相似度${(similarity * 100).toFixed(1)}%，触发重试（第${retryCount + 1}次）`);
+                                    this.isProcessing = false;
+                                    this.stopHeartVoicePulse();
+                                    return this.triggerAI(targetMsgId);
+                                } else {
+                                    // 已重试2次仍重复，放行但记录警告
+                                    console.warn(`[重复检测] 重试${retryCount}次后仍重复，放行`);
+                                    window._aiRetryCount = 0;
+                                }
+                            } else {
+                                window._aiRetryCount = 0;  // 不重复，重置计数
                             }
                         }
 
