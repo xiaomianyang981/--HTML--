@@ -343,6 +343,40 @@
             --dock-container-height: 85px;                         /* Dock容器高度 */
             --dock-container-radius: 26px;                         /* Dock容器圆角 */
             --dock-container-padding: 12px 20px;                   /* Dock容器内边距 */
+
+            /* 主屏高级玻璃（可自由改色） */
+            --home-shell-bg-start: #edf2f6;
+            --home-shell-bg-mid: #e8edf2;
+            --home-shell-bg-end: #e3e9ef;
+            --home-shell-border: rgba(255, 255, 255, 0.68);
+            --home-shell-shadow: 0 26px 52px rgba(113, 128, 150, 0.16);
+
+            --home-card-bg-start: rgba(255, 255, 255, 0.28);
+            --home-card-bg-mid: rgba(243, 248, 253, 0.20);
+            --home-card-bg-end: rgba(226, 236, 247, 0.24);
+            --home-card-border: rgba(255, 255, 255, 0.50);
+
+            --home-memo-bg-start: rgba(255, 255, 255, 0.36);
+            --home-memo-bg-end: rgba(243, 248, 253, 0.24);
+            --home-memo-border: rgba(255, 255, 255, 0.48);
+
+            --home-icon-base-start: rgba(246, 250, 255, 0.55);
+            --home-icon-base-end: rgba(218, 229, 239, 0.52);
+            --home-icon-border: rgba(255, 255, 255, 0.56);
+            --home-icon-fg: rgba(245, 250, 255, 0.96);
+
+            --home-icon-message-start: rgba(240, 247, 255, 0.60);
+            --home-icon-message-end: rgba(206, 220, 236, 0.56);
+            --home-icon-chat-start: rgba(236, 246, 255, 0.60);
+            --home-icon-chat-end: rgba(205, 221, 238, 0.56);
+            --home-icon-worldbook-start: rgba(238, 247, 255, 0.60);
+            --home-icon-worldbook-end: rgba(203, 218, 236, 0.56);
+            --home-icon-settings-start: rgba(241, 248, 255, 0.60);
+            --home-icon-settings-end: rgba(208, 224, 238, 0.56);
+
+            --home-dock-bg-start: rgba(249, 252, 255, 0.50);
+            --home-dock-bg-end: rgba(239, 246, 252, 0.35);
+            --home-dock-border: rgba(255, 255, 255, 0.58);
         }
 
         /* ============================================================
@@ -619,175 +653,6 @@
             gap: 8px;
         }
 
-        .frost-widget {
-            width: 88%;
-            height: 120px;
-            background: var(--color-widget-bg);
-            padding: 16px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 26px;
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            box-shadow: var(--box-shadow);
-        }
-
-        .widget-left {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            color: var(--color-text);
-        }
-
-        .widget-weather {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .widget-weather i {
-            color: var(--color-text-light);
-            font-size: 22px;
-        }
-
-        .widget-temp {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--color-text-medium);
-        }
-
-        .widget-greeting {
-            font-size: 14px;
-            color: var(--color-text);
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 12px;
-            background: var(--glass-bg-light);
-            backdrop-filter: var(--glass-blur-light);
-            -webkit-backdrop-filter: var(--glass-blur-light);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 400;
-        }
-
-        .widget-greeting:focus {
-            outline: none;
-            background: var(--glass-bg-strong);
-            color: var(--color-text-dark);
-        }
-
-
-        .home-header {
-            width: 88%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .home-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        .avatar-section {
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-            z-index: 2;
-        }
-
-        .avatar {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, 
-                var(--avatar-gradient-start) 0%, 
-                var(--avatar-gradient-end) 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 3px solid var(--glass-border-icon);
-            box-shadow: 0 6px 20px var(--shadow-color-medium);
-            z-index: 3;
-            overflow: hidden;
-            backdrop-filter: var(--glass-blur-light);
-            -webkit-backdrop-filter: var(--glass-blur-light);
-        }
-
-        .avatar i {
-            font-size: 40px;
-            color: var(--icon-color);
-        }
-
-        .info-card {
-            width: 88%;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(107, 125, 143, 0.04);
-            position: absolute;
-            top: 45px;
-            z-index: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .user-info {
-            text-align: left;
-        }
-
-        .user-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-text-dark);
-            margin-bottom: 4px;
-        }
-
-        .user-status {
-            font-size: 14px;
-            color: var(--color-text-medium);
-            font-weight: 400;
-        }
-
-        .icons-section {
-            width: 90%;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-        }
-
-        .left-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
-            border-radius: 18px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 8px 20px rgba(240, 214, 215, 0.3);
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        .right-icons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 15px;
-            width: 130px;
-        }
-
         /* ========== 主屏幕图标网格布局 ========== */
         .app-grid {
             display: none; /* 隐藏旧的网格布局，使用新的玻璃效果布局 */
@@ -876,6 +741,11 @@
             background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary) 100%);
         }
 
+        /* 内容页面图标（黑色） */
+        .content-icon {
+            color: #444;
+        }
+
         /* ========== 底部Dock柔光毛玻璃 (中等大小极简风格) ========== */
         .dock-glass {
             position: absolute;
@@ -933,6 +803,203 @@
 
         .dock-forum {
             background: linear-gradient(135deg, #B8C4E0 0%, #A5B3D5 100%);
+        }
+
+        /* ========== 主屏幕高级玻璃质感升级（不改布局） ========== */
+        .iphone-container {
+            background:
+                linear-gradient(160deg, var(--home-shell-bg-start) 0%, var(--home-shell-bg-mid) 42%, var(--home-shell-bg-end) 100%);
+            border: 1px solid var(--home-shell-border);
+            box-shadow:
+                var(--home-shell-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.78);
+        }
+
+        .iphone-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(120% 60% at 10% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 56%),
+                radial-gradient(90% 52% at 88% 86%, rgba(212, 222, 234, 0.35) 0%, rgba(212, 222, 234, 0) 66%);
+            mix-blend-mode: screen;
+            opacity: 0.9;
+            z-index: 0;
+        }
+
+        .iphone-container>.status-bar,
+        .iphone-container>.main-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .iphone-container>.dock-glass {
+            z-index: 1;
+        }
+
+        .iphone-container>.status-bar {
+            background: rgba(248, 251, 255, 0.52);
+            backdrop-filter: blur(20px) saturate(145%);
+            -webkit-backdrop-filter: blur(20px) saturate(145%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.62);
+        }
+
+        .home-screen {
+            isolation: isolate;
+        }
+
+        .home-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(260px 180px at 15% 26%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 72%),
+                radial-gradient(320px 210px at 83% 38%, rgba(217, 228, 238, 0.35) 0%, rgba(217, 228, 238, 0) 74%),
+                radial-gradient(240px 170px at 42% 74%, rgba(235, 241, 247, 0.36) 0%, rgba(235, 241, 247, 0) 76%);
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        .profile-widget-glass {
+            background: linear-gradient(158deg, var(--home-card-bg-start) 0%, var(--home-card-bg-mid) 45%, var(--home-card-bg-end) 100%);
+            backdrop-filter: blur(34px) saturate(156%);
+            -webkit-backdrop-filter: blur(34px) saturate(156%);
+            border: 1px solid var(--home-card-border);
+            box-shadow:
+                0 22px 48px rgba(119, 133, 152, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.62),
+                inset 0 -18px 30px rgba(218, 227, 237, 0.12);
+        }
+
+        .profile-widget-glass::before {
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.46) 0%, rgba(255, 255, 255, 0.14) 38%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        .profile-widget-glass::after {
+            content: '';
+            position: absolute;
+            top: 2%;
+            left: 6%;
+            width: 74%;
+            height: 36%;
+            border-radius: 40px;
+            background: linear-gradient(124deg, rgba(255, 255, 255, 0.66) 0%, rgba(255, 255, 255, 0.1) 62%, rgba(255, 255, 255, 0) 100%);
+            transform: rotate(-6deg);
+            opacity: 0.58;
+            pointer-events: none;
+        }
+
+        .profile-avatar-circle {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(232, 239, 248, 0.84));
+            border: 2px solid rgba(255, 255, 255, 0.74);
+            box-shadow:
+                0 10px 28px rgba(108, 124, 145, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+
+        .profile-info {
+            color: rgba(246, 250, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(80, 96, 120, 0.18);
+        }
+
+        .memo-card {
+            background: linear-gradient(160deg, var(--home-memo-bg-start) 0%, var(--home-memo-bg-end) 100%);
+            backdrop-filter: blur(26px) saturate(145%);
+            -webkit-backdrop-filter: blur(26px) saturate(145%);
+            border: 1px solid var(--home-memo-border);
+            box-shadow:
+                0 18px 40px rgba(116, 130, 149, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.66);
+        }
+
+        .memo-header {
+            background: linear-gradient(180deg, rgba(240, 246, 252, 0.8) 0%, rgba(231, 239, 248, 0.56) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.58);
+        }
+
+        .memo-content {
+            background: linear-gradient(180deg, rgba(251, 253, 255, 0.72) 0%, rgba(242, 248, 253, 0.52) 100%);
+            color: rgba(132, 146, 163, 0.72);
+        }
+
+        .app-icon,
+        .dock-icon-glass {
+            background: linear-gradient(154deg, var(--home-icon-base-start) 0%, var(--home-icon-base-end) 100%);
+            border: 1px solid var(--home-icon-border);
+            box-shadow:
+                0 10px 26px rgba(110, 124, 144, 0.19),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -8px 15px rgba(196, 210, 224, 0.22);
+            color: var(--home-icon-fg);
+            backdrop-filter: blur(12px) saturate(140%);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
+        }
+
+        .app-icon i,
+        .dock-icon-glass i {
+            text-shadow: 0 1px 6px rgba(96, 114, 138, 0.25);
+        }
+
+        .message-icon,
+        .dock-phone {
+            background: linear-gradient(154deg, var(--home-icon-message-start) 0%, var(--home-icon-message-end) 100%);
+        }
+
+        .chat-icon,
+        .dock-novel {
+            background: linear-gradient(154deg, var(--home-icon-chat-start) 0%, var(--home-icon-chat-end) 100%);
+        }
+
+        .worldbook-icon,
+        .dock-forum {
+            background: linear-gradient(154deg, var(--home-icon-worldbook-start) 0%, var(--home-icon-worldbook-end) 100%);
+        }
+
+        .settings-icon {
+            background: linear-gradient(154deg, var(--home-icon-settings-start) 0%, var(--home-icon-settings-end) 100%);
+        }
+
+        .app-name {
+            color: rgba(104, 120, 138, 0.94);
+            font-weight: 500;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .dock-glass {
+            background: linear-gradient(180deg, var(--home-dock-bg-start) 0%, var(--home-dock-bg-end) 100%);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border: 1px solid var(--home-dock-border);
+            box-shadow:
+                0 14px 34px rgba(113, 127, 146, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.78);
+        }
+
+        body.theme-monochrome-glass {
+            --home-shell-bg-start: #efefef;
+            --home-shell-bg-mid: #e8e8e8;
+            --home-shell-bg-end: #e2e2e2;
+            --home-card-bg-start: rgba(255, 255, 255, 0.30);
+            --home-card-bg-mid: rgba(245, 245, 245, 0.22);
+            --home-card-bg-end: rgba(225, 225, 225, 0.24);
+            --home-memo-bg-start: rgba(255, 255, 255, 0.34);
+            --home-memo-bg-end: rgba(239, 239, 239, 0.22);
+            --home-icon-base-start: rgba(250, 250, 250, 0.56);
+            --home-icon-base-end: rgba(222, 222, 222, 0.52);
+            --home-icon-message-start: rgba(244, 244, 244, 0.62);
+            --home-icon-message-end: rgba(214, 214, 214, 0.58);
+            --home-icon-chat-start: rgba(244, 244, 244, 0.62);
+            --home-icon-chat-end: rgba(214, 214, 214, 0.58);
+            --home-icon-worldbook-start: rgba(244, 244, 244, 0.62);
+            --home-icon-worldbook-end: rgba(214, 214, 214, 0.58);
+            --home-icon-settings-start: rgba(244, 244, 244, 0.62);
+            --home-icon-settings-end: rgba(214, 214, 214, 0.58);
+            --home-dock-bg-start: rgba(252, 252, 252, 0.52);
+            --home-dock-bg-end: rgba(236, 236, 236, 0.36);
+            --home-icon-fg: rgba(250, 250, 250, 0.98);
         }
 
         /* ============================================================
@@ -2449,7 +2516,9 @@
         }
 
         #chatModal .modal-header h3 {
-            flex: 1;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             margin: 0;
             color: var(--color-text);
             font-size: 15px;
@@ -2460,6 +2529,18 @@
             align-items: center;
             justify-content: center;
             min-height: 30px;
+            max-width: calc(100% - 160px);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #chatModal .modal-header #chatHeaderActions {
+            margin-left: auto;
+            position: relative;
+            z-index: 2;
         }
 
         #chatModal .modal-header>div {
@@ -3400,12 +3481,6 @@
                 max-width: 100%;
                 height: 100vh;
             }
-
-            .frost-widget {
-                width: 95%;
-                height: auto;
-                padding: 12px;
-            }
         }
 
         /* 移动端全屏适配 (PWA/Add to Home Screen) */
@@ -4146,10 +4221,6 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
         }
 
-        .worldbook-icon {
-            color: #444;
-        }
-
         /* 世界书玻璃按钮样式 */
         .wb-glass-btn {
             border-radius: 24px;
@@ -4410,19 +4481,19 @@
                     </div>
                 </div>
                 
-                <!-- 右侧图标区域 (4个图标: 消息、QQ、创世书、设置) -->
+                <!-- 右侧图标区域 (4个图标: QQ、消息、创世书、设置) -->
                 <div class="icon-area-glass">
-                    <div class="app-item" data-app="message">
-                        <div class="app-icon message-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="app-name">消息</div>
-                    </div>
                     <div class="app-item" data-app="feixin">
                         <div class="app-icon chat-icon">
                             <i class="fas fa-comments"></i>
                         </div>
                         <div class="app-name">QQ</div>
+                    </div>
+                    <div class="app-item" data-app="message">
+                        <div class="app-icon message-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="app-name">消息</div>
                     </div>
                     <div class="app-item" data-app="worldbook">
                         <div class="app-icon worldbook-icon">
@@ -4697,7 +4768,7 @@
                 <h3 id="chatTitle"
                     style="margin: 0; color: var(--color-ui-gray); font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-align: center;">
                     芋圆</h3>
-                <div style="display: flex; gap: 8px; align-items: center;">
+                <div id="chatHeaderActions" style="display: flex; gap: 8px; align-items: center;">
                     <button id="heartVoiceBtn"
                         style="background: none; border: none; font-size: 18px; color: var(--color-accent-pink); cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
                         aria-label="心声">
@@ -12402,6 +12473,24 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             });
         }
 
+        // ========== 主屏玻璃主题（clear / mono） ==========
+        function initGlassTheme() {
+            const saved = StorageManager.get('glassThemeMode', 'clear');
+            document.body.classList.toggle('theme-monochrome-glass', saved === 'mono');
+        }
+
+        window.setGlassTheme = function (mode = 'clear') {
+            const themeMode = mode === 'mono' ? 'mono' : 'clear';
+            StorageManager.set('glassThemeMode', themeMode);
+            document.body.classList.toggle('theme-monochrome-glass', themeMode === 'mono');
+            return themeMode;
+        };
+
+        window.toggleGlassTheme = function () {
+            const isMono = document.body.classList.contains('theme-monochrome-glass');
+            return window.setGlassTheme(isMono ? 'clear' : 'mono');
+        };
+
         // ========== 隐藏状态栏功能 ==========
         function initHideStatusBar() {
             const hideStatusBarToggle = document.getElementById('hideStatusBarToggle');
@@ -12746,12 +12835,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
             // 初始化隐藏状态栏功能
             initHideStatusBar();
+            initGlassTheme();
 
             // 初始化记忆对话条数配置
             initMemoryChatCount();
 
             // 为所有图标添加悬停效果
-            const allIcons = document.querySelectorAll('.app-icon, .dock-icon, .left-icon, .app-item');
+            const allIcons = document.querySelectorAll('.app-icon, .dock-icon, .app-item');
             allIcons.forEach(icon => {
                 icon.addEventListener('mousedown', () => {
                     icon.style.transform = 'scale(0.95)';
@@ -12820,13 +12910,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 <!-- 世界书和游戏按钮区域 -->
                 <div style="display: flex; gap: 20px; justify-content: center; margin-top: 24px; padding: 0 12px;">
                     <div id="worldbookBtn" class="worldbook-button" style="background-color: #F2EBF5;">
-                        <div class="worldbook-icon">
+                        <div class="content-icon">
                             <i class="fas fa-book" style="font-size: 28px;"></i>
                         </div>
                         <span>世界书</span>
                     </div>
                     <div id="htmlGameBtn" class="worldbook-button" style="background-color: #EAE4F2;">
-                        <div class="worldbook-icon">
+                        <div class="content-icon">
                             <i class="fas fa-gamepad" style="font-size: 28px;"></i>
                         </div>
                         <span>HTML 游戏</span>
