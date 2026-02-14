@@ -34,7 +34,7 @@
     6. 聊天界面 (chatModal) - 主要对话界面
     7. 语音输入 (voiceModal) - 语音转文本
     8. 相机描述 (cameraDescModal) - 上传图片描述
-    9. 图片查看 (imageDescModal) - 查看AI生成图片
+    9. 图片查看 (imageDescModal) - 查看角色生成图片
     10. 删除确认 (confirmDeleteModal) - 删除好友确认
     11. 心声历史 (heartVoiceHistoryModal) - 查看历史心声
     12. 心声删除 (hvDeleteModal) - 删除心声确认
@@ -141,16 +141,16 @@
             /* 背景色 - 干净冷调 */
             --color-background: #f5f8fa;        /* 主背景：极浅灰蓝 */
             --color-bg-white: #fafbfc;          /* 白色背景：微带蓝调 */
-            --color-widget-bg: #f0f4f7;         /* 小部件背景 */
+            --color-widget-bg: #ffffff;         /* 小部件背景 */
             --color-bg-hover: #eef2f5;          /* 悬停背景 */
             --color-bg-active: #e5ebf0;         /* 激活背景 */
             --color-bg-pressed: #dce3e8;        /* 按下背景 */
             --color-bg-light: #f7f9fb;          /* 浅背景 */
             --color-bg-input: #f3f6f9;          /* 输入框背景 */
-            --color-bg-selected: #eef5fa;       /* 选中背景 */
+            --color-bg-selected: #fbfbfb;       /* 选中背景 */
             --color-bg-disabled: #e8ecf0;       /* 禁用背景 */
-            --color-bg-user-msg: #e8f2f7;       /* 用户消息背景 */
-            --color-bg-ai-msg: #e6f0f5;         /* AI消息背景 */
+            --color-bg-user-msg: #f2e4f1;       /* 用户消息背景 */
+            --color-bg-ai-msg: #e6f0f5;         /* 角色消息背景 */
 
             /* 文字颜色 - 柔和不刺眼 */
             --color-text: #6b7d8f;              /* 主文字：柔和灰蓝 */
@@ -163,10 +163,10 @@
             --color-text-placeholder: #8b99a8;  /* 占位符文字 */
 
             /* 边框/分割线 - 轻盈纤细 */
-            --color-border: #e0e7ed;            /* 标准边框 */
-            --color-border-light: #eaeef2;      /* 浅边框 */
-            --color-border-lighter: #f0f3f6;    /* 更浅边框/分割线 */
-            --color-border-widget: #e8edf2;     /* 小部件边框 */
+            --color-border: #ffffff;            /* 标准边框 */
+            --color-border-light: #fefefe;      /* 浅边框 */
+            --color-border-lighter: #f7f7f7;    /* 更浅边框/分割线 */
+            --color-border-widget: #f5f5f5;     /* 小部件边框 */
             --color-border-input: #dce3e9;      /* 输入框边框 */
 
             /* 状态色 - 低饱和度版本 */
@@ -199,9 +199,14 @@
             --glass-blur-strong: blur(25px);
             
             /* 状态栏/导航栏背景 */
-            --status-bar-bg: rgba(250, 251, 252, 0.75);
+            --status-bar-bg: rgba(249, 249, 249, 0.75);
             --status-border: rgba(224, 231, 237, 0.25);
             --status-border-strong: rgba(224, 231, 237, 0.35);
+            
+            /* 聊天界面返回栏 - 独立控制 */
+            --chat-header-bg: rgba(255, 255, 255, 0.7);
+            --chat-header-border: rgba(224, 231, 237, 0.35);
+            --chat-header-blur: blur(25px);
             
             /* 图标/头像渐变色 */
             --avatar-gradient-start: rgba(200, 220, 240, 0.7);
@@ -1088,9 +1093,16 @@
             position: relative;
         }
 
+        /* 聊天页消息区覆盖通用样式，避免底部出现多余分隔缝 */
+        #chatModal #chatMessages {
+            margin-bottom: 0;
+        }
+
         #chatModal .modal-header {
-            background-color: var(--color-bg-white);
-            border-bottom: 1px solid var(--color-widget-bg);
+            background: var(--chat-header-bg);
+            backdrop-filter: var(--chat-header-blur);
+            -webkit-backdrop-filter: var(--chat-header-blur);
+            border-bottom: 1px solid var(--chat-header-border);
             display: flex;
             align-items: center;
             /* padding和height由统一适配逻辑控制 */
@@ -1618,7 +1630,7 @@
             background: var(--color-bg-light);
             color: var(--color-text-medium);
             font-size: 12px;
-            margin-bottom: 8px;
+            margin: 0 !important;
         }
 
         .reply-preview-text {
@@ -1646,7 +1658,7 @@
             background: var(--color-widget-bg);
             color: var(--color-primary);
             font-size: 12px;
-            margin-bottom: 8px;
+            margin: 0 !important;
             border: 1px dashed var(--glass-border-light);
         }
 
@@ -2420,8 +2432,10 @@
             justify-content: flex-start;
             gap: 0;
             padding-right: 16px;
-            border-bottom: 1px solid var(--color-widget-bg);
-            background: var(--color-bg-white);
+            background: var(--chat-header-bg);
+            backdrop-filter: var(--chat-header-blur);
+            -webkit-backdrop-filter: var(--chat-header-blur);
+            border-bottom: 1px solid var(--chat-header-border);
             flex-shrink: 0;
             min-height: 50px;
             padding-left: 0;
@@ -4396,7 +4410,7 @@
                     </div>
                 </div>
                 
-                <!-- 右侧图标区域 (4个图标: 消息、甜聊、创世书、设置) -->
+                <!-- 右侧图标区域 (4个图标: 消息、QQ、创世书、设置) -->
                 <div class="icon-area-glass">
                     <div class="app-item" data-app="message">
                         <div class="app-icon message-icon">
@@ -4408,7 +4422,7 @@
                         <div class="app-icon chat-icon">
                             <i class="fas fa-comments"></i>
                         </div>
-                        <div class="app-name">甜聊</div>
+                        <div class="app-name">QQ</div>
                     </div>
                     <div class="app-item" data-app="worldbook">
                         <div class="app-icon worldbook-icon">
@@ -4739,14 +4753,11 @@
             <!-- 消息区域 -->
             <div class="chat-messages" id="chatMessages"
                 style="flex: 1; overflow-y: auto; border: none; padding: 15px 12px; background-color: #FFFFFF;">
-                <div class="message ai">
-                    你好！我是AI助手，请问有什么可以帮助你的吗？
-                </div>
             </div>
 
             <!-- 输入框区域 -->
             <div
-                style="background-color: #FFFFFF; border-top: 1px solid var(--color-ui-border); flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px);">
+                style="background-color: #FFFFFF; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px);">
                 <div id="chatInputAreaWrap" class="chat-input-area-wrap" style="padding: 8px 12px 2px;">
                     <div id="replyPreview" class="reply-preview">
                         <span id="replyPreviewText" class="reply-preview-text"></span>
@@ -4781,7 +4792,7 @@
                         style="display: flex; gap: 8px; margin-bottom: 2px; align-items: flex-end;">
                         <button id="triggerAiBtn"
                             style="width: 38px; height: 38px; padding: 0; border-radius: 50%; flex-shrink: 0; background: var(--color-ui-bg); border: none; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(120,119,133,0.05); display: flex; align-items: center; justify-content: center; color: var(--color-accent-lavender);"
-                            aria-label="呼唤AI">
+                            aria-label="呼唤角色">
                             <i class="fas fa-wand-magic-sparkles" style="font-size: 18px;"></i>
                         </button>
                         <textarea class="chat-input" id="chatInput" placeholder="输入消息..." rows="1"
@@ -5345,8 +5356,8 @@
                     </div>
 
                     <div class="profile-form-section">
-                        <label class="profile-form-label">甜聊号</label>
-                        <input type="text" id="profileIdInput" class="form-control" placeholder="请输入甜聊号" maxlength="15">
+                        <label class="profile-form-label">QQ号</label>
+                        <input type="text" id="profileIdInput" class="form-control" placeholder="请输入QQ号" maxlength="15">
                     </div>
 
                     <div class="profile-form-section">
@@ -5378,7 +5389,7 @@
                     <div class="profile-form-section">
                         <label class="profile-form-label">角色人设</label>
                         <textarea id="profilePersonalityInput" class="form-control" rows="5" placeholder="描述一下你的性格、爱好、特点等..." maxlength="500"></textarea>
-                        <div class="form-help-text">用于AI更好地理解你的个性</div>
+                        <div class="form-help-text">用于角色更好地理解你的个性</div>
                     </div>
 
                     <div class="profile-form-section">
@@ -6334,7 +6345,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 customApiErrorText.textContent = errorMessage;
-                customErrorModal.style.display = 'flex';
+                ModalManager.show('customError');
 
                 // 移除旧的事件监听器并添加新的
                 if (customErrorOkButton) {
@@ -6345,7 +6356,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const clonedButton = document.getElementById('customErrorOkButton');
                     if (clonedButton) {
                         clonedButton.addEventListener('click', function () {
-                            customErrorModal.style.display = 'none';
+                            ModalManager.hide('customError');
                         });
                     }
                 }
@@ -6353,7 +6364,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 // 点击背景关闭（只添加一次）
                 customErrorModal.onclick = function (e) {
                     if (e.target === customErrorModal) {
-                        customErrorModal.style.display = 'none';
+                        ModalManager.hide('customError');
                     }
                 };
             }
@@ -6417,25 +6428,167 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             }
 
             // 基础功能
-            const statusTimeEl = document.getElementById('statusTime');
-            const statusSignalEl = document.getElementById('statusSignal');
-            const statusWifiEl = document.getElementById('statusWifi');
-            const statusBatteryEl = document.getElementById('statusBattery');
-            const chatStatusTime = document.getElementById('chatStatusTime');
-            const chatStatusSignal = document.getElementById('chatStatusSignal');
-            const chatStatusWifi = document.getElementById('chatStatusWifi');
-            const chatStatusBattery = document.getElementById('chatStatusBattery');
-            const friendSettingsStatusTime = document.getElementById('friendSettingsStatusTime');
-            const friendSettingsStatusSignal = document.getElementById('friendSettingsStatusSignal');
-            const friendSettingsStatusWifi = document.getElementById('friendSettingsStatusWifi');
-            const friendSettingsStatusBattery = document.getElementById('friendSettingsStatusBattery');
-            const worldbookStatusTime = document.getElementById('worldbookStatusTime');
-            const settingsStatusTime = document.getElementById('settingsStatusTime');
-            const friendListStatusTime = document.getElementById('friendListStatusTime');
-            const profileStatusTime = document.getElementById('profileStatusTime');
-            const profileStatusSignal = document.getElementById('profileStatusSignal');
-            const profileStatusWifi = document.getElementById('profileStatusWifi');
-            const profileStatusBattery = document.getElementById('profileStatusBattery');
+            // ========== 通用 LocalStorage 管理系统 ==========
+            const StorageManager = {
+                /**
+                 * 获取存储的数据（自动 JSON 解析）
+                 * @param {string} key - 存储键名
+                 * @param {*} defaultValue - 默认值
+                 * @returns {*} - 解析后的数据或默认值
+                 */
+                get(key, defaultValue = null) {
+                    try {
+                        const data = localStorage.getItem(key);
+                        return data ? JSON.parse(data) : defaultValue;
+                    } catch (e) {
+                        console.error(`[StorageManager] 读取失败 (${key}):`, e);
+                        return defaultValue;
+                    }
+                },
+                
+                /**
+                 * 保存数据（自动 JSON 序列化）
+                 * @param {string} key - 存储键名
+                 * @param {*} value - 要保存的数据
+                 */
+                set(key, value) {
+                    try {
+                        localStorage.setItem(key, JSON.stringify(value));
+                    } catch (e) {
+                        console.error(`[StorageManager] 保存失败 (${key}):`, e);
+                    }
+                },
+                
+                /**
+                 * 删除指定键
+                 * @param {string} key - 存储键名
+                 */
+                remove(key) {
+                    try {
+                        localStorage.removeItem(key);
+                    } catch (e) {
+                        console.error(`[StorageManager] 删除失败 (${key}):`, e);
+                    }
+                },
+                
+                /**
+                 * 批量删除（支持前缀匹配）
+                 * @param {string|string[]} keys - 键名或键名数组或前缀
+                 */
+                removeBatch(keys) {
+                    if (Array.isArray(keys)) {
+                        keys.forEach(key => this.remove(key));
+                    } else if (typeof keys === 'string') {
+                        // 如果是字符串，按前缀匹配删除
+                        const allKeys = Object.keys(localStorage);
+                        allKeys.forEach(key => {
+                            if (key.startsWith(keys)) {
+                                this.remove(key);
+                            }
+                        });
+                    }
+                },
+                
+                /**
+                 * 清空所有存储
+                 */
+                clear() {
+                    try {
+                        localStorage.clear();
+                    } catch (e) {
+                        console.error('[StorageManager] 清空失败:', e);
+                    }
+                },
+                
+                /**
+                 * 检查键是否存在
+                 * @param {string} key - 存储键名
+                 * @returns {boolean}
+                 */
+                has(key) {
+                    return localStorage.getItem(key) !== null;
+                }
+            };
+
+            // ========== 通用模态窗口管理系统 ==========
+            const ModalManager = {
+                modals: {},
+                
+                /**
+                 * 注册模态窗口
+                 * @param {string} name - 模态窗口名称
+                 * @param {object} config - 配置 { modal: 'id', status: 'id'(可选), onShow: fn(可选), onHide: fn(可选) }
+                 */
+                register(name, config) {
+                    this.modals[name] = {
+                        modal: document.getElementById(config.modal),
+                        status: config.status ? document.getElementById(config.status) : null,
+                        onShow: config.onShow || null,
+                        onHide: config.onHide || null
+                    };
+                },
+                
+                /**
+                 * 批量注册
+                 */
+                registerBatch(configs) {
+                    configs.forEach(config => this.register(config.name, config));
+                },
+                
+                /**
+                 * 显示模态窗口
+                 */
+                show(name, hideStatus = true) {
+                    const m = this.modals[name];
+                    if (!m) return;
+                    
+                    if (m.modal) m.modal.style.display = 'flex';
+                    if (m.status && hideStatus) m.status.style.display = 'none';
+                    if (m.onShow) m.onShow();
+                },
+                
+                /**
+                 * 隐藏模态窗口
+                 */
+                hide(name, hideStatus = true) {
+                    const m = this.modals[name];
+                    if (!m) return;
+                    
+                    if (m.modal) m.modal.style.display = 'none';
+                    if (m.status && hideStatus) m.status.style.display = 'none';
+                    if (m.onHide) m.onHide();
+                },
+                
+                /**
+                 * 切换：隐藏一个，显示另一个
+                 */
+                switch(fromName, toName) {
+                    this.hide(fromName);
+                    this.show(toName);
+                }
+            };
+
+            // 注册所有模态窗口（集中配置）
+            ModalManager.registerBatch([
+                { name: 'api', modal: 'apiModal', status: 'apiStatus' },
+                { name: 'chat', modal: 'chatModal', status: 'chatStatus' },
+                { name: 'settings', modal: 'settingsModal' },
+                { name: 'friendList', modal: 'friendListModal' },
+                { name: 'addFriend', modal: 'addFriendModal' },
+                { name: 'dataManage', modal: 'dataManageModal' },
+                { name: 'charSettings', modal: 'charSettingsModal' },
+                { name: 'avatarPicker', modal: 'avatarPickerModal' },
+                { name: 'confirmDelete', modal: 'confirmDeleteModal' },
+                { name: 'worldbookMount', modal: 'worldbookMountModal' },
+                { name: 'htmlGameMount', modal: 'htmlGameMountModal' },
+                { name: 'worldbook', modal: 'worldbookModal' },
+                { name: 'imageConfirm', modal: 'imageConfirmPopover' },
+                { name: 'customError', modal: 'customErrorModal' },
+                { name: 'summary', modal: 'summaryModal' },
+                { name: 'bigSummary', modal: 'bigSummaryModal' },
+                { name: 'profile', modal: 'profileModal' }
+            ]);
+
             // ========== 通用状态栏管理系统（可扩展方案） ==========
             const StatusBarManager = {
                 pages: {}, // 存储所有页面的状态栏元素引用
@@ -6510,8 +6663,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
             };
 
-            // 初始化主状态栏
-            StatusBarManager.initMainStatusBar(statusTimeEl, statusSignalEl, statusWifiEl, statusBatteryEl);
+            // 初始化主状态栏（直接传入元素引用）
+            StatusBarManager.initMainStatusBar(
+                document.getElementById('statusTime'),
+                document.getElementById('statusSignal'),
+                document.getElementById('statusWifi'),
+                document.getElementById('statusBattery')
+            );
 
             // 批量注册所有页面（一次性配置，以后只需在这里添加新页面）
             StatusBarManager.registerBatch([
@@ -6675,19 +6833,16 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 message: () => openAppWithNotice('message', '消息', '消息功能开发中...'),
                 feixin: () => {
                     launchApp('feixin');
-                    friendListModal.style.display = 'flex';
+                    ModalManager.show('friendList');
                     renderFriendList();
                 },
                 worldbook: () => {
                     launchApp('worldbook');
-                    const worldbookModal = document.getElementById('worldbookModal');
-                    if (worldbookModal) {
-                        worldbookModal.style.display = 'flex';
-                    }
+                    ModalManager.show('worldbook');
                 },
                 settings: () => {
                     launchApp('settings');
-                    settingsModal.style.display = 'flex';
+                    ModalManager.show('settings');
                     if (apiService) apiService.updateSettingsDisplay();
                 },
                 beautify: () => openAppWithNotice('beautify', '美化', '美化功能开发中...'),
@@ -6723,31 +6878,26 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // ========== 模态窗口控制 ==========
 
             closeApiModal.addEventListener('click', () => {
-                apiModal.style.display = 'none';
-                apiStatus.style.display = 'none';
-                settingsModal.style.display = 'flex';
+                ModalManager.switch('api', 'settings');
             });
 
             backToFriendList.addEventListener('click', () => {
                 if (chatSession && chatSession.multiSelect && chatSession.multiSelect.active) {
                     chatSession.exitMultiSelectMode();
                 }
-                chatModal.style.display = 'none';
-                chatStatus.style.display = 'none';
+                ModalManager.switch('chat', 'friendList');
                 if (heartVoiceSystem) heartVoiceSystem.closePopup();
-                friendListModal.style.display = 'flex';
                 renderFriendList();
             });
 
             closeSettingsModal.addEventListener('click', () => {
-                settingsModal.style.display = 'none';
+                ModalManager.hide('settings');
             });
 
 
             if (settingsApiCard) {
                 settingsApiCard.addEventListener('click', () => {
-                    settingsModal.style.display = 'none';
-                    apiModal.style.display = 'flex';
+                    ModalManager.switch('settings', 'api');
 
                     if (!apiService) return;
                     const config = apiService.getConfig();
@@ -6767,18 +6917,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
             if (settingsDataCard) {
                 settingsDataCard.addEventListener('click', () => {
-                    dataManageModal.style.display = 'flex';
+                    ModalManager.show('dataManage');
                 });
             }
 
             if (closeDataManageModal) {
                 closeDataManageModal.addEventListener('click', () => {
-                    dataManageModal.style.display = 'none';
+                    ModalManager.hide('dataManage');
                 });
             }
 
             closeFriendListModal.addEventListener('click', () => {
-                friendListModal.style.display = 'none';
+                ModalManager.hide('friendList');
             });
 
             // 好友列表导航栏事件处理
@@ -6797,7 +6947,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             alert('动态功能开发中...');
                         } else if (navType === 'me') {
                             // 切页到“我”：隐藏好友列表，避免叠层弹出感
-                            friendListModal.style.display = 'none';
+                            ModalManager.hide('friendList');
                             openProfileModal({ from: 'friendList' });
                         }
                     });
@@ -6808,13 +6958,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             const addFriendFromList = document.getElementById('addFriendFromList');
             if (addFriendFromList) {
                 addFriendFromList.addEventListener('click', () => {
-                    addFriendModal.style.display = 'flex';
+                    ModalManager.show('addFriend');
                     resetAddFriendForm();
                 });
             }
 
             closeAddFriendModal.addEventListener('click', () => {
-                addFriendModal.style.display = 'none';
+                ModalManager.hide('addFriend');
                 resetAddFriendForm();
             });
 
@@ -6902,7 +7052,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             charAvatarInput.value = '';
                         }
                         modalAvatarTemp = pendingCharAvatar || '';
-                        charSettingsModal.style.display = 'flex';
+                        ModalManager.show('charSettings');
                     }
                 }
             });
@@ -6910,14 +7060,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // 关闭好友设置
             if (charSettingsBack) {
                 charSettingsBack.addEventListener('click', () => {
-                    charSettingsModal.style.display = 'none';
+                    ModalManager.hide('charSettings');
                 });
             }
 
             // 点击背景关闭
             charSettingsModal.addEventListener('click', (e) => {
                 if (e.target === charSettingsModal) {
-                    charSettingsModal.style.display = 'none';
+                    ModalManager.hide('charSettings');
                 }
             });
 
@@ -6932,7 +7082,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     charAvatarFileModalInput.value = '';
                 }
                 setAvatarModalPreview(modalAvatarTemp);
-                avatarPickerModal.style.display = 'flex';
+                ModalManager.show('avatarPicker');
             }
 
             if (charAvatarDisplay) {
@@ -6984,7 +7134,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
             if (cancelAvatarPicker && avatarPickerModal) {
                 cancelAvatarPicker.addEventListener('click', () => {
-                    avatarPickerModal.style.display = 'none';
+                    ModalManager.hide('avatarPicker');
                 });
             }
 
@@ -6999,14 +7149,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     }
                     // 如果pendingCharAvatar已有值（文件上传时设置），则保持不变
                     setCharAvatarDisplay(pendingCharAvatar);
-                    avatarPickerModal.style.display = 'none';
+                    ModalManager.hide('avatarPicker');
                 });
             }
 
             if (avatarPickerModal) {
                 avatarPickerModal.addEventListener('click', (e) => {
                     if (e.target === avatarPickerModal) {
-                        avatarPickerModal.style.display = 'none';
+                        ModalManager.hide('avatarPicker');
                     }
                 });
             }
@@ -7032,7 +7182,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     chatHideAvatar: chatHideAvatarToggle ? chatHideAvatarToggle.checked : false
                 }) : null;
                 if (updated) {
-                    charSettingsModal.style.display = 'none';
+                    ModalManager.hide('charSettings');
                     if (chatSession) {
                         // 更新聊天对话框标题
                         chatTitle.textContent = newName;
@@ -7076,7 +7226,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             const confirmDeleteNo = document.getElementById('confirmDeleteNo');
 
             deleteCharBtn.addEventListener('click', () => {
-                confirmDeleteModal.style.display = 'flex';
+                ModalManager.show('confirmDelete');
             });
 
             confirmDeleteYes.addEventListener('click', () => {
@@ -7085,34 +7235,30 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 if (removed && currentFriendId) {
                     // 清除该好友的所有相关数据
-                    // 1. 删除好友的聊天历史
-                    localStorage.removeItem(`chat_${currentFriendId}`);
-
-                    // 2. 删除好友的人设数据
-                    localStorage.removeItem(`persona_${currentFriendId}`);
-
-                    // 3. 删除好友的心声数据
-                    localStorage.removeItem(`heartvoice_${currentFriendId}`);
-
-                    // 4. 删除好友的其他相关配置
+                    StorageManager.removeBatch([
+                        `chat_${currentFriendId}`,
+                        `persona_${currentFriendId}`,
+                        `heartvoice_${currentFriendId}`
+                    ]);
+                    
+                    // 删除包含好友ID的其他相关配置
                     const allKeys = Object.keys(localStorage);
                     allKeys.forEach(key => {
                         if (key.includes(currentFriendId)) {
-                            localStorage.removeItem(key);
+                            StorageManager.remove(key);
                         }
                     });
 
-                    confirmDeleteModal.style.display = 'none';
-                    charSettingsModal.style.display = 'none';
-                    chatModal.style.display = 'none';
+                    ModalManager.hide('confirmDelete');
+                    ModalManager.hide('charSettings');
+                    ModalManager.switch('chat', 'friendList');
                     if (chatSession) chatSession.setCurrentFriendId(null);
-                    friendListModal.style.display = 'flex';
                     renderFriendList();
                 }
             });
 
             confirmDeleteNo.addEventListener('click', () => {
-                confirmDeleteModal.style.display = 'none';
+                ModalManager.hide('confirmDelete');
             });
 
             // ========== 世界书挂载模块 ==========
@@ -7180,14 +7326,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             if (worldbookMountBtn) {
                 worldbookMountBtn.addEventListener('click', () => {
                     initWorldbookMountList();
-                    worldbookMountModal.style.display = 'flex';
+                    ModalManager.show('worldbookMount');
                 });
             }
 
             // 关闭弹窗（取消）
             if (worldbookMountCancel) {
                 worldbookMountCancel.addEventListener('click', () => {
-                    worldbookMountModal.style.display = 'none';
+                    ModalManager.hide('worldbookMount');
                 });
             }
 
@@ -7208,7 +7354,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         showCuteToast('保存成功');
                     }
 
-                    worldbookMountModal.style.display = 'none';
+                    ModalManager.hide('worldbookMount');
                 });
             }
 
@@ -7216,7 +7362,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             if (worldbookMountModal) {
                 worldbookMountModal.addEventListener('click', (e) => {
                     if (e.target === worldbookMountModal) {
-                        worldbookMountModal.style.display = 'none';
+                        ModalManager.hide('worldbookMount');
                     }
                 });
             }
@@ -7286,14 +7432,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             if (htmlGameMountBtn) {
                 htmlGameMountBtn.addEventListener('click', () => {
                     initHtmlGameMountList();
-                    htmlGameMountModal.style.display = 'flex';
+                    ModalManager.show('htmlGameMount');
                 });
             }
 
             // 关闭弹窗（取消）
             if (htmlGameMountCancel) {
                 htmlGameMountCancel.addEventListener('click', () => {
-                    htmlGameMountModal.style.display = 'none';
+                    ModalManager.hide('htmlGameMount');
                 });
             }
 
@@ -7314,7 +7460,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         showCuteToast('保存成功');
                     }
 
-                    htmlGameMountModal.style.display = 'none';
+                    ModalManager.hide('htmlGameMount');
                 });
             }
 
@@ -7322,7 +7468,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             if (htmlGameMountModal) {
                 htmlGameMountModal.addEventListener('click', (e) => {
                     if (e.target === htmlGameMountModal) {
-                        htmlGameMountModal.style.display = 'none';
+                        ModalManager.hide('htmlGameMount');
                     }
                 });
             }
@@ -7353,7 +7499,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (reservedKeys.has(key)) continue;
                     if (reservedPrefixes.some(prefix => key.startsWith(prefix))) continue;
                     try {
-                        otherSettings[key] = JSON.parse(localStorage.getItem(key));
+                        otherSettings[key] = StorageManager.get(key);
                     } catch (e) {
                         otherSettings[key] = localStorage.getItem(key);
                     }
@@ -7374,11 +7520,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (!key || !key.startsWith('chat_')) continue;
                     const friendId = key.replace('chat_', '');
                     if (!chatHistories[friendId]) {
-                        try {
-                            chatHistories[friendId] = JSON.parse(localStorage.getItem(key)) || [];
-                        } catch (e) {
-                            chatHistories[friendId] = [];
-                        }
+                        chatHistories[friendId] = StorageManager.get(key, []);
                     }
                 }
                 return chatHistories;
@@ -7426,25 +7568,25 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 const data = payload.data;
-                localStorage.clear();
+                StorageManager.clear();
 
                 if (data.apiConfig) {
-                    localStorage.setItem('apiConfig', JSON.stringify(data.apiConfig));
+                    StorageManager.set('apiConfig', data.apiConfig);
                 }
                 if (data.friends) {
-                    localStorage.setItem('friends', JSON.stringify(data.friends));
+                    StorageManager.set('friends', data.friends);
                 }
                 if (data.homeGreeting !== undefined) {
-                    localStorage.setItem('homeGreeting', JSON.stringify(data.homeGreeting));
+                    StorageManager.set('homeGreeting', data.homeGreeting);
                 }
                 if (data.chatHistories && typeof data.chatHistories === 'object') {
                     Object.keys(data.chatHistories).forEach(friendId => {
-                        localStorage.setItem(`chat_${friendId}`, JSON.stringify(data.chatHistories[friendId] || []));
+                        StorageManager.set(`chat_${friendId}`, data.chatHistories[friendId] || []);
                     });
                 }
                 if (data.otherSettings && typeof data.otherSettings === 'object') {
                     Object.keys(data.otherSettings).forEach(key => {
-                        localStorage.setItem(key, JSON.stringify(data.otherSettings[key]));
+                        StorageManager.set(key, data.otherSettings[key]);
                     });
                 }
 
@@ -7492,26 +7634,23 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // 点击模态窗口外部关闭
             window.addEventListener('click', (e) => {
                 if (e.target === apiModal) {
-                    apiModal.style.display = 'none';
-                    apiStatus.style.display = 'none';
-                    settingsModal.style.display = 'flex';
+                    ModalManager.switch('api', 'settings');
                 }
                 if (e.target === chatModal) {
-                    chatModal.style.display = 'none';
-                    chatStatus.style.display = 'none';
+                    ModalManager.hide('chat');
                 }
                 if (e.target === settingsModal) {
-                    settingsModal.style.display = 'none';
+                    ModalManager.hide('settings');
                 }
                 if (e.target === friendListModal) {
-                    friendListModal.style.display = 'none';
+                    ModalManager.hide('friendList');
                 }
                 if (e.target === addFriendModal) {
-                    addFriendModal.style.display = 'none';
+                    ModalManager.hide('addFriend');
                     resetAddFriendForm();
                 }
                 if (e.target === dataManageModal) {
-                    dataManageModal.style.display = 'none';
+                    ModalManager.hide('dataManage');
                 }
             });
 
@@ -7565,23 +7704,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 getStorage(key, defaultValue = null) {
-                    const saved = localStorage.getItem(key);
-                    if (!saved) return defaultValue;
-                    try {
-                        return JSON.parse(saved);
-                    } catch (e) {
-                        console.error('读取本地存储失败:', e);
-                        return defaultValue;
-                    }
+                    return StorageManager.get(key, defaultValue);
                 }
 
                 setStorage(key, value) {
-                    // 同步写入localStorage，确保立即可读
-                    try {
-                        localStorage.setItem(key, JSON.stringify(value));
-                    } catch (e) {
-                        console.error('保存到localStorage失败:', e);
-                    }
+                    StorageManager.set(key, value);
                 }
 
                 rebuildCacheFromFriends(friends) {
@@ -7601,16 +7728,16 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 ensureSync() {
-                    const saved = localStorage.getItem('friends') || '';
-                    if (!saved && this.lastSnapshot) {
+                    const saved = StorageManager.get('friends');
+                    const savedStr = saved ? JSON.stringify(saved) : '';
+                    if (!savedStr && this.lastSnapshot) {
                         this.cache.clear();
                         this.lastSnapshot = '';
                         return;
                     }
-                    if (saved && saved !== this.lastSnapshot) {
+                    if (savedStr && savedStr !== this.lastSnapshot) {
                         try {
-                            const friends = JSON.parse(saved);
-                            this.rebuildCacheFromFriends(Array.isArray(friends) ? friends : []);
+                            this.rebuildCacheFromFriends(Array.isArray(saved) ? saved : []);
                         } catch (e) {
                             console.error('同步人设缓存失败:', e);
                         }
@@ -7804,7 +7931,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     friendItem.appendChild(infoDiv);
 
                     friendItem.addEventListener('click', () => {
-                        friendListModal.style.display = 'none';
+                        ModalManager.hide('friendList');
                         if (chatSession) chatSession.openChatWithFriend(friend);
                     });
 
@@ -7837,7 +7964,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (type === 'success') {
                     setTimeout(() => {
                         resetAddFriendForm();
-                        addFriendModal.style.display = 'none';
+                        ModalManager.hide('addFriend');
                         renderFriendList();
                     }, 1500);
                 }
@@ -7915,7 +8042,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             });
 
             cancelAddFriend.addEventListener('click', () => {
-                addFriendModal.style.display = 'none';
+                ModalManager.hide('addFriend');
                 resetAddFriendForm();
             });
 
@@ -7943,7 +8070,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (this.friendSystem) {
                         this.friendSystem.setStorage('apiConfig', config);
                     } else {
-                        localStorage.setItem('apiConfig', JSON.stringify(config));
+                        StorageManager.set('apiConfig', config);
                     }
                     this.updateSettingsDisplay();
                 }
@@ -8209,8 +8336,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     this.showApiStatus('配置已保存！', 'success');
 
                     setTimeout(() => {
-                        apiModal.style.display = 'none';
-                        apiStatus.style.display = 'none';
+                        ModalManager.hide('api');
                     }, 2000);
                 }
 
@@ -8219,12 +8345,15 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const defaultPresets = [];
                     const presetsStr = this.friendSystem
                         ? this.friendSystem.getStorage('apiPresets', JSON.stringify(defaultPresets))
-                        : localStorage.getItem('apiPresets') || JSON.stringify(defaultPresets);
-                    try {
-                        return JSON.parse(presetsStr);
-                    } catch {
-                        return defaultPresets;
+                        : StorageManager.get('apiPresets', defaultPresets);
+                    if (typeof presetsStr === 'string') {
+                        try {
+                            return JSON.parse(presetsStr);
+                        } catch {
+                            return defaultPresets;
+                        }
                     }
+                    return Array.isArray(presetsStr) ? presetsStr : defaultPresets;
                 }
 
                 savePreset(name, preset) {
@@ -8240,7 +8369,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (this.friendSystem) {
                         this.friendSystem.setStorage('apiPresets', JSON.stringify(presets));
                     } else {
-                        localStorage.setItem('apiPresets', JSON.stringify(presets));
+                        StorageManager.set('apiPresets', presets);
                     }
                 }
 
@@ -8250,7 +8379,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (this.friendSystem) {
                         this.friendSystem.setStorage('apiPresets', JSON.stringify(filteredPresets));
                     } else {
-                        localStorage.setItem('apiPresets', JSON.stringify(filteredPresets));
+                        StorageManager.set('apiPresets', filteredPresets);
                     }
                 }
 
@@ -8469,16 +8598,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 getData(friendId) {
-                    const raw = localStorage.getItem(this.getStorageKey(friendId));
-                    try {
-                        return raw ? JSON.parse(raw) : null;
-                    } catch {
-                        return null;
-                    }
+                    return StorageManager.get(this.getStorageKey(friendId), null);
                 }
 
                 saveData(friendId, data) {
-                    localStorage.setItem(this.getStorageKey(friendId), JSON.stringify(data));
+                    StorageManager.set(this.getStorageKey(friendId), data);
                 }
 
                 togglePopup() {
@@ -9231,12 +9355,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 loadBooks() {
-                    const data = localStorage.getItem(this.storageKey);
-                    return data ? JSON.parse(data) : [];
+                    return StorageManager.get(this.storageKey, []);
                 }
 
                 saveBooks() {
-                    localStorage.setItem(this.storageKey, JSON.stringify(this.books));
+                    StorageManager.set(this.storageKey, this.books);
                 }
 
                 addBook(title, content) {
@@ -9303,6 +9426,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 initEvents() {
                     const worldbookBtn = document.getElementById('worldbookBtn');
+                    const worldbookBack = document.getElementById('worldbookBack');
                     const wbListBack = document.getElementById('wbListBack');
                     const wbAddNewBtn = document.getElementById('wbAddNewBtn');
                     const wbEditBack = document.getElementById('wbEditBack');
@@ -9310,6 +9434,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     if (worldbookBtn) {
                         worldbookBtn.addEventListener('click', () => this.showListPage());
+                    }
+
+                    if (worldbookBack) {
+                        worldbookBack.addEventListener('click', () => ModalManager.hide('worldbook'));
                     }
 
                     if (wbListBack) {
@@ -9464,12 +9592,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 loadGames() {
-                    const data = localStorage.getItem(this.storageKey);
-                    return data ? JSON.parse(data) : [];
+                    return StorageManager.get(this.storageKey, []);
                 }
 
                 saveGames() {
-                    localStorage.setItem(this.storageKey, JSON.stringify(this.games));
+                    StorageManager.set(this.storageKey, this.games);
                 }
 
                 addGame(title, content) {
@@ -10194,7 +10321,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (role === 'ai' || role === 'assistant') {
                         this.regenerateMessage(messageWrapper, msgId);
                     } else {
-                        console.warn('[修正] 只能修正AI的回复');
+                        console.warn('[修正] 只能修正角色的回复');
                     }
                 }
 
@@ -10321,7 +10448,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 // 清洗消息内容：移除开头的emoji、前缀标记、加密标识等
                 content = String(content || '').replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\s]+/gu, '').trim();
 
-                // AI消息最终兜底：禁止 inner_voice / 神态 / 心情值 混入聊天气泡
+                // 角色消息最终兜底：禁止 inner_voice / 神态 / 心情值 混入聊天气泡
                 if (role === 'ai' && !imageData) {
                     const parsed = JSONCleaningLayer.cleanAndParse(content);
                     const extractPlainText = (val) => {
@@ -10507,7 +10634,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 chatMessages.appendChild(messageWrapper);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
 
-                // 实时更新好友列表（仅用户消息立即更新，AI消息批量更新避免频繁刷新）
+                // 实时更新好友列表（仅用户消息立即更新，角色消息批量更新避免频繁刷新）
                 if (this.currentFriendId && typeof window.updateFriendList === 'function' && role === 'user') {
                     window.updateFriendList();
                 }
@@ -10755,15 +10882,15 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     validSentences = [response.trim()];
                 }
 
-                // 技术性限制：最多20条（防止崩溃），最少1条（AI自主决定）
+                // 技术性限制：最多20条（防止崩溃），最少1条（角色自主决定）
                 const maxCount = Math.max(1, Math.min(20, validSentences.length));
-                const minCount = 1;  // 让AI自然根据人设、世界书和当前对话决定，不强制最少条数
+                const minCount = 1;  // 让角色自然根据人设、世界书和当前对话决定，不强制最少条数
                 const weighted = Math.random();
                 let messageCount = Math.round(minCount + weighted * (maxCount - minCount));
                 if (messageCount < minCount) messageCount = minCount;
                 if (messageCount > maxCount) messageCount = maxCount;
 
-                // 语音概率：由AI根据人设、世界书和当前对话自然决定，前端保持基础随机性
+                // 语音概率：由角色根据人设、世界书和当前对话自然决定，前端保持基础随机性
                 const voiceProbability = 0.4;
 
                 const messages = [];
@@ -10820,7 +10947,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 // 【关键保底】如果没有生成任何消息，直接返回原始文本
                 if (deduped.length === 0) {
-                    console.warn('[generateAIMessages] 未生成任何有效消息，返回原始文本');
+                    console.warn('[生成角色消息] 未生成任何有效消息，返回原始文本');
                     return [{ content: this.ensureNonEmptyAiText(response), isVoice: false }];
                 }
 
@@ -10836,8 +10963,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (this.friendSystem && typeof this.friendSystem.getStorage === 'function') {
                         return this.friendSystem.getStorage(key, defaultValue);
                     }
-                    const raw = localStorage.getItem(key);
-                    return raw ? JSON.parse(raw) : defaultValue;
+                    return StorageManager.get(key, defaultValue);
                 } catch (e) {
                     return defaultValue;
                 }
@@ -10849,7 +10975,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         this.friendSystem.setStorage(key, value);
                         return;
                     }
-                    localStorage.setItem(key, JSON.stringify(value));
+                    StorageManager.set(key, value);
                 } catch (e) {
                     // ignore
                 }
@@ -10970,10 +11096,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         if (messageWrapper) messageWrapper.remove();
                     }
 
-                    // 清除AI回复缓存，避免防重复检测影响新回复
+                    // 清除角色回复缓存，避免防重复检测影响新回复
                     window._previousAIContent = '';
 
-                    // 重新调用AI生成（强制回复模式，基于完整对话历史）
+                    // 重新调用角色执理（强制回复模式，基于完整对话历史）
                     await this.triggerAI(null, true);
 
                     console.log('[修正] 完成');
@@ -11068,7 +11194,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     );
                 });
 
-                chatModal.style.display = 'flex';
+                ModalManager.show('chat');
                 setTimeout(() => {
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     chatInput.focus();
@@ -11120,7 +11246,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const chatHistory = this.friendSystem ? this.friendSystem.getFriendChatHistory(targetFriendId) : [];
                     const timestamp = Date.now();
 
-                    // 保存用户消息，心声由 triggerAI 一体化生成，不在此处额外调用API
+                    // 保存用户消息，心声由 triggerCharacter 一体化生成，不在此处额外调用API
                     const userMessage = {
                         role: 'user',
                         content: message,
@@ -11154,7 +11280,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     return;
                 }
 
-                console.log(`[AI回复] 开始调用 - 目标好友ID: ${targetFriendId}`);
+                console.log(`[角色回复] 开始调用 - 目标好友ID: ${targetFriendId}`);
 
                 // 启动心声按钮脉动动画（等待API回复）
                 this.startHeartVoicePulse();
@@ -11221,8 +11347,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             personaProfile = {
                                 name: friend.name,
                                 persona: persona,
-                                goals: '以真实自然的聊天风格交流，体现角色人设背景与性格，严格遵守所有世界书约束',
-                                style: '像真实人类聊天，不做旁白或动作说明',
+                                goals: '真实自然的聊天风格交流，体现角色人设背景与性格，严格遵守所有世界书约束',
+                                style: '真实人类聊天，不做旁白或动作说明',
                                 emotion: '用语言表达情绪，不用任何括号',
                                 memory: '牢记最近对话并连贯回应'
                             };
@@ -11247,8 +11373,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     let pendingMessages = [];
                     if (forceReply) {
                         // 【修正/强制回复模式】不检查isReplied，直接触发"继续对话"模式
-                        // pendingMessages保持为空数组，让AI基于完整对话历史生成新内容
-                        // 不管最后一条是用户还是AI消息，都让AI自然继续对话
+                        // pendingMessages保持为空数组，让角色基于完整对话历史生成新内容
+                        // 不管最后一条是用户还是角色消息，都让角色自然继续对话
                         pendingMessages = [];
                         console.log('[强制回复] 触发继续对话模式，基于完整历史生成');
                     } else if (targetMsgId) {
@@ -11269,7 +11395,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     // ========== 上下文读取规则 ==========
                     // 根据配置的记忆条数读取对话历史，生成自然连贯的上下文
-                    // 这确保了AI能够理解对话背景并做出符合上下文的回应
+                    // 这确保了角色能够理解对话背景并做出符合上下文的回应
                     const selectedContextHistory = this.buildPromptContextHistory(chatHistory, memoryChatCount);
                     const promptHistory = selectedContextHistory
                         .slice(-memoryChatCount)
@@ -11355,7 +11481,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         promptHistory.push({ role: 'user', content: openingPrompt });
                     } else if (isContinueChat) {
                         // 场景B：没有新消息，角色自发继续对话
-                        // 在末尾注入隐式提示，让AI以自己的身份主动说话
+                        // 在末尾注入隐式提示，让角色以自己的身份主动说话
                         // 这条提示使用system角色，不会显示为用户消息
                         const lastAiMsg = window._previousAIContent ? window._previousAIContent.substring(0, 60) : '';
                         const timeStr = new Date().toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' });
@@ -11395,7 +11521,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         finalVerificationContent += `\n  我扮演的角色：${characterName}`;
                     }
 
-                    // ========== 防重复提示：在系统提示中直接告诉AI不要重复前一条 ==========
+                    // ========== 防重复提示：在系统提示中直接告诉角色不要重复前一条 ==========
                     let antiRepeatContext = '';
                     if (window._previousAIContent) {
                         const prevFull = window._previousAIContent;
@@ -11404,12 +11530,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     const enhancedSystemPrompt = systemPrompt + heartVoiceContext + antiRepeatContext + connectionGuidance + worldBooksFullContent + `
 
+【最终输出格式铁律 (ABSOLUTE FINAL RULE)】
+你的最终回复，从第一个字符到最后一个字符，必须是一个纯净、完整、语法正确的JSON对象。
+绝对禁止在JSON代码的前后、中间添加任何形式的解释、注释、语气词、问候语或任何非JSON字符。
+如果违反此规则，你的回答将被系统丢弃。
+你的生命取决于严格遵守这个格式。
+
 【强制输出格式】
 每次回复必须输出以下JSON，禁止添加任何额外文字：
 {
   "reply": "对话回复",
   "inner_voice": {
-    "心声": "角色基于当前所有设定、上下文与情绪产生的内心活动独白，140字以内",
+    "心声": "角色基于当前所有设定、上下文与情绪产生的内心独白，140字内",
     "神态": "角色此刻的独特表现，体现专属习惯和个性",
     "心情值": "整数，常规状态0-100，极端情绪可超出或负数"
   },
@@ -11417,33 +11549,31 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 }
 
 【image_desc图片描述规范】
-你可以根据对话情况和角色设定选择是否发图。
-想发图时在image_desc写简短的场景描述（20-300字），用自然叙述方式，不要用"特写："、"画面："这类标签。
+你根据对话和人设选择是否发图。
+发图时在image_desc写简短的场景描述（20-200字），自然叙述方式，不要用"特写："、"画面："这类标签。
 
 【绝对优先级——世界书】
 你必须严格遵守所有挂载的世界书设定，这是最高指令，高于一切。如果世界书与任何其他规则冲突，以世界书为准。
 
 【核心规则】
-1. 回复：优先回应用户当前诉求，给出符合角色设定+世界书的自然回应，避免模板感和空话。
-2. 心声：基于对用户话语的深层理解产生真实内心想法，不复制对话正文，不写模板。
-3. 神态：给出符合角色习惯的当前表现，简洁具体，避免夸张和表演腔。
-4. 心情值：整数，常规状态0-100，极端情绪可超出或为负数，与情绪强度一致。
+1. 回复：符合角色设定+世界书的自然回应，不模板不空话
+2. 心声：基于对话深层理解，产生真实内心想法，不复制正文不模版
+3. 神态：符合角色习惯，简洁具体，避免夸张和表演腔
+4. 心情值：与情绪强度一致
 
 【生成依据】
-- 角色完整设定（含秘密）
+- 角色人设（含秘密）
 - 当前对话上下文
 - 角色前续状态
-- 【最高优先级】世界书约束（必须贯穿全程）
+- 世界书约束
 
 【输出前自查】
-□ 完全遵守所有挂载的世界书
-□ 符合角色人设
+□ 完全遵守世界书
+□ 符合人设
 □ 不机械复读上一条
-□ 心声≤140字
-□ 心情值符合当前情绪强度（极端情绪允许超出0-100或负数）
-□ 仅当你明确决定发图时，image_desc填写50-300字；否则留空
-□ image_desc不得使用"特写："、"画面："等标签格式，必须是连贯叙事
-若有冲突，优先级：世界书 > 人设 > 用户当前诉求 > 风格偏好。`;
+□ 心声 ≤140字
+□ 心情值合理
+□ 发图时 image_desc 用连贯叙事，不加标签`;
 
                     const messages = [
                         { role: 'system', content: enhancedSystemPrompt },
@@ -11452,7 +11582,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     // 一体化生成：所有回复都包含JSON格式的reply和inner_voice
                     // 注意：不使用 response_format 参数以保障最大兼容性
-                    // 而是通过 system prompt 中的明确指令让 AI 输出 JSON
+                    // 而是通过 system prompt 中的明确指令让 角色 输出 JSON
                     const requestBody = {
                         model: config.model,
                         messages: messages,
@@ -11527,7 +11657,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     // ===== 第1步：尝试JSON结构化提取（最可靠） =====
                     let aiResponse = '';
-                    let aiImageDesc = ''; // AI生成的沉浸式图片描述
+                    let aiImageDesc = ''; // 角色生成的沉浸式图片描述
                     const jsonContent = JSONCleaningLayer.cleanAndParse(rawContent);
 
                     if (jsonContent && typeof jsonContent === 'object') {
@@ -11553,7 +11683,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                                 console.log('[解析-L1] 心声数据已提取并隔离');
                             }
                         }
-                        // 1c. 提取图片描述（AI生成的沉浸式画面描述）
+                        // 1c. 提取图片描述（角色生成的沉浸式画面描述）
                         if (jsonContent.image_desc) {
                             aiImageDesc = String(jsonContent.image_desc).trim();
                             if (aiImageDesc.length >= 20) {
@@ -11907,7 +12037,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     if (shouldGenerateImage) {
                         let imageText = normalizedAiImageDesc;
-                        console.log('[图片描述] 使用AI生成描述，长度:', imageText.length);
+                        console.log('[图片描述] 使用角色生成描述，长度:', imageText.length);
                         // ===== 防护：严格验证内容有效性，不发送不足的内容 =====
                         if (imageText && imageText.trim().length >= 20) {
                             const imageId = `ai-img-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
@@ -11938,7 +12068,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         // 更新真实历史记录
                         const realHistory = this.friendSystem.getFriendChatHistory(targetFriendId);
 
-                        console.log(`[AI回复] 保存到好友 ${targetFriendId} - AI消息数: ${aiMessagePayloads.length}, 图片数: ${extraImagePayloads.length}`);
+                        console.log(`[角色回复] 保存到好友 ${targetFriendId} - 角色消息数: ${aiMessagePayloads.length}, 图片数: ${extraImagePayloads.length}`);
 
                         // 1. 标记已回复
                         pendingMessages.forEach(pm => {
@@ -11946,7 +12076,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             if (match) match.isReplied = true;
                         });
 
-                        // 2. 追加 AI 回复
+                        // 2. 追加角色回复
                         for (const aiMsg of aiMessagePayloads) {
                             realHistory.push({ role: 'assistant', content: aiMsg.content, isVoice: aiMsg.isVoice, id: aiMsg.id });
                         }
@@ -11958,7 +12088,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                         this.friendSystem.saveFriendChatHistory(targetFriendId, realHistory);
 
-                        // AI回复完成后统一刷新好友列表
+                        // 角色回复完成后统一刷新好友列表
                         if (typeof window.updateFriendList === 'function') {
                             window.updateFriendList();
                         }
@@ -12058,12 +12188,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
         if (chatSummaryBtn) {
             chatSummaryBtn.addEventListener('click', () => {
                 closeChatExtraPanel();
-                const fid = chatSession ? chatSession.getCurrentFriendId() : null;
-                const summaryModal = document.getElementById('summaryModal');
-                if (summaryModal) {
-                    if (fid) summaryModal.dataset.friendId = fid;
-                    summaryModal.style.display = 'flex';
-                }
+                ModalManager.show('summary');
             });
         }
 
@@ -12215,7 +12340,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
         const appCatalog = [
             { id: 'message', name: '消息', iconClass: 'fa-envelope', styleClass: 'message-icon' },
-            { id: 'feixin', name: '甜聊', iconClass: 'fa-comment-dots', styleClass: 'feixin-icon' },
+            { id: 'feixin', name: 'QQ', iconClass: 'fa-comment-dots', styleClass: 'feixin-icon' },
             { id: 'worldbook', name: '创世书', iconClass: 'fa-book-open', styleClass: 'book-icon' },
             { id: 'settings', name: '设置', iconClass: 'fa-cog', styleClass: 'settings-icon' },
             { id: 'beautify', name: '美化', iconClass: 'fa-paint-brush', styleClass: 'brush-icon' },
@@ -12283,7 +12408,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             if (!hideStatusBarToggle) return;
 
             // 从 localStorage 读取状态
-            const isHidden = localStorage.getItem('hideStatusBar') === 'true';
+            const isHidden = StorageManager.get('hideStatusBar', false) === true || StorageManager.get('hideStatusBar') === 'true';
             hideStatusBarToggle.checked = isHidden;
 
             // 应用初始状态
@@ -12294,7 +12419,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // 监听开关变化
             hideStatusBarToggle.addEventListener('change', (e) => {
                 const checked = e.target.checked;
-                localStorage.setItem('hideStatusBar', checked);
+                StorageManager.set('hideStatusBar', checked);
 
                 if (checked) {
                     document.body.classList.add('hide-status-bar');
@@ -12372,9 +12497,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             });
         }
 
-        // ========== AI调取内容接口 ==========
+        // ========== 角色获取内容接口 ==========
         /**
-         * AI获取已挂载内容的统一接口
+         * 角色获取已挂载内容的统一接口
          * @param {string} type - 内容类型，可选值：'WORLD_BOOK' | 'HTML_GAME'
          * @param {string|number} id - 内容ID
          * @returns {object} 返回内容对象，包含id、title、content、isMounted等字段；若未找到返回null
@@ -12410,7 +12535,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
         };
 
         /**
-         * AI获取当前聊天对象已挂载的所有世界书和HTML游戏
+         * 角色获取当前聊天对象已挂载的所有世界书和HTML游戏
          * @param {string|number} friendId - 好友ID
          * @returns {object} 返回 {worldBooks: [], htmlGames: []} 的对象
          */
@@ -12457,6 +12582,12 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
+            // 重新注册在脚本之后定义的模态窗口（DOM此时已完整）
+            ModalManager.register('worldbook', { modal: 'worldbookModal' });
+            ModalManager.register('customError', { modal: 'customErrorModal' });
+            ModalManager.register('summary', { modal: 'summaryModal' });
+            ModalManager.register('bigSummary', { modal: 'bigSummaryModal' });
+
             // 初始化UI管理器（最优先）
             UIManager.init();
             // 暴露到全局，方便其他模块使用
@@ -12679,7 +12810,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             </div>
             <div class="settings-nav">
                 <button id="worldbookBack" class="settings-back"
-                    onclick="document.getElementById('worldbookModal').style.display='none'">
+                    onclick="ModalManager.hide('worldbook')">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="settings-title">创世书</div>
@@ -12874,7 +13005,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             </div>
             <div class="settings-nav">
                 <button id="summaryBack" class="settings-back"
-                    onclick="document.getElementById('summaryModal').style.display='none'">
+                    onclick="ModalManager.hide('summary')">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="settings-title">总结</div>
@@ -12933,7 +13064,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             </div>
             <div class="settings-nav">
                 <button id="bigSummaryBack" class="settings-back"
-                    onclick="document.getElementById('bigSummaryModal').style.display='none'">
+                    onclick="ModalManager.hide('bigSummary')">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="settings-title">大总结</div>
@@ -13023,15 +13154,17 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
             }
             function getFriendId() {
-                const modal = document.getElementById('summaryModal');
-                return modal ? (modal.dataset.friendId || null) : null;
+                return typeof chatSession !== 'undefined' 
+                    ? chatSession.getCurrentFriendId() 
+                    : null;
             }
             function getList(key, friendId) {
-                try { return JSON.parse(localStorage.getItem(key + friendId)) || []; }
-                catch { return []; }
+                if (!friendId) return [];
+                return StorageManager.get(`${key}${friendId}`, []);
             }
             function saveList(key, friendId, list) {
-                localStorage.setItem(key + friendId, JSON.stringify(list));
+                if (!friendId) return;
+                StorageManager.set(`${key}${friendId}`, list);
             }
             function escapeHtml(str) {
                 const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
@@ -13055,7 +13188,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const container = document.getElementById(containerId);
                 if (!container) return;
                 const friendId = getFriendId();
-                if (!friendId) { container.innerHTML = ''; return; }
+                if (!friendId) {
+                    container.innerHTML = `<div style="text-align:center;padding:40px 0;color:#ccc;font-size:14px;">请先选择聊天对象</div>`;
+                    return;
+                }
                 const list = getList(storagePrefix, friendId);
                 if (list.length === 0) {
                     container.innerHTML = '<div style="text-align:center;padding:40px 0;color:#ccc;font-size:14px;">' + emptyText + '</div>';
@@ -13086,14 +13222,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             const MAX_ROUNDS = 70;
             const roundsInput = document.getElementById('summaryRoundsInput');
             if (roundsInput) {
-                const saved = parseInt(localStorage.getItem(ROUNDS_KEY));
+                const saved = StorageManager.get(ROUNDS_KEY, 25);
                 if (!isNaN(saved) && saved >= 1 && saved <= MAX_ROUNDS) roundsInput.value = saved;
                 roundsInput.addEventListener('change', () => {
                     let v = parseInt(roundsInput.value);
                     if (isNaN(v) || v < 1) v = 1;
                     if (v > MAX_ROUNDS) v = MAX_ROUNDS;
                     roundsInput.value = v;
-                    localStorage.setItem(ROUNDS_KEY, v);
+                    StorageManager.set(ROUNDS_KEY, v);
                 });
             }
 
@@ -13118,7 +13254,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     }
 
                     // 获取当前轮数
-                    const count = parseInt(localStorage.getItem('summaryCounter_' + friendId)) || 0;
+                    const count = StorageManager.get(`summaryCounter_${friendId}`, 0);
 
                     // 弹窗询问
                     const overlay = document.createElement('div');
@@ -13149,9 +13285,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             apiConfig = window.summarySystemApiService.getConfig();
                         } else {
                             apiConfig = {
-                                apiUrl: localStorage.getItem('apiUrl'),
-                                apiKey: localStorage.getItem('apiKey'),
-                                model: localStorage.getItem('selectedModel')
+                                apiUrl: StorageManager.get('apiUrl'),
+                                apiKey: StorageManager.get('apiKey'),
+                                model: StorageManager.get('selectedModel')
                             };
                         }
 
@@ -13161,8 +13297,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         }
 
                         // 从localStorage直接读取聊天记录
-                        let chatHistory = [];
-                        try { chatHistory = JSON.parse(localStorage.getItem('chat_' + friendId)) || []; } catch (e) { }
+                        let chatHistory = StorageManager.get(`chat_${friendId}`, []);
 
                         if (chatHistory.length === 0) {
                             showCuteToast('没有聊天记录可供总结');
@@ -13244,9 +13379,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             apiConfig = window.summarySystemApiService.getConfig();
                         } else {
                             apiConfig = {
-                                apiUrl: localStorage.getItem('apiUrl'),
-                                apiKey: localStorage.getItem('apiKey'),
-                                model: localStorage.getItem('selectedModel')
+                                apiUrl: StorageManager.get('apiUrl'),
+                                apiKey: StorageManager.get('apiKey'),
+                                model: StorageManager.get('selectedModel')
                             };
                         }
 
@@ -13334,18 +13469,16 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
             function getCounter(friendId) {
                 try {
-                    return parseInt(localStorage.getItem(COUNTER_PREFIX + friendId)) || 0;
+                    return StorageManager.get(COUNTER_PREFIX + friendId, 0) || 0;
                 } catch (e) {
-                    // 隐私模式或 localStorage 不可用
                     console.warn('[总结计数器] 读取失败:', e.message);
                     return 0;
                 }
             }
             function setCounter(friendId, val) {
                 try {
-                    localStorage.setItem(COUNTER_PREFIX + friendId, val);
+                    StorageManager.set(COUNTER_PREFIX + friendId, val);
                 } catch (e) {
-                    // 隐私模式或 localStorage 不可用
                     console.warn('[总结计数器] 写入失败:', e.message);
                 }
             }
@@ -13356,7 +13489,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 // 检查上次失败是否还在限流期内
                 if (!canGenerateSummary(friendId, 'small')) return;
                 const count = getCounter(friendId) + 1;
-                const threshold = parseInt(localStorage.getItem(ROUNDS_KEY)) || 25;
+                const threshold = StorageManager.get(ROUNDS_KEY, 25) || 25;
                 setCounter(friendId, count);
                 if (count < threshold) return;
                 // 达到轮数，触发总结（不立即重置，只在成功时才重置）
@@ -13379,14 +13512,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // ===== 限流机制 =====
             const FAILURE_COOLDOWN_MS = 600000; // 10分钟限流
             function recordSummaryFailureTime(friendId, type) {
-                const key = 'summaryFailureTime_' + type + '_' + friendId;
-                localStorage.setItem(key, Date.now().toString());
+                const key = `summaryFailureTime_${type}_${friendId}`;
+                StorageManager.set(key, Date.now());
             }
             function canGenerateSummary(friendId, type) {
-                const key = 'summaryFailureTime_' + type + '_' + friendId;
-                const lastFailTime = localStorage.getItem(key);
+                const key = `summaryFailureTime_${type}_${friendId}`;
+                const lastFailTime = StorageManager.get(key);
                 if (!lastFailTime) return true;
-                const elapsed = Date.now() - parseInt(lastFailTime);
+                const elapsed = Date.now() - lastFailTime;
                 return elapsed > FAILURE_COOLDOWN_MS;
             }
 
@@ -13667,7 +13800,7 @@ ${summaryTexts}`;
 
                     // 增量总结：只取上次总结之后的新消息
                     const totalCount = Array.isArray(chatHistory) ? chatHistory.length : 0;
-                    const savedCursor = parseInt(localStorage.getItem('lastSummaryIndex_' + friendId));
+                    const savedCursor = StorageManager.get(`lastSummaryIndex_${friendId}`, 0) || 0;
                     const lastIdx = Number.isFinite(savedCursor) ? Math.max(0, Math.min(savedCursor, totalCount)) : 0;
                     const newMessages = chatHistory.slice(lastIdx);
                     const sourceMessageIds = newMessages.map((m, idx) => m && m.id ? String(m.id) : ('idx:' + String(lastIdx + idx)));
@@ -13675,7 +13808,7 @@ ${summaryTexts}`;
                     const recent = newMessages
                         .filter(m => !m.isDeletedLocal && !m.isRecalled && m.content)
                         .map(m => {
-                            const role = (m.role === 'ai' || m.role === 'assistant') ? 'AI' : '用户';
+                            const role = (m.role === 'ai' || m.role === 'assistant') ? '角色' : '用户';
                             return role + '：' + m.content;
                         }).join('\n');
 
@@ -13805,7 +13938,7 @@ ${recent}`;
                         resetSummaryCounter(friendId);
                         // 记录增量总结位置
                         if (Number.isFinite(meta.nextCursor)) {
-                            localStorage.setItem('lastSummaryIndex_' + friendId, String(meta.nextCursor));
+                            StorageManager.set(`lastSummaryIndex_${friendId}`, meta.nextCursor);
                         }
                         showCuteToast('已自动生成1条新小结');
                         // 检查是否需要自动合成大总结 - 优先使用全局apiService
@@ -13813,7 +13946,7 @@ ${recent}`;
                         if (window.summarySystemApiService && typeof window.summarySystemApiService.getConfig === 'function') {
                             bigSummaryConfig = window.summarySystemApiService.getConfig();
                         } else {
-                            bigSummaryConfig = { apiUrl: localStorage.getItem('apiUrl'), apiKey: localStorage.getItem('apiKey'), model: localStorage.getItem('selectedModel') };
+                            bigSummaryConfig = { apiUrl: StorageManager.get('apiUrl'), apiKey: StorageManager.get('apiKey'), model: StorageManager.get('selectedModel') };
                         }
                         checkAndGenerateBigSummary(friendId, bigSummaryConfig);
                     }
@@ -13849,7 +13982,7 @@ ${recent}`;
                 modal.dataset.from = options.from || '';
                 loadProfileData();
                 updateStatusBarTime('profile');
-                modal.style.display = 'flex';
+                ModalManager.show('profile');
             };
 
             // 关闭个人资料页面
@@ -13857,15 +13990,12 @@ ${recent}`;
                 const modal = document.getElementById('profileModal');
                 if (modal) {
                     const from = modal.dataset.from || '';
-                    modal.style.display = 'none';
+                    ModalManager.hide('profile');
                     modal.dataset.from = '';
                     exitEditMode();
 
                     if (from === 'friendList') {
-                        const friendListModalEl = document.getElementById('friendListModal');
-                        if (friendListModalEl) {
-                            friendListModalEl.style.display = 'flex';
-                        }
+                        ModalManager.show('friendList');
 
                         const navItems = document.querySelectorAll('.friend-list-nav-item');
                         navItems.forEach(item => item.classList.remove('active'));
@@ -13877,20 +14007,21 @@ ${recent}`;
 
             // 加载个人资料数据
             function loadProfileData() {
-                const savedProfile = localStorage.getItem('userProfile');
-                const profile = savedProfile ? { ...defaultProfile, ...JSON.parse(savedProfile) } : defaultProfile;
+                const profile = StorageManager.get('userProfile', defaultProfile);
+                // 确保使用默认值填充缺失字段
+                const mergedProfile = { ...defaultProfile, ...profile };
 
                 // 显示信息
-                document.getElementById('profileDisplayName').textContent = profile.name;
-                document.getElementById('profileIdDisplay').textContent = profile.sweetId;
-                document.getElementById('profileSignatureDisplay').textContent = profile.signature;
+                document.getElementById('profileDisplayName').textContent = mergedProfile.name;
+                document.getElementById('profileIdDisplay').textContent = mergedProfile.sweetId;
+                document.getElementById('profileSignatureDisplay').textContent = mergedProfile.signature;
 
                 // 设置性别图标
                 const genderIcon = document.getElementById('profileGenderIcon');
-                if (profile.gender === 'male') {
+                if (mergedProfile.gender === 'male') {
                     genderIcon.className = 'fas fa-mars';
                     genderIcon.style.color = '#8b99a8';
-                } else if (profile.gender === 'other') {
+                } else if (mergedProfile.gender === 'other') {
                     genderIcon.className = 'fas fa-genderless';
                     genderIcon.style.color = '#9aa8b5';
                 } else {
@@ -13899,15 +14030,15 @@ ${recent}`;
                 }
 
                 // 填充表单
-                document.getElementById('profileNameInput').value = profile.name;
-                document.getElementById('profileIdInput').value = profile.sweetId;
-                document.getElementById('profileSignatureInput').value = profile.signature;
-                document.getElementById('profilePersonalityInput').value = profile.personality;
-                document.getElementById('profileBirthdayInput').value = profile.birthday;
-                document.getElementById('profileLocationInput').value = profile.location;
+                document.getElementById('profileNameInput').value = mergedProfile.name;
+                document.getElementById('profileIdInput').value = mergedProfile.sweetId;
+                document.getElementById('profileSignatureInput').value = mergedProfile.signature;
+                document.getElementById('profilePersonalityInput').value = mergedProfile.personality;
+                document.getElementById('profileBirthdayInput').value = mergedProfile.birthday;
+                document.getElementById('profileLocationInput').value = mergedProfile.location;
 
                 // 设置性别选择
-                const genderRadio = document.querySelector(`input[name="gender"][value="${profile.gender}"]`);
+                const genderRadio = document.querySelector(`input[name="gender"][value="${mergedProfile.gender}"]`);
                 if (genderRadio) genderRadio.checked = true;
             }
 
@@ -13924,7 +14055,7 @@ ${recent}`;
                 };
 
                 // 保存到localStorage
-                localStorage.setItem('userProfile', JSON.stringify(profile));
+                StorageManager.set('userProfile', profile);
                 
                 // 更新显示
                 loadProfileData();
