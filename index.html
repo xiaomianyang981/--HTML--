@@ -1873,7 +1873,8 @@
 
         .message-action-menu {
             position: absolute;
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             padding: 8px 10px;
             border-radius: 14px;
@@ -1958,31 +1959,313 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 16px 12px 20px;
-            background-color: var(--color-bg-white);
-            border-top: 1px solid var(--color-widget-bg);
+            gap: 14px;
+            padding: 14px 12px 18px;
+            background: var(--color-bg-white);
+            border-top: 1px solid var(--glass-border-light);
             flex-shrink: 0;
         }
 
-        .multi-select-delete-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        .multi-select-forward-btn {
+            min-width: 122px;
+            height: 46px;
+            border-radius: 24px;
             border: none;
-            background-color: var(--color-widget-bg);
-            color: var(--color-danger);
-            font-size: 20px;
+            background-color: var(--color-button-primary);
+            color: var(--color-text-dark);
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            padding: 0 16px;
+            box-shadow: var(--box-shadow-light);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .multi-select-forward-btn:active {
+            transform: scale(0.96);
+            background-color: var(--color-bg-active);
+        }
+
+        .forward-friend-overlay,
+        .forward-record-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            z-index: 2300;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            box-sizing: border-box;
+            background: var(--overlay-dark);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .forward-friend-box {
+            width: min(80vw, 320px);
+            max-height: min(72vh, 560px);
+            overflow: hidden;
+            border-radius: 22px;
+            background: var(--glass-bg-stronger);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border-white);
+            box-shadow: var(--box-shadow-hover);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .forward-friend-head {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid var(--glass-border-strong);
+        }
+
+        .forward-friend-head h3 {
+            margin: 0;
+            color: var(--color-text-dark);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .forward-friend-list {
+            overflow-y: auto;
+            padding: 8px 10px 10px;
+        }
+
+        .forward-friend-item {
+            width: 100%;
+            border: none;
+            background: var(--color-bg-light);
+            border-radius: 14px;
+            margin-bottom: 8px;
+            padding: 11px 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--color-text-medium);
+            cursor: pointer;
+        }
+
+        .forward-friend-item:active {
+            transform: scale(0.985);
+            background: var(--color-bg-hover);
+        }
+
+        .forward-friend-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--color-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px var(--shadow-color-light);
+            color: var(--color-text-light);
+            flex-shrink: 0;
         }
 
-        .multi-select-delete-btn:active {
+        .forward-friend-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .forward-friend-actions {
+            display: flex;
+            gap: 10px;
+            padding: 12px 12px 14px;
+            border-top: 1px solid var(--glass-border-light);
+            background: var(--glass-bg-light);
+        }
+
+        .forward-friend-actions button {
+            flex: 1;
+            border: none;
+            border-radius: 12px;
+            height: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        #forwardFriendCancelBtn {
+            color: var(--color-text-medium);
+            background: var(--color-bg-light);
+        }
+
+        #forwardFriendCancelBtn:active {
+            background: var(--color-bg-hover);
+        }
+
+        .forward-friend-actions button:not(#forwardFriendCancelBtn) {
+            background-color: var(--color-button-primary);
+            color: var(--color-text-dark);
+            box-shadow: var(--box-shadow-light);
+        }
+
+        .forward-friend-actions button:not(#forwardFriendCancelBtn):active {
+            transform: scale(0.96);
+            background-color: var(--color-bg-active);
+        }
+
+        .forward-empty {
+            color: var(--color-text-lighter);
+            font-size: 13px;
+            text-align: center;
+            padding: 18px 12px 22px;
+        }
+
+        .forward-bundle-card {
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            min-width: 176px;
+            max-width: 280px;
+            padding: 10px 12px;
+            cursor: pointer;
+            box-shadow: var(--box-shadow-light);
+            transition: all 0.2s ease;
+        }
+
+        .forward-bundle-card:active {
+            transform: scale(0.98);
+            box-shadow: var(--box-shadow);
+        }
+
+        .forward-bundle-title {
+            color: var(--color-text-dark);
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .forward-bundle-preview {
+            color: var(--color-text-light);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .forward-record-page {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: min(85vw, 340px);
+            height: min(65vh, 520px);
+            background: var(--glass-bg-stronger);
+            backdrop-filter: var(--glass-blur-strong);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border-white);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .forward-record-header {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px;
+            border-bottom: 1px solid var(--glass-border-strong);
+            background: var(--glass-bg-light);
+        }
+
+        #forwardRecordBackBtn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: var(--color-bg-light);
+            color: var(--color-text-medium);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #forwardRecordBackBtn:active {
+            background: var(--color-bg-hover);
             transform: scale(0.93);
-            background-color: var(--color-bg-pressed);
+        }
+
+        .forward-record-title {
+            color: var(--color-text-dark);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .forward-record-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 12px 14px;
+            background: var(--color-background);
+        }
+
+        .forward-record-tip {
+            color: var(--color-text-light);
+            background: var(--color-bg-light);
+            font-size: 12px;
+            border-radius: 12px;
+            padding: 7px 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--glass-border-light);
+        }
+
+        .forward-record-msg {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .forward-record-name {
+            color: var(--color-text-light);
+            font-size: 12px;
+            margin: 0 0 4px 2px;
+        }
+
+        .forward-record-bubble {
+            max-width: 86%;
+            background: var(--color-bg-white);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 12px;
+            padding: 8px 10px;
+            color: var(--color-text-dark);
+            font-size: 13px;
+            line-height: 1.45;
+            white-space: pre-wrap;
+            word-break: break-word;
+            box-shadow: var(--box-shadow-light);
+        }
+
+        .forward-record-bubble img {
+            width: 170px;
+            max-width: 100%;
+            border-radius: 10px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .forward-record-voice {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--color-text-light);
+            font-size: 12px;
+            margin-bottom: 4px;
         }
 
         .multi-select-checkbox {
@@ -2083,6 +2366,72 @@
             background-color: white;
             color: var(--color-text);
             border: 1px solid var(--color-widget-bg);
+        }
+
+        /* ========== 编辑消息弹窗 ========== */
+        .message-edit-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2001;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .message-edit-box {
+            background-color: var(--color-bg-white);
+            border-radius: 30px;
+            padding: 24px;
+            width: 85%;
+            max-width: 320px;
+            box-shadow: 0 10px 40px var(--shadow-color-medium);
+        }
+
+        .message-edit-box h3 {
+            margin: 0 0 16px 0;
+            color: var(--color-text);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #messageEditTextarea {
+            color: var(--color-text-darker) !important;
+        }
+
+        #messageEditTextarea::placeholder {
+            color: var(--color-text-placeholder);
+        }
+
+        .message-edit-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .message-edit-actions button {
+            padding: 10px 24px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        #messageEditCancel {
+            background-color: var(--color-bg-disabled);
+            color: var(--color-text-medium);
+        }
+
+        #messageEditSave {
+            background-color: var(--color-accent);
+            color: var(--color-text-darker);
+        }
+
+        #messageEditSave:active {
+            transform: scale(0.96);
         }
 
         .chat-input-area {
@@ -3674,7 +4023,9 @@
         #settingsBack,
         #worldbookBack,
         #closeFriendListModal,
-        #closeApiModal {
+        #closeApiModal,
+        #closeProfileModal,
+        #profileEditBtn {
             z-index: 999 !important;
             pointer-events: auto !important;
             position: relative !important;
@@ -4150,6 +4501,30 @@
 
         #profileModal .modal-content {
             animation: none;
+        }
+
+        /* 个人资料顶部栏点击兜底：强制保证顶部按钮可交互 */
+        #profileModal .status-bar {
+            pointer-events: none;
+            z-index: 3004;
+        }
+
+        #profileModal .settings-nav {
+            position: sticky;
+            top: 0;
+            z-index: 3005 !important;
+            pointer-events: auto;
+        }
+
+        #profileModal .settings-title {
+            pointer-events: none;
+        }
+
+        #profileModal #closeProfileModal,
+        #profileModal #profileEditBtn {
+            position: relative;
+            z-index: 3006 !important;
+            pointer-events: auto !important;
         }
 
         /* 响应式调整 */
@@ -4913,8 +5288,8 @@
             </div>
             <!-- 多选模式底部栏 -->
             <div id="multiSelectFooter" class="multi-select-footer">
-                <button id="multiSelectDeleteBtn" class="multi-select-delete-btn" type="button">
-                    <i class="fas fa-trash"></i>
+                <button id="multiSelectForwardBtn" class="multi-select-forward-btn" type="button">
+                    <i class="fas fa-share"></i> 转发
                 </button>
             </div>
 
@@ -4945,6 +5320,14 @@
                 <i class="fas fa-check-double"></i>
                 <span>多选</span>
             </button>
+            <button class="message-action-item forward-item" id="messageActionForward" type="button">
+                <i class="fas fa-share"></i>
+                <span>转发</span>
+            </button>
+            <button class="message-action-item" id="messageActionEdit" type="button">
+                <i class="fas fa-edit"></i>
+                <span>编辑</span>
+            </button>
             <button class="message-action-item" id="messageActionRegenerate" type="button">
                 <i class="fas fa-magic"></i>
                 <span>修正</span>
@@ -4961,6 +5344,40 @@
                 <button id="multiSelectConfirmYes" type="button">确认删除</button>
                 <button id="multiSelectConfirmNo" type="button">取消</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 编辑消息弹窗 -->
+    <div id="messageEditOverlay" class="message-edit-overlay" style="display: none;">
+        <div class="message-edit-box">
+            <h3>编辑消息</h3>
+            <textarea id="messageEditTextarea" placeholder="输入编辑的内容..." style="width: 100%; height: 120px; padding: 12px; border: 1px solid var(--color-border-input); border-radius: 12px; font-size: 14px; resize: none; box-sizing: border-box; font-family: inherit;"></textarea>
+            <div class="message-edit-actions">
+                <button id="messageEditCancel" type="button">取消</button>
+                <button id="messageEditSave" type="button">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="forwardFriendOverlay" class="forward-friend-overlay">
+        <div class="forward-friend-box">
+            <div class="forward-friend-head">
+                <h3>选择好友</h3>
+            </div>
+            <div id="forwardFriendList" class="forward-friend-list"></div>
+            <div class="forward-friend-actions">
+                <button id="forwardFriendCancelBtn" type="button">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="forwardRecordOverlay" class="forward-record-overlay">
+        <div class="forward-record-page">
+            <div class="forward-record-header">
+                <button id="forwardRecordBackBtn" type="button"><i class="fas fa-chevron-left"></i></button>
+                <div class="forward-record-title">聊天记录</div>
+            </div>
+            <div id="forwardRecordBody" class="forward-record-body"></div>
         </div>
     </div>
 
@@ -5381,11 +5798,12 @@
 
             <!-- 顶部导航 -->
             <div class="settings-nav">
-                <button class="settings-back" id="closeProfileModal">
+                <button class="settings-back" id="closeProfileModal" type="button"
+                    onclick="event.stopPropagation(); if (window.closeProfileModal) window.closeProfileModal();">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="settings-title">个人资料</div>
-                <button class="profile-edit-btn" id="profileEditBtn">
+                <button class="profile-edit-btn" id="profileEditBtn" type="button">
                     <i class="fas fa-edit"></i>
                 </button>
             </div>
@@ -6314,6 +6732,19 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     // 移除控制字符和不可见字符
                     fixed = fixed.replace(/[\x00-\x1F\x7F]/g, '');
 
+                    // === 新增容错：针对Gemini/Claude的边界情况 ===
+                    // 处理中文标签前缀（极少见，但有备无患）
+                    fixed = fixed.replace(/^【[^】]*】\s*/, '').trim();
+                    
+                    // 如果最外层不是 { 开头，但包含 reply 字段，尝试快速修复
+                    if (!fixed.trim().startsWith('{')) {
+                        const replyMatch = fixed.match(/"reply"\s*[：："]\s*"?([^"]+)"?/);
+                        if (replyMatch?.[1]) {
+                            console.log('[JSON修复] 检测到非JSON格式reply，自动转换');
+                            fixed = `{"reply":"${replyMatch[1].replace(/"/g, '\\"')}", "inner_voice": {"心情值": 50}}`;
+                        }
+                    }
+
                     return fixed;
                 },
 
@@ -6581,6 +7012,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
             };
 
+            // 暴露到全局，供第二个脚本块使用
+            window.StorageManager = StorageManager;
+
             // ========== 通用模态窗口管理系统 ==========
             const ModalManager = {
                 modals: {},
@@ -6659,6 +7093,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 { name: 'bigSummary', modal: 'bigSummaryModal' },
                 { name: 'profile', modal: 'profileModal' }
             ]);
+
+            // 暴露到全局，供第二个脚本块和 inline onclick 使用
+            window.ModalManager = ModalManager;
 
             // ========== 通用状态栏管理系统（可扩展方案） ==========
             const StatusBarManager = {
@@ -7017,9 +7454,12 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         } else if (navType === 'moments') {
                             alert('动态功能开发中...');
                         } else if (navType === 'me') {
-                            // 切页到“我”：隐藏好友列表，避免叠层弹出感
-                            ModalManager.hide('friendList');
-                            openProfileModal({ from: 'friendList' });
+                            // 切页到“我”：优先调用个人页入口，失败时兜底强制切页
+                            if (typeof window.openProfileModal === 'function') {
+                                window.openProfileModal({ from: 'friendList' });
+                            } else {
+                                ModalManager.switch('friendList', 'profile');
+                            }
                         }
                     });
                 });
@@ -7544,6 +7984,176 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 });
             }
 
+            // ========== 模块化导入导出系统 ==========
+            // 核心特点：
+            // 1. 所有模块均通过注册方式加入，无硬编码
+            // 2. 新增功能只需注册一行代码，导出导入自动生效
+            // 3. 预留extensionsData存放未来功能（如美化、主题、背景等）
+            // 4. 版本控制明确，支持版本迁移
+
+            class DataExchangeManager {
+                constructor(appVersion = '1.0.0') {
+                    this.appVersion = appVersion;
+                    this.modules = {};      // { moduleName: { exportFn, importFn, version } }
+                    this.reservedKeys = new Set(['chat_']); // localStorage保留前缀
+                }
+
+                // 注册一个数据模块（每个功能系统都应该注册）
+                registerModule(moduleName, {
+                    exportFn,     // 返回该模块的数据
+                    importFn,     // 接收该模块的数据并应用
+                    version = '1.0'
+                }) {
+                    this.modules[moduleName] = {
+                        exportFn,
+                        importFn,
+                        version
+                    };
+                }
+
+                // 导出所有已注册模块的数据 + 完整 localStorage 备份
+                exportAll() {
+                    const manifest = {
+                        appVersion: this.appVersion,
+                        exportTime: new Date().toISOString(),
+                        exportDevice: 'browser',
+                        modules: {}
+                    };
+                    const data = {};
+
+                    // 导出各模块
+                    Object.entries(this.modules).forEach(([name, module]) => {
+                        try {
+                            manifest.modules[name] = module.version;
+                            data[name] = module.exportFn();
+                        } catch (e) {
+                            console.error(`[导出] 模块${name}导出失败:`, e);
+                        }
+                    });
+
+                    // 关键：导出完整的 localStorage 备份（防止遗漏）
+                    const localStorageBackup = {};
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key) {
+                            try {
+                                localStorageBackup[key] = localStorage.getItem(key);
+                            } catch (e) {
+                                console.warn(`[导出] localStorage 键${key}读取失败:`, e);
+                            }
+                        }
+                    }
+
+                    return {
+                        manifest,
+                        data,
+                        extensions: {},
+                        localStorageBackup  // ✅ 完整的 localStorage 备份
+                    };
+                }
+
+                // 导入所有模块的数据 + 完整恢复 localStorage
+                importAll(payload, options = {}) {
+                    if (!payload || !payload.manifest || !payload.data) {
+                        throw new Error('文件格式不正确');
+                    }
+
+                    const clearBeforeImport = options && options.clearBeforeImport === true;
+                    if (clearBeforeImport) {
+                        try {
+                            localStorage.clear();
+                        } catch (e) {
+                            console.error('[导入] 清空 localStorage 失败:', e);
+                        }
+                    }
+
+                    // 第一步：如果有 localStorage 完整备份，优先恢复它（确保最大兼容）
+                    if (payload.localStorageBackup && typeof payload.localStorageBackup === 'object') {
+                        Object.entries(payload.localStorageBackup).forEach(([key, value]) => {
+                            try {
+                                localStorage.setItem(key, String(value));
+                            } catch (e) {
+                                console.error(`[导入] localStorage 键${key}导入失败:`, e);
+                            }
+                        });
+                    }
+
+                    // 第二步：逐模块导入（便于模块执行升级/迁移逻辑）
+                    Object.entries(payload.data).forEach(([moduleName, moduleData]) => {
+                        if (this.modules[moduleName]) {
+                            try {
+                                this.modules[moduleName].importFn(moduleData);
+                            } catch (e) {
+                                console.error(`[导入] 模块${moduleName}导入失败:`, e);
+                            }
+                        }
+                    });
+
+                    // 第三步：导入扩展数据（未来的美化、主题等）
+                    if (payload.extensions && typeof payload.extensions === 'object') {
+                        Object.entries(payload.extensions).forEach(([key, value]) => {
+                            try {
+                                StorageManager.set(`ext_${key}`, value);
+                            } catch (e) {
+                                console.error(`[导入] 扩展${key}导入失败:`, e);
+                            }
+                        });
+                    }
+                }
+
+                // 导出特定模块子集（用于部分导出）
+                exportModules(moduleNames = []) {
+                    const manifest = {
+                        appVersion: this.appVersion,
+                        exportTime: new Date().toISOString(),
+                        exportDevice: 'browser',
+                        modules: {}
+                    };
+                    const data = {};
+
+                    moduleNames.forEach(name => {
+                        if (this.modules[name]) {
+                            try {
+                                manifest.modules[name] = this.modules[name].version;
+                                data[name] = this.modules[name].exportFn();
+                            } catch (e) {
+                                console.error(`[导出] 模块${name}导出失败:`, e);
+                            }
+                        }
+                    });
+
+                    // 部分导出也包含完整 localStorage 备份
+                    const localStorageBackup = {};
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key) {
+                            try {
+                                localStorageBackup[key] = localStorage.getItem(key);
+                            } catch (e) {
+                                console.warn(`[导出] localStorage 键${key}读取失败:`, e);
+                            }
+                        }
+                    }
+
+                    return {
+                        manifest,
+                        data,
+                        extensions: {},
+                        localStorageBackup
+                    };
+                }
+            }
+
+            const dataExchange = new DataExchangeManager('1.0.0');
+
+            function getFormattedDate() {
+                const now = new Date();
+                const year = String(now.getFullYear()).slice(-2);
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const date = String(now.getDate()).padStart(2, '0');
+                return `${year}${month}${date}`;
+            }
+
             function downloadJson(data, filename) {
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -7556,114 +8166,121 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 URL.revokeObjectURL(url);
             }
 
-            function collectOtherSettings() {
-                const otherSettings = {};
-                const reservedPrefixes = ['chat_'];
-                const reservedKeys = new Set([
-                    'apiConfig',
-                    'friends',
-                    'homeGreeting'
-                ]);
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (!key) continue;
-                    if (reservedKeys.has(key)) continue;
-                    if (reservedPrefixes.some(prefix => key.startsWith(prefix))) continue;
-                    try {
-                        otherSettings[key] = StorageManager.get(key);
-                    } catch (e) {
-                        otherSettings[key] = localStorage.getItem(key);
-                    }
-                }
-                return otherSettings;
-            }
-
-            function collectChatHistories(friendsList = []) {
-                const chatHistories = {};
-                friendsList.forEach(friend => {
-                    if (!friend || !friend.id) return;
-                    chatHistories[friend.id] = friendSystem
-                        ? friendSystem.getFriendChatHistory(friend.id)
-                        : [];
-                });
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (!key || !key.startsWith('chat_')) continue;
-                    const friendId = key.replace('chat_', '');
-                    if (!chatHistories[friendId]) {
-                        chatHistories[friendId] = StorageManager.get(key, []);
-                    }
-                }
-                return chatHistories;
-            }
-
-            function buildExportPayload(customData = {}) {
-                return {
-                    exportVersion: '1.0',
-                    exportTime: new Date().toISOString(),
-                    data: customData
-                };
-            }
-
             function exportAllData() {
-                const friends = friendSystem ? friendSystem.getFriends() : [];
-                const payload = buildExportPayload({
-                    apiConfig: apiService ? apiService.getConfig() : {},
-                    friends: friends,
-                    chatHistories: collectChatHistories(friends),
-                    homeGreeting: friendSystem ? friendSystem.getStorage('homeGreeting', '') : '',
-                    otherSettings: collectOtherSettings()
-                });
-                downloadJson(payload, `app_backup_all_${Date.now()}.json`);
+                try {
+                    // 防止在角色回复尚未落盘时导出，导致“少一轮”
+                    if (chatSession && chatSession.isProcessing) {
+                        showCuteToast('角色还在回复中，请稍候再导出', 'warning');
+                        return;
+                    }
+
+                    // 强制同步内存数据到localStorage
+                    if (window.worldBookSystem && Array.isArray(window.worldBookSystem.books)) {
+                        StorageManager.set('worldBooks', window.worldBookSystem.books);
+                    }
+                    if (window.htmlGameSystem && Array.isArray(window.htmlGameSystem.games)) {
+                        StorageManager.set('htmlGames', window.htmlGameSystem.games);
+                    }
+
+                    const friendsForExport = friendSystem ? friendSystem.getFriends() : StorageManager.get('friends', []);
+                    const chatHistoriesForExport = {};
+                    (Array.isArray(friendsForExport) ? friendsForExport : []).forEach(friend => {
+                        if (!friend || !friend.id) return;
+                        const fid = String(friend.id);
+                        chatHistoriesForExport[fid] = friendSystem
+                            ? (friendSystem.getFriendChatHistory(fid) || [])
+                            : (StorageManager.get(`chat_${fid}`, []) || []);
+                    });
+                    // 兜底收集所有 chat_*，防止无好友关系但有历史
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key && key.startsWith('chat_')) {
+                            const fid = key.replace('chat_', '');
+                            if (!Object.prototype.hasOwnProperty.call(chatHistoriesForExport, fid)) {
+                                chatHistoriesForExport[fid] = StorageManager.get(key, []);
+                            }
+                        }
+                    }
+
+                    // 统一走模块化导出 + localStorage 全备份，确保未来功能自动纳入
+                    const payload = dataExchange.exportAll();
+                    payload.dataType = 'yuanyuanji_full_export_v3';
+
+                    // 兜底注入关键模块数据：即使模块注册异常，也确保世界书/聊天在导出包中
+                    if (!payload.manifest) payload.manifest = { modules: {} };
+                    if (!payload.manifest.modules) payload.manifest.modules = {};
+                    if (!payload.data || typeof payload.data !== 'object') payload.data = {};
+
+                    const worldBooksForExport = StorageManager.get('worldBooks', []);
+                    payload.data.worldBooks = { worldBooks: worldBooksForExport };
+                    payload.data.chatSystem = { chatHistories: chatHistoriesForExport };
+                    payload.manifest.modules.worldBooks = payload.manifest.modules.worldBooks || '1.0';
+                    payload.manifest.modules.chatSystem = payload.manifest.modules.chatSystem || '1.0';
+
+                    // 同步到 raw localStorage 备份
+                    if (!payload.localStorageBackup || typeof payload.localStorageBackup !== 'object') {
+                        payload.localStorageBackup = {};
+                    }
+                    payload.localStorageBackup.worldBooks = JSON.stringify(worldBooksForExport);
+                    
+                    Object.entries(chatHistoriesForExport).forEach(([fid, history]) => {
+                        payload.localStorageBackup[`chat_${fid}`] = JSON.stringify(history || []);
+                    });
+
+                    downloadJson(payload, `芋圆机_v3_${getFormattedDate()}.json`);
+                    showCuteToast('✓ 导出成功');
+                } catch (e) {
+                    console.error('导出失败:', e);
+                    showCuteToast('导出失败: ' + e.message);
+                }
             }
 
             function exportFriendsData() {
-                const friends = friendSystem ? friendSystem.getFriends() : [];
-                const payload = buildExportPayload({
-                    friends: friends
-                });
-                downloadJson(payload, `app_backup_friends_${Date.now()}.json`);
+                try {
+                    const exportData = {
+                        friends: StorageManager.get('friends', []),
+                        homeGreeting: StorageManager.get('homeGreeting', '')
+                    };
+                    
+                    const payload = {
+                        dataType: 'yuanyuanji_friends_export',
+                        appVersion: '1.0.0',
+                        exportTime: new Date().toISOString(),
+                        data: exportData
+                    };
+                    
+                    downloadJson(payload, `芋圆机_好友_${getFormattedDate()}.json`);
+                    showCuteToast('✓ 导出好友数据成功！');
+                } catch (e) {
+                    console.error('导出失败:', e);
+                    showCuteToast('导出失败: ' + e.message);
+                }
             }
 
             function exportChatsData() {
-                const friends = friendSystem ? friendSystem.getFriends() : [];
-                const payload = buildExportPayload({
-                    chatHistories: collectChatHistories(friends)
-                });
-                downloadJson(payload, `app_backup_chats_${Date.now()}.json`);
-            }
-
-            function applyImportPayload(payload) {
-                if (!payload || !payload.data || typeof payload.data !== 'object') {
-                    throw new Error('数据格式不正确');
+                try {
+                    const chatHistories = {};
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key && key.startsWith('chat_')) {
+                            const friendId = key.replace('chat_', '');
+                            chatHistories[friendId] = StorageManager.get(key, []);
+                        }
+                    }
+                    
+                    const payload = {
+                        dataType: 'yuanyuanji_chats_export',
+                        appVersion: '1.0.0',
+                        exportTime: new Date().toISOString(),
+                        data: { chatHistories }
+                    };
+                    
+                    downloadJson(payload, `芋圆机_聊天_${getFormattedDate()}.json`);
+                    showCuteToast('✓ 导出聊天数据成功！');
+                } catch (e) {
+                    console.error('导出失败:', e);
+                    showCuteToast('导出失败: ' + e.message);
                 }
-
-                const data = payload.data;
-                StorageManager.clear();
-
-                if (data.apiConfig) {
-                    StorageManager.set('apiConfig', data.apiConfig);
-                }
-                if (data.friends) {
-                    StorageManager.set('friends', data.friends);
-                }
-                if (data.homeGreeting !== undefined) {
-                    StorageManager.set('homeGreeting', data.homeGreeting);
-                }
-                if (data.chatHistories && typeof data.chatHistories === 'object') {
-                    Object.keys(data.chatHistories).forEach(friendId => {
-                        StorageManager.set(`chat_${friendId}`, data.chatHistories[friendId] || []);
-                    });
-                }
-                if (data.otherSettings && typeof data.otherSettings === 'object') {
-                    Object.keys(data.otherSettings).forEach(key => {
-                        StorageManager.set(key, data.otherSettings[key]);
-                    });
-                }
-
-                if (friendSystem) friendSystem.init();
-                if (apiService) apiService.updateSettingsDisplay();
-                renderFriendList();
             }
 
             function handleImportFile(file) {
@@ -7671,15 +8288,185 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 reader.onload = () => {
                     try {
                         const payload = JSON.parse(String(reader.result || '{}'));
-                        const confirmImport = confirm('导入将覆盖当前所有数据，是否继续？');
+                        
+                        if (!payload.data || typeof payload.data !== 'object') {
+                            alert('导入失败：文件格式不正确');
+                            return;
+                        }
+                        
+                        const confirmImport = confirm('⚠️ 导入将覆盖当前所有数据，是否继续？');
                         if (!confirmImport) return;
-                        applyImportPayload(payload);
-                        alert('导入完成');
+                        
+                        console.log('[导入] 开始处理 ' + (payload.dataType || 'unknown') + ' 类型的导出文件...');
+                        
+                        // 新版：模块化全量导入（100%复刻 + 未来扩展）
+                        if (payload.dataType === 'yuanyuanji_full_export_v3' || payload.dataType === 'yuanyuanji_full_export_v2' || (payload.manifest && payload.data)) {
+                            dataExchange.importAll(payload, { clearBeforeImport: true });
+                            reinitializeAllSystems();
+                            showCuteToast('导入成功！页面即将刷新...');
+                            setTimeout(() => window.location.reload(), 1200);
+                        } else if (payload.dataType === 'yuanyuanji_full_export') {
+                            // 兼容旧版全量导出格式
+                            handleFullImport(payload.data);
+                            // ✓ 全量导入后刷新页面，确保所有系统重新初始化
+                            showCuteToast('导入成功！页面即将刷新...');
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else if (payload.dataType === 'yuanyuanji_friends_export') {
+                            handleFriendsImport(payload.data);
+                            showCuteToast('✓ 好友数据导入完成！');
+                        } else if (payload.dataType === 'yuanyuanji_chats_export') {
+                            handleChatsImport(payload.data);
+                            showCuteToast('✓ 聊天数据导入完成！');
+                        } else {
+                            // 兼容旧格式
+                            console.warn('未识别的导出格式，尝试作为全量导入处理');
+                            handleFullImport(payload.backup || payload.data);
+                            showCuteToast('导入成功！页面即将刷新...');
+                            setTimeout(() => window.location.reload(), 1500);
+                        }
+                        
+                        console.log('[导入] 成功完成');
                     } catch (e) {
-                        alert('导入失败：JSON 格式不正确');
+                        alert('导入失败：' + e.message);
+                        console.error('导入错误:', e);
                     }
                 };
                 reader.readAsText(file);
+            }
+            
+            function handleFullImport(importedData) {
+                console.log('[全量导入] 清空所有旧数据...');
+                localStorage.clear();
+                
+                console.log('[全量导入] 写入核心数据...');
+                
+                // ✓ 1. 导入好友（包含 ID 绑定）
+                if (importedData.friends && Array.isArray(importedData.friends)) {
+                    StorageManager.set('friends', importedData.friends);
+                    console.log('✓ 导入 ' + importedData.friends.length + ' 个好友');
+                }
+                
+                // ✓ 2. 导入 API 配置（只保留链接和密钥）
+                if (importedData.apiConfig) {
+                    const cleanApiConfig = {
+                        apiUrl: importedData.apiConfig.apiUrl || '',
+                        apiKey: importedData.apiConfig.apiKey || ''
+                    };
+                    StorageManager.set('apiConfig', cleanApiConfig);
+                    console.log('✓ 导入 API 配置 (链接 + 密钥)');
+                }
+                
+                // ✓ 3. 导入世界书（完整数据）
+                if (importedData.worldBooks && Array.isArray(importedData.worldBooks)) {
+                    StorageManager.set('worldBooks', importedData.worldBooks);
+                    console.log('✓ 导入 ' + importedData.worldBooks.length + ' 本世界书');
+                }
+                
+                // ✓ 4. 导入 HTML 游戏
+                if (importedData.htmlGames && Array.isArray(importedData.htmlGames)) {
+                    StorageManager.set('htmlGames', importedData.htmlGames);
+                    console.log('✓ 导入 ' + importedData.htmlGames.length + ' 个游戏');
+                }
+                
+                // 5. 导入贺词
+                if (importedData.homeGreeting) {
+                    StorageManager.set('homeGreeting', importedData.homeGreeting);
+                }
+                
+                // ✓ 6. 导入聊天记录（通过 ID 绑定匹配）
+                if (importedData.chatHistories && typeof importedData.chatHistories === 'object') {
+                    const friends = importedData.friends || [];
+                    const friendIds = new Set(friends.map(f => f.id || f.id));
+                    let chatImportCount = 0;
+                    
+                    Object.entries(importedData.chatHistories).forEach(([friendIdStr, messages]) => {
+                        // ✓ ID 验证：只导入与 friends 中存在的 ID 相匹配的聊天记录
+                        if (friendIds.has(friendIdStr) || friendIds.has(parseInt(friendIdStr))) {
+                            StorageManager.set(`chat_${friendIdStr}`, messages);
+                            chatImportCount++;
+                        } else {
+                            console.warn('[ID 未匹配] 聊天记录的 friendId ' + friendIdStr + ' 不存在于好友列表中');
+                        }
+                    });
+                    console.log('✓ 导入 ' + chatImportCount + ' 个聊天记录');
+                }
+                
+                // 7. 导入心声
+                if (importedData.heartVoices && typeof importedData.heartVoices === 'object') {
+                    Object.entries(importedData.heartVoices).forEach(([friendId, data]) => {
+                        StorageManager.set(`heartvoice_${friendId}`, data);
+                    });
+                }
+                
+                console.log('[全量导入] 重新初始化系统...');
+                reinitializeAllSystems();
+            }
+            
+            function handleFriendsImport(importedData) {
+                console.log('[好友导入] 合并好友数据...');
+                const existingFriends = StorageManager.get('friends', []);
+                
+                if (importedData.friends && Array.isArray(importedData.friends)) {
+                    importedData.friends.forEach(newFriend => {
+                        const existing = existingFriends.findIndex(f => f.id === newFriend.id);
+                        if (existing > -1) {
+                            existingFriends[existing] = newFriend;
+                        } else {
+                            existingFriends.push(newFriend);
+                        }
+                    });
+                    StorageManager.set('friends', existingFriends);
+                }
+                
+                if (importedData.homeGreeting) {
+                    StorageManager.set('homeGreeting', importedData.homeGreeting);
+                }
+                
+                console.log('[好友导入] 重新初始化好友系统...');
+                if (friendSystem) friendSystem.init();
+                if (window.renderFriendList) renderFriendList();
+            }
+            
+            function handleChatsImport(importedData) {
+                console.log('[聊天导入] 合并聊天记录...');
+                
+                if (importedData.chatHistories && typeof importedData.chatHistories === 'object') {
+                    Object.entries(importedData.chatHistories).forEach(([friendId, newMessages]) => {
+                        if (Array.isArray(newMessages)) {
+                            const existingKey = `chat_${friendId}`;
+                            const existingMessages = StorageManager.get(existingKey, []);
+                            // 本次导入：直接覆盖
+                            StorageManager.set(existingKey, newMessages);
+                        }
+                    });
+                }
+                
+                console.log('[聊天导入] 刷新当前聊天页面...');
+                if (window.goHome) goHome();  // 返回首页刷新
+            }
+            
+            function reinitializeAllSystems() {
+                try {
+                    const friends = StorageManager.get('friends', []);
+                    const worldBooks = StorageManager.get('worldBooks', []);
+                    const htmlGames = StorageManager.get('htmlGames', []);
+                    
+                    if (window.worldBookSystem) { 
+                        window.worldBookSystem.books = worldBooks && Array.isArray(worldBooks) ? worldBooks : [];
+                    }
+                    
+                    if (friendSystem) { friendSystem.init(); }
+                    if (apiService) { apiService.updateSettingsDisplay?.(); }
+                    if (heartVoiceSystem) { heartVoiceSystem.init?.(); }
+                    if (window.htmlGameSystem) { 
+                        window.htmlGameSystem.games = htmlGames && Array.isArray(htmlGames) ? htmlGames : [];
+                    }
+                    if (window.renderFriendList) renderFriendList();
+                    
+                } catch (e) {
+                    console.error('系统初始化出错:', e);
+                    alert('部分系统初始化失败，请手动刷新页面');
+                }
             }
 
             if (exportAllDataBtn) {
@@ -8104,6 +8891,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     name: name,
                     persona: persona,
                     avatar: avatar || null,
+                    voiceId: '',                           // ✅ 语音ID初始化
+                    voiceIdMode: 'auto',                   // ✅ 语音模式默认自动
+                    chatShowTime: true,                    // ✅ 默认显示时间戳
+                    chatReadStatus: true,                  // ✅ 默认显示已读状态
+                    chatHideAvatar: false,                 // ✅ 默认显示头像
+                    mountedWorldBooks: [],                 // ✅ 挂载的世界书（数组）
+                    mountedHtmlGames: [],                  // ✅ 挂载的HTML游戏（数组）
                     createdAt: new Date().toISOString()
                 };
 
@@ -8706,8 +9500,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (titleEl) titleEl.textContent = `${friend?.name || ''}の心声`;
 
                     this.selectedItems.clear();
+                    // 重置多选模式，确保每次打开都是正常模式
+                    this.isMultiSelectMode = false;
+                    this.multiSelectItems.clear();
+                    
                     this.renderHistory(friendId);
                     if (this.historyModal) this.historyModal.style.display = 'flex';
+                    
+                    // 确保顶部按钮显示
+                    const deleteSelectBtn = document.getElementById('hv-delete-select-btn');
+                    const exportSelectBtn = document.getElementById('hv-export-select-btn');
+                    if (deleteSelectBtn) deleteSelectBtn.style.display = '';
+                    if (exportSelectBtn) exportSelectBtn.style.display = '';
                 }
 
                 renderHistory(friendId) {
@@ -8850,19 +9654,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                             // 绑定长按删除
                             this.attachLongPress(el, originalIndex);
-
-                            // 点击选择（按钮点击不触发）
-                            el.addEventListener('click', (e) => {
-                                if (e.target.closest('.hv-delete-btn')) return;
-                                if (this.isLongPressTriggered) return;
-                                if (this.selectedItems.has(item.time)) {
-                                    this.selectedItems.delete(item.time);
-                                    el.classList.remove('selected');
-                                } else {
-                                    this.selectedItems.add(item.time);
-                                    el.classList.add('selected');
-                                }
-                            });
                         }
 
                         this.historyList.appendChild(el);
@@ -8917,6 +9708,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     this.isMultiSelectMode = true;
                     this.multiSelectItems.clear();
                     this.currentMultiSelectMode = mode;
+                    
+                    // 隐藏顶部按钮
+                    const deleteSelectBtn = document.getElementById('hv-delete-select-btn');
+                    const exportSelectBtn = document.getElementById('hv-export-select-btn');
+                    if (deleteSelectBtn) deleteSelectBtn.style.display = 'none';
+                    if (exportSelectBtn) exportSelectBtn.style.display = 'none';
+                    
                     if (chatSession) {
                         this.renderHistory(chatSession.getCurrentFriendId());
                     }
@@ -8926,6 +9724,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     this.isMultiSelectMode = false;
                     this.multiSelectItems.clear();
                     this.currentMultiSelectMode = null;
+                    
+                    // 显示顶部按钮
+                    const deleteSelectBtn = document.getElementById('hv-delete-select-btn');
+                    const exportSelectBtn = document.getElementById('hv-export-select-btn');
+                    if (deleteSelectBtn) deleteSelectBtn.style.display = '';
+                    if (exportSelectBtn) exportSelectBtn.style.display = '';
+                    
                     if (chatSession) {
                         this.renderHistory(chatSession.getCurrentFriendId());
                     }
@@ -8977,11 +9782,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const data = this.getData(friendId);
                     if (!data || !data.history) return;
 
+                    const deleteCount = this.multiSelectItems.size;
                     // 删除选中的项（按时间戳匹配）
                     data.history = data.history.filter(item => !this.multiSelectItems.has(item.time));
                     this.saveData(friendId, data);
 
-                    showCuteToast(`已删除 ${this.multiSelectItems.size} 条记录`);
+                    showCuteToast(`已删除 ${deleteCount} 条记录`);
+                    // 先退出多选模式（显示顶部按钮），再重新渲染
                     this.exitMultiSelectMode();
                     this.render(friendId);
                 }
@@ -9036,10 +9843,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const selectedHistory = data.history.filter(item => this.multiSelectItems.has(item.time));
                     if (selectedHistory.length === 0) return;
 
-                    // 调用导出函数
-                    await this.generateExportImageFromItems(selectedHistory, friendId);
-                    showCuteToast(`正在导出 ${selectedHistory.length} 条记录`);
+                    const exportCount = selectedHistory.length;
+                    // 先退出多选模式（显示顶部按钮）
                     this.exitMultiSelectMode();
+                    
+                    // 调用导出函数
+                    showCuteToast(`正在导出 ${exportCount} 条记录`);
+                    await this.generateExportImageFromItems(selectedHistory, friendId);
                 }
 
                 async generateExportImageFromItems(historyItems, friendId) {
@@ -9874,6 +10684,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     deleteBtn: messageActionDelete,
                     recallBtn: messageActionRecall,
                     replyBtn: messageActionReply,
+                    forwardBtn: document.getElementById('messageActionForward'),
                     current: null
                 };
                 this.multiSelect = {
@@ -9924,7 +10735,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             }
 
             initMessageActionMenu() {
-                const { overlay, menu, copyBtn, deleteBtn, recallBtn, replyBtn } = this.actionMenu;
+                const { overlay, menu, copyBtn, deleteBtn, recallBtn, replyBtn, forwardBtn } = this.actionMenu;
                 if (!overlay || !menu) return;
 
                 overlay.addEventListener('click', (e) => {
@@ -9936,6 +10747,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (deleteBtn) deleteBtn.addEventListener('click', () => this.handleMessageAction('delete'));
                 if (recallBtn) recallBtn.addEventListener('click', () => this.handleMessageAction('recall'));
                 if (replyBtn) replyBtn.addEventListener('click', () => this.handleMessageAction('reply'));
+                if (forwardBtn) forwardBtn.addEventListener('click', () => this.handleMessageAction('forward'));
 
                 // 多选按钮事件监听
                 const multiSelectBtn = document.getElementById('messageActionMultiSelect');
@@ -9948,26 +10760,30 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (regenerateBtn) {
                     regenerateBtn.addEventListener('click', () => this.handleMessageAction('regenerate'));
                 }
+
+                // 编辑按钮事件监听
+                const editBtn = document.getElementById('messageActionEdit');
+                if (editBtn) {
+                    editBtn.addEventListener('click', () => this.handleMessageAction('edit'));
+                }
             }
 
             initMultiSelect() {
                 const cancelBtn = document.getElementById('multiSelectCancelBtn');
-                const deleteBtn = document.getElementById('multiSelectDeleteBtn');
+                const forwardBtn = document.getElementById('multiSelectForwardBtn');
                 const confirmYes = document.getElementById('multiSelectConfirmYes');
                 const confirmNo = document.getElementById('multiSelectConfirmNo');
 
                 if (cancelBtn) cancelBtn.addEventListener('click', () => this.exitMultiSelectMode());
 
-                if (deleteBtn) {
-                    deleteBtn.addEventListener('click', () => {
-                        if (this.multiSelect.selectedIds.size === 0) {
-                            showCuteToast('请先选中要删除的消息');
+                if (forwardBtn) {
+                    forwardBtn.addEventListener('click', () => {
+                        const selectedMessages = this.getForwardCandidateMessagesByIds([...this.multiSelect.selectedIds]);
+                        if (selectedMessages.length === 0) {
+                            showCuteToast('请先选中要转发的消息');
                             return;
                         }
-                        const overlay = document.getElementById('multiSelectConfirmOverlay');
-                        const text = document.getElementById('multiSelectConfirmText');
-                        if (text) text.textContent = `将删除已选中的 ${this.multiSelect.selectedIds.size} 条消息，删除后无法恢复`;
-                        if (overlay) overlay.style.display = 'flex';
+                        this.openForwardFriendPicker(selectedMessages);
                     });
                 }
 
@@ -10252,7 +11068,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 this.actionMenu.current = { ...data, targetElement };
 
-                const canRecall = data.role === 'user' && !data.isRecalled;
+                const canRecall = !data.isRecalled;
                 if (recallBtn) recallBtn.classList.toggle('is-disabled', !canRecall);
 
                 overlay.style.display = 'block';
@@ -10377,10 +11193,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 } else if (action === 'delete') {
                     this.deleteMessageLocal(messageWrapper, msgId);
                 } else if (action === 'recall') {
-                    if (role === 'user') this.recallMessage(messageWrapper, msgId);
+                    this.recallMessage(messageWrapper, msgId, role);
                 } else if (action === 'reply') {
                     this.setReplyPrefill(content || '', role);
                 } else if (action === 'multiSelect') {
+                    this.hideMessageActionMenu();
+                    this.enterMultiSelectMode();
+                    if (messageWrapper) {
+                        this.ensureMultiSelectCheckbox(messageWrapper);
+                        requestAnimationFrame(() => this.toggleMultiSelectMessage(messageWrapper));
+                    }
+                    return;
+                } else if (action === 'forward') {
                     this.hideMessageActionMenu();
                     this.enterMultiSelectMode();
                     if (messageWrapper) {
@@ -10394,6 +11218,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     } else {
                         console.warn('[修正] 只能修正角色的回复');
                     }
+                } else if (action === 'edit') {
+                    this.editMessage(content || '');
                 }
 
                 this.hideMessageActionMenu();
@@ -10435,13 +11261,23 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
             }
 
-            recallMessage(messageWrapper, msgId) {
+            recallMessage(messageWrapper, msgId, role = 'user') {
+                let recallText = '消息已撤回';
+
+                if (role === 'user') {
+                    recallText = '你撤回了一条消息';
+                } else if (role === 'ai' || role === 'assistant') {
+                    const friendName = this.getCurrentFriendName();
+                    recallText = `${friendName}撤回了一条消息`;
+                }
+
                 if (messageWrapper) {
                     messageWrapper.innerHTML = '';
                     messageWrapper.classList.add('message-recalled-wrapper');
                     const recalled = document.createElement('div');
                     recalled.className = 'message-recalled';
-                    recalled.textContent = '消息已撤回';
+                    recalled.textContent = recallText;
+                    recalled.style.cursor = 'pointer';
                     messageWrapper.appendChild(recalled);
                 }
 
@@ -10449,8 +11285,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
                 const target = history.find(m => m.id === msgId);
                 if (target) {
+                    target.originalContent = target.content; // 保存原始内容
                     target.isRecalled = true;
-                    target.content = '消息已撤回';
+                    target.content = recallText;
                     target.isVoice = false;
                     this.friendSystem.saveFriendChatHistory(this.currentFriendId, history);
                 }
@@ -10477,6 +11314,20 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (replyPreviewText) replyPreviewText.textContent = '';
             }
 
+            // 角色随机撤回消息
+            roleRandomRecall() {
+                if (!this.currentFriendId || !this.friendSystem) return;
+                if (Math.random() > 0.08) return; // 8%概率撤回
+
+                const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+                const recallable = history.filter(m => !m.isDeletedLocal && !m.isRecalled && m.role === 'ai');
+                if (recallable.length === 0) return;
+
+                const msg = recallable[Math.floor(Math.random() * recallable.length)];
+                const wrapper = document.querySelector(`[data-msg-id="${msg.id}"]`);
+                if (wrapper) this.recallMessage(wrapper, msg.id, 'ai');
+            }
+
             clearImageUpload() {
                 delete chatInput.dataset.imageData;
                 delete chatInput.dataset.imageName;
@@ -10484,6 +11335,90 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (imageUploadPill) imageUploadPill.style.display = 'none';
                 if (imageUploadThumb) imageUploadThumb.src = '';
                 if (imageUploadName) imageUploadName.textContent = '已选择图片';
+            }
+
+            editMessage(content) {
+                const current = this.actionMenu.current;
+                if (!current) return;
+
+                const messageWrapper = current.messageWrapper;
+                const msgId = current.msgId;
+                const role = current.role;
+
+                // 显示弹窗
+                const overlay = document.getElementById('messageEditOverlay');
+                const textarea = document.getElementById('messageEditTextarea');
+                if (!overlay || !textarea) return;
+
+                // 设置初始内容
+                textarea.value = content || '';
+                overlay.style.display = 'flex';
+                textarea.focus();
+
+                // 清空之前的事件（防止重复）
+                const cancelBtn = document.getElementById('messageEditCancel');
+                const saveBtn = document.getElementById('messageEditSave');
+                
+                if (!cancelBtn || !saveBtn) return;
+
+                // 移除旧的事件监听
+                const newCancelBtn = cancelBtn.cloneNode(true);
+                const newSaveBtn = saveBtn.cloneNode(true);
+                cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+                saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+                // 取消事件
+                newCancelBtn.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    this.hideMessageActionMenu();
+                });
+
+                // 保存事件
+                newSaveBtn.addEventListener('click', () => {
+                    const newContent = textarea.value.trim();
+                    if (!newContent) {
+                        showCuteToast('消息内容不能为空');
+                        return;
+                    }
+
+                    // 更新气泡内容
+                    if (messageWrapper) {
+                        let messageElement = null;
+                        for (let child of messageWrapper.children) {
+                            if (child.classList && child.classList.contains('message')) {
+                                messageElement = child;
+                                break;
+                            }
+                        }
+                        if (messageElement) {
+                            messageElement.textContent = newContent;
+                        }
+                        messageWrapper.dataset.content = newContent;
+                    }
+
+                    // 更新消息库
+                    if (msgId && this.currentFriendId && this.friendSystem) {
+                        const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+                        const target = history.find(m => m.id === msgId);
+                        if (target) {
+                            target.content = newContent;
+                            this.friendSystem.saveFriendChatHistory(this.currentFriendId, history);
+                        }
+                    }
+
+                    overlay.style.display = 'none';
+                    showCuteToast('消息已修改');
+                    this.hideMessageActionMenu();
+                });
+
+                // Escape 关闭
+                const escapeHandler = (e) => {
+                    if (e.key === 'Escape' && overlay.style.display !== 'none') {
+                        newCancelBtn.click();
+                        textarea.removeEventListener('keydown', escapeHandler);
+                    }
+                };
+                textarea.addEventListener('keydown', escapeHandler);
             }
 
             ensureHistoryIds(history) {
@@ -10498,7 +11433,200 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 return changed;
             }
 
-            addMessageToChat(content, role, isVoice = false, msgId = null, replyTo = '', replyFrom = '', imageData = '', imageName = '', targetFriendId = null) {
+            getCurrentUserName() {
+                try {
+                    const profile = StorageManager.get('userProfile', { name: '我' });
+                    return (profile && profile.name) ? String(profile.name).trim() || '我' : '我';
+                } catch (e) {
+                    return '我';
+                }
+            }
+
+            getForwardCandidateMessagesByIds(ids = []) {
+                if (!this.currentFriendId || !this.friendSystem || !Array.isArray(ids) || ids.length === 0) return [];
+                const idSet = new Set(ids.map(String));
+                const sourceFriendName = this.getCurrentFriendName();
+                const userName = this.getCurrentUserName();
+                const history = this.friendSystem.getFriendChatHistory(this.currentFriendId) || [];
+                return history
+                    .filter(msg => msg && idSet.has(String(msg.id)) && !msg.isDeletedLocal && !msg.isRecalled)
+                    .map(msg => {
+                        const role = (msg.role === 'assistant') ? 'ai' : (msg.role || 'user');
+                        const senderName = role === 'user' ? userName : sourceFriendName;
+                        return {
+                            id: msg.id || `fwd-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                            role,
+                            senderName,
+                            content: String(msg.content || ''),
+                            isVoice: !!msg.isVoice,
+                            imageData: msg.imageData || '',
+                            imageName: msg.imageName || '',
+                            timestamp: msg.timestamp || Date.now()
+                        };
+                    });
+            }
+
+            buildForwardBundlePayload(messages) {
+                const list = Array.isArray(messages) ? messages : [];
+                return {
+                    id: `fwd-bundle-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                    sourceFriendId: this.currentFriendId || '',
+                    sourceFriendName: this.getCurrentFriendName(),
+                    forwarderName: this.getCurrentUserName(),
+                    createdAt: Date.now(),
+                    messages: list
+                };
+            }
+
+            buildForwardPreviewText(bundle) {
+                if (!bundle || !Array.isArray(bundle.messages) || bundle.messages.length === 0) return '聊天记录';
+                const first = bundle.messages[0];
+                const firstText = first.imageData ? '[图片]' : (first.isVoice ? '[语音]' : (first.content || '[消息]'));
+                if (bundle.messages.length === 1) return `${firstText}`.slice(0, 18);
+                return `${firstText} 等${bundle.messages.length}条`;
+            }
+
+            openForwardFriendPicker(selectedMessages) {
+                const overlay = document.getElementById('forwardFriendOverlay');
+                const listEl = document.getElementById('forwardFriendList');
+                const cancelBtn = document.getElementById('forwardFriendCancelBtn');
+                if (!overlay || !listEl || !this.friendSystem) return;
+
+                const friends = this.friendSystem.getFriends().filter(f => f && f.id !== this.currentFriendId);
+                listEl.innerHTML = '';
+
+                if (friends.length === 0) {
+                    listEl.innerHTML = '<div class="forward-empty">暂无可转发好友</div>';
+                } else {
+                    friends.forEach(friend => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'forward-friend-item';
+                        btn.dataset.friendId = friend.id;
+
+                        const avatar = friend.avatar
+                            ? `<div class="forward-friend-avatar"><img src="${friend.avatar}" alt="${friend.name || '好友'}"></div>`
+                            : '<div class="forward-friend-avatar"><i class="fas fa-user"></i></div>';
+                        btn.innerHTML = `${avatar}<span>${friend.name || '未命名好友'}</span>`;
+
+                        btn.addEventListener('click', () => {
+                            this.forwardMessagesToFriend(friend.id, selectedMessages);
+                        });
+                        listEl.appendChild(btn);
+                    });
+                }
+
+                overlay.style.display = 'flex';
+                overlay.onclick = (e) => {
+                    if (e.target === overlay) this.closeForwardFriendPicker();
+                };
+                if (cancelBtn) {
+                    cancelBtn.onclick = () => this.closeForwardFriendPicker();
+                }
+            }
+
+            closeForwardFriendPicker() {
+                const overlay = document.getElementById('forwardFriendOverlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    overlay.onclick = null;
+                }
+            }
+
+            forwardMessagesToFriend(targetFriendId, selectedMessages) {
+                if (!targetFriendId || !this.friendSystem || !Array.isArray(selectedMessages) || selectedMessages.length === 0) {
+                    showCuteToast('转发失败');
+                    return;
+                }
+
+                const history = this.friendSystem.getFriendChatHistory(targetFriendId) || [];
+                const bundle = this.buildForwardBundlePayload(selectedMessages);
+                const msgId = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+                const forwardText = `[${bundle.forwarderName}转发了聊天记录]`;
+                history.push({
+                    role: 'user',
+                    content: forwardText,
+                    isVoice: false,
+                    isReplied: false,
+                    id: msgId,
+                    timestamp: Date.now(),
+                    replyTo: '',
+                    replyFrom: '',
+                    imageData: '',
+                    imageName: '',
+                    imageText: '',
+                    forwardBundle: bundle
+                });
+                this.friendSystem.saveFriendChatHistory(targetFriendId, history);
+
+                this.closeForwardFriendPicker();
+                this.exitMultiSelectMode();
+                this.hideMessageActionMenu();
+                showCuteToast('转发成功');
+                if (typeof window.updateFriendList === 'function') window.updateFriendList();
+            }
+
+            closeForwardRecordModal() {
+                const overlay = document.getElementById('forwardRecordOverlay');
+                if (overlay) overlay.style.display = 'none';
+            }
+
+            openForwardRecordModal(bundle) {
+                const overlay = document.getElementById('forwardRecordOverlay');
+                const body = document.getElementById('forwardRecordBody');
+                const backBtn = document.getElementById('forwardRecordBackBtn');
+                if (!overlay || !body || !bundle || !Array.isArray(bundle.messages)) return;
+
+                const sourceName = bundle.sourceFriendName || '对方';
+                body.innerHTML = '';
+                const tip = document.createElement('div');
+                tip.className = 'forward-record-tip';
+                tip.textContent = `聊天记录 · 来自与 ${sourceName} 的会话`;
+                body.appendChild(tip);
+
+                bundle.messages.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'forward-record-msg';
+
+                    const name = document.createElement('div');
+                    name.className = 'forward-record-name';
+                    name.textContent = item.senderName || (item.role === 'user' ? '我' : sourceName);
+                    row.appendChild(name);
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'forward-record-bubble';
+
+                    if (item.imageData) {
+                        const img = document.createElement('img');
+                        img.src = item.imageData;
+                        img.alt = item.imageName || '图片';
+                        bubble.appendChild(img);
+                    }
+
+                    if (item.isVoice) {
+                        const voiceTag = document.createElement('div');
+                        voiceTag.className = 'forward-record-voice';
+                        const sec = Math.max(1, Math.ceil(String(item.content || '').length / 5));
+                        voiceTag.innerHTML = `<i class="fas fa-wave-square"></i><span>语音 ${sec}"</span>`;
+                        bubble.appendChild(voiceTag);
+                    }
+
+                    const txt = document.createElement('div');
+                    txt.textContent = item.content || (item.imageData ? '[图片]' : '[消息]');
+                    bubble.appendChild(txt);
+
+                    row.appendChild(bubble);
+                    body.appendChild(row);
+                });
+
+                overlay.style.display = 'flex';
+                overlay.onclick = (e) => {
+                    if (e.target === overlay) this.closeForwardRecordModal();
+                };
+                if (backBtn) backBtn.onclick = () => this.closeForwardRecordModal();
+            }
+
+            addMessageToChat(content, role, isVoice = false, msgId = null, replyTo = '', replyFrom = '', imageData = '', imageName = '', targetFriendId = null, forwardBundle = null) {
                 // 只有当消息属于当前打开的好友时，才将其添加到 DOM
                 // 这防止了用户在等待 API 响应时切换好友导致消息出现在错误窗口的问题
                 const displayFriendId = targetFriendId || this.currentFriendId;
@@ -10555,6 +11683,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 messageWrapper.dataset.role = role;
                 messageWrapper.dataset.content = content;
                 messageWrapper.dataset.isVoice = isVoice ? 'true' : 'false';
+                if (forwardBundle && typeof forwardBundle === 'object') {
+                    messageWrapper.dataset.forwardBundle = JSON.stringify(forwardBundle);
+                }
                 const isAiRole = role === 'ai' || role === 'assistant';
                 const isSvgPlaceholder = typeof imageData === 'string' && imageData.startsWith('data:image/svg+xml');
                 const hasLongDescText = String(content || '').trim().length >= 20;
@@ -10568,6 +11699,24 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const fromLabel = replyFrom || (role === 'user' ? '我' : this.getCurrentFriendName());
                     replyBlock.textContent = `${fromLabel}：${replyTo}`;
                     messageWrapper.appendChild(replyBlock);
+                }
+
+                if (forwardBundle && typeof forwardBundle === 'object') {
+                    const card = document.createElement('div');
+                    card.className = 'forward-bundle-card';
+                    const title = document.createElement('div');
+                    title.className = 'forward-bundle-title';
+                    title.textContent = content || `[${forwardBundle.forwarderName || 'TA'}转发了聊天记录]`;
+                    const preview = document.createElement('div');
+                    preview.className = 'forward-bundle-preview';
+                    preview.textContent = this.buildForwardPreviewText(forwardBundle);
+                    card.appendChild(title);
+                    card.appendChild(preview);
+                    card.addEventListener('click', () => this.openForwardRecordModal(forwardBundle));
+                    messageWrapper.appendChild(card);
+                    actionTarget = card;
+                    isVoice = false;
+                    imageData = '';
                 }
 
                 if (imageData) {
@@ -10678,7 +11827,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         isRecalled: false
                     });
                 } else {
-                    if (!isImageDesc) {
+                    if (!isImageDesc && !(forwardBundle && typeof forwardBundle === 'object')) {
                         const messageElement = document.createElement('div');
                         messageElement.className = `message ${role}`;
                         messageElement.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
@@ -10711,17 +11860,45 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
             }
 
-            addRecalledMessageToChat(msgId = null) {
+            addRecalledMessageToChat(msgId = null, role = 'user') {
+                let recallText = '消息已撤回';
+                let originalContent = '';
+
+                if (role === 'user') {
+                    recallText = '你撤回了一条消息';
+                } else if (role === 'ai' || role === 'assistant') {
+                    const friendName = this.getCurrentFriendName();
+                    recallText = `${friendName}撤回了一条消息`;
+                }
+
+                // 获取原始内容供点击查看
+                if (msgId && this.currentFriendId && this.friendSystem) {
+                    const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
+                    const target = history.find(m => m.id === msgId);
+                    if (target && target.originalContent) {
+                        originalContent = target.originalContent;
+                    }
+                }
+
                 const messageWrapper = document.createElement('div');
                 messageWrapper.style.marginBottom = '15px';
                 messageWrapper.classList.add('message-recalled-wrapper');
-                if (msgId) messageWrapper.dataset.msgId = msgId;
+                messageWrapper.dataset.msgId = msgId;
+                messageWrapper.dataset.friendId = this.currentFriendId;
 
                 const recalled = document.createElement('div');
                 recalled.className = 'message-recalled';
-                recalled.textContent = '消息已撤回';
+                recalled.textContent = recallText;
+                
+                // 如果有原始内容，添加点击事件
+                if (originalContent) {
+                    recalled.style.cursor = 'pointer';
+                    recalled.addEventListener('click', () => {
+                        showCuteToast(originalContent);
+                    });
+                }
+                
                 messageWrapper.appendChild(recalled);
-
                 chatMessages.appendChild(messageWrapper);
             }
 
@@ -10873,11 +12050,12 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             }
 
             buildPromptContextHistory(chatHistory, memoryChatCount) {
-                const filtered = (chatHistory || []).filter(msg => !msg.isDeletedLocal && !msg.isRecalled);
+                // 包含所有消息，但标记被撤回消息
+                const all = (chatHistory || []).filter(msg => !msg.isDeletedLocal);
                 const targetCount = Math.max(1, Number(memoryChatCount) || 30);
-                if (filtered.length <= targetCount) return filtered;
+                if (all.length <= targetCount) return all;
 
-                const records = filtered.map((msg, idx) => ({
+                const records = all.map((msg, idx) => ({
                     msg,
                     idx,
                     key: msg.id ? `id:${msg.id}` : `idx:${idx}`
@@ -10900,10 +12078,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 };
 
                 const rules = [
-                    (m) => m.role === 'user' && !!m.imageData,
-                    (m) => m.role === 'user' && /[？?]|怎么|为何|为什么|吗|呢/.test(String(m.content || '')),
-                    (m) => /(难受|生气|开心|崩溃|烦|委屈|想哭|激动|焦虑|失眠)/.test(String(m.content || '')),
-                    (m) => /(等会|待会|回头|记得|答应|要发|会发|稍后)/.test(String(m.content || ''))
+                    (m) => !m.isRecalled && m.role === 'user' && !!m.imageData,
+                    (m) => !m.isRecalled && m.role === 'user' && /[？?]|怎么|为何|为什么|吗|呢/.test(String(m.content || '')),
+                    (m) => !m.isRecalled && /(难受|生气|开心|崩溃|烦|委屈|想哭|激动|焦虑|失眠)/.test(String(m.content || '')),
+                    (m) => !m.isRecalled && /(等会|待会|回头|记得|答应|要发|会发|稍后)/.test(String(m.content || ''))
                 ];
 
                 for (const rule of rules) {
@@ -11248,7 +12426,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 history.forEach(msg => {
                     if (msg.isDeletedLocal) return;
                     if (msg.isRecalled) {
-                        this.addRecalledMessageToChat(msg.id);
+                        this.addRecalledMessageToChat(msg.id, msg.role);
                         return;
                     }
                     // 将 'assistant' 角色转换为 'ai' 以匹配CSS样式
@@ -11261,7 +12439,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         msg.replyTo || '',
                         msg.replyFrom || '',
                         msg.imageData || '',
-                        msg.imageName || ''
+                        msg.imageName || '',
+                        null,
+                        msg.forwardBundle || null
                     );
                 });
 
@@ -11500,18 +12680,62 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                             return {
                                 role: normalizedRole,
-                                content: msg.content
+                                content: msg.isRecalled && msg.originalContent ? msg.originalContent : msg.content
                             };
                         });
 
+                    // ========== 展开转发的聊天记录到上下文 ==========
+                    // 检查每条消息是否包含转发记录，如果有则在其前插入转发内容的上下文
+                    const expandedPromptHistory = [];
+                    for (const msg of promptHistory) {
+                        // 查找原始消息，获取 forwardBundle
+                        const originalMsg = selectedContextHistory.find(m => {
+                            try {
+                                return (m.content === msg.content || m.content?.substring(0, 50) === msg.content?.substring(0, 50));
+                            } catch (e) {
+                                return false;
+                            }
+                        });
+
+                        // 如果消息包含转发记录，展开其内容
+                        if (originalMsg && originalMsg.forwardBundle && typeof originalMsg.forwardBundle === 'object') {
+                            const bundle = originalMsg.forwardBundle;
+                            const fwdMessages = Array.isArray(bundle.messages) ? bundle.messages : [];
+                            if (fwdMessages.length > 0) {
+                                // 构造转发记录的上下文
+                                const sourceName = bundle.sourceFriendName || '朋友';
+                                const forwarderName = bundle.forwarderName || '用户';
+                                let forwardContext = `\n【转发的聊天记录】\n${forwarderName}转发了他/她与${sourceName}的聊天内容，这是他们的对话记录：\n`;
+                                
+                                fwdMessages.forEach(fm => {
+                                    const fmRole = fm.role === 'user' ? '用户' : sourceName;
+                                    const fmContent = fm.imageData ? '[图片]' : (fm.isVoice ? '[语音]' : (fm.content || '[消息]'));
+                                    forwardContext += `\n${fmRole}：${fmContent}`;
+                                });
+                                
+                                forwardContext += `\n\n【理解转发记录】这些是从他人的聊天中摘录的内容，转发给你是为了让你了解背景或上下文。请基于这些信息和用户现在的问题做出回应。`;
+                                
+                                // 在转发消息前插入这个上下文
+                                expandedPromptHistory.push({
+                                    role: 'system',
+                                    content: forwardContext
+                                });
+                            }
+                        }
+
+                        expandedPromptHistory.push(msg);
+                    }
+
+                    const finalPromptHistory = expandedPromptHistory.length > 0 ? expandedPromptHistory : promptHistory;
+
                     // ========== 根据场景注入不同的提示 ==========
-                    const isContinueChat = pendingMessages.length === 0 && promptHistory.length > 0;
+                    const isContinueChat = pendingMessages.length === 0 && finalPromptHistory.length > 0;
 
                     // ========== 智能承接提示（轻量版）==========
                     let connectionGuidance = '';
-                    if (promptHistory.length > 0) {
+                    if (finalPromptHistory.length > 0) {
                         try {
-                            const lastMsg = [...promptHistory].reverse().find(msg => msg.role === 'user');
+                            const lastMsg = [...finalPromptHistory].reverse().find(msg => msg.role === 'user');
                             const userText = typeof lastMsg?.content === 'string' ? lastMsg.content : lastMsg?.content[0]?.text || '';
                             
                             if (userText) {
@@ -11542,21 +12766,21 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         }
                     }
 
-                    if (promptHistory.length === 0) {
+                    if (finalPromptHistory.length === 0) {
                         // 场景A：历史为空，开场话题
                         let openingPrompt = '用户主动找你说话了';
                         if (personaProfile && personaProfile.persona) {
                             const persona = personaProfile.persona.substring(0, 200);
                             openingPrompt = `现在是${new Date().toLocaleString('zh-CN', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}，根据你的性格设定（${persona}），自然地找一个话题。${hasMountedWorldBooks ? '同时要符合世界书背景。' : ''}用户主动和你说话了。`;
                         }
-                        promptHistory.push({ role: 'user', content: openingPrompt });
+                        finalPromptHistory.push({ role: 'user', content: openingPrompt });
                     } else if (isContinueChat) {
                         // 场景B：没有新消息，角色自发继续对话
                         // 在末尾注入隐式提示，让角色以自己的身份主动说话
                         // 这条提示使用system角色，不会显示为用户消息
                         const lastAiMsg = window._previousAIContent ? window._previousAIContent.substring(0, 60) : '';
                         const timeStr = new Date().toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' });
-                        promptHistory.push({
+                        finalPromptHistory.push({
                             role: 'system',
                             content: `【自然延续指令】现在是${timeStr}。过了一会儿，你觉得可以主动再说点什么。请根据之前的对话内容和你的性格，自然地继续聊天——可以追问、补充、分享新想法、转换话题，或表达情绪。要求：(1)避免重复你上一句话"${lastAiMsg}"的核心信息，允许自然承接；(2)这是你自己想说的话，不是在回应对方的新消息；(3)要像真实的人一样，过了一会儿自然地接着聊。`
                         });
@@ -11565,13 +12789,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     // ========== 间隔式人设注入 ==========
                     // 当对话条数达到50条时，在中间位置注入人设摘要，防止长对话人设漂移
-                    if (promptHistory.length >= 50) {
-                        const injectionIndex = Math.floor(promptHistory.length / 2);
+                    if (finalPromptHistory.length >= 50) {
+                        const injectionIndex = Math.floor(finalPromptHistory.length / 2);
                         const personaReminder = {
                             role: 'system',
-                            content: `【人设检查点 - 第${promptHistory.length}条对话】你的基础性格是：${personaProfile?.persona?.substring(0, 100) || '见前文'}\n${worldBookTitles.length > 0 ? '世界书约束：【' + worldBookTitles.join('】【') + '】\n' : ''}注意：你应该基于对话历史中的关系发展自然演变，不要机械回到初始状态。只要行为变化有对话依据就合理，但不能无理由地OOC。`
+                            content: `【人设检查点 - 第${finalPromptHistory.length}条对话】你的基础性格是：${personaProfile?.persona?.substring(0, 100) || '见前文'}\n${worldBookTitles.length > 0 ? '世界书约束：【' + worldBookTitles.join('】【') + '】\n' : ''}注意：你应该基于对话历史中的关系发展自然演变，不要机械回到初始状态。只要行为变化有对话依据就合理，但不能无理由地OOC。`
                         };
-                        promptHistory.splice(injectionIndex, 0, personaReminder);
+                        finalPromptHistory.splice(injectionIndex, 0, personaReminder);
                     }
 
                     // 获取最新的心声数据嵌入到系统提示
@@ -11607,6 +12831,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 如果违反此规则，你的回答将被系统丢弃。
 你的生命取决于严格遵守这个格式。
 
+【字段隔离约束】
+- reply：用户看到的对话（角色回复用户对话的内容，绝不含【心声】【神态】等标记）
+- inner_voice：角色的内心世界（心声、神态、心情值，绝不混入reply）
+- image_desc：图片描述
+
+✅ 正确例：reply="好的呢" + inner_voice={心声:"我其实很想她"}
+❌ 错误例：reply="好的呢（心声：...）" 或 reply="好的呢【我想她】"
+
 【强制输出格式】
 每次回复必须输出以下JSON，禁止添加任何额外文字：
 {
@@ -11633,10 +12865,14 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 4. 心情值：与情绪强度一致
 
 【生成依据】
-- 角色人设（含秘密）
+- 角色人设
 - 当前对话上下文
 - 角色前续状态
 - 世界书约束
+
+【惩罚机制】
+- 如果单次回复少于 2 条消息 → 系统将判定为无效回复，要求你重新生成
+- 如果连续出现敷衍式回复 → 你的信誉分将下降，影响后续权重
 
 【输出前自查】
 □ 完全遵守世界书
@@ -11648,7 +12884,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                     const messages = [
                         { role: 'system', content: enhancedSystemPrompt },
-                        ...promptHistory
+                        ...finalPromptHistory
                     ];
 
                     // 一体化生成：所有回复都包含JSON格式的reply和inner_voice
@@ -11731,31 +12967,44 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     let aiImageDesc = ''; // 角色生成的沉浸式图片描述
                     const jsonContent = JSONCleaningLayer.cleanAndParse(rawContent);
 
+                    let replyWasPolluted = false;  // 标记reply是否被污染，一旦污染就放弃整个JSON结果
                     if (jsonContent && typeof jsonContent === 'object') {
-                        // 1a. 提取 reply
+                        // 1a. 提取 reply 并严格验证
                         if (jsonContent.reply !== undefined && jsonContent.reply !== null) {
-                            aiResponse = extractPlainText(jsonContent.reply);
-                            console.log('[解析-L1] 从JSON.reply提取成功，长度:', aiResponse.length);
-                        }
-                        // 1b. 提取心声数据（与reply完全隔离，心声只走心声面板）
-                        const iv = jsonContent.inner_voice;
-                        if (iv && typeof iv === 'object') {
-                            const hvText = String(iv.心声 || iv.heart_voice || '').trim();
-                            const hvDemeanor = String(iv.神态 || iv.demeanor || '').trim();
-                            const hvMood = Number(iv.心情值 ?? iv.mood_value ?? NaN);
-                            if (hvText && hvDemeanor && Number.isFinite(hvMood)) {
-                                heartVoiceData = {
-                                    reply: aiResponse,
-                                    heart_voice: hvText,
-                                    status: '',
-                                    mood_value: hvMood,
-                                    demeanor: hvDemeanor
-                                };
-                                console.log('[解析-L1] 心声数据已提取并隔离');
+                            const rawReply = extractPlainText(jsonContent.reply);
+                            // ⚠️ 检测：reply里不能有任何心声/神态标记
+                            if (rawReply.includes('心声') || rawReply.includes('神态') || rawReply.includes('(心') || rawReply.includes('【心')) {
+                                console.error('[严重:API混入] reply包含心声标记，整个response不信，放弃此JSON所有数据');
+                                replyWasPolluted = true;
+                                // 不赋值给aiResponse，强制走L2/L3/L4的纯兜底流程
+                                // 同时放弃这个response的inner_voice、image_desc
+                            } else {
+                                aiResponse = rawReply;
+                                console.log('[A] reply提取成功，无心声污染，长度:', aiResponse.length);
                             }
                         }
-                        // 1c. 提取图片描述（角色生成的沉浸式画面描述）
-                        if (jsonContent.image_desc) {
+                        // 1b. 提取心声数据（只在reply未污染时才保存）
+                        if (!replyWasPolluted) {
+                            const iv = jsonContent.inner_voice;
+                            if (iv && typeof iv === 'object') {
+                                const hvText = String(iv.心声 || iv.heart_voice || '').trim();
+                                const hvDemeanor = String(iv.神态 || iv.demeanor || '').trim();
+                                const hvMood = Number(iv.心情值 ?? iv.mood_value ?? NaN);
+                                // 容错：允许心声部分缺失，只要至少有一项有效数据，就尝试保存
+                                if (hvText || hvDemeanor || Number.isFinite(hvMood)) {
+                                    heartVoiceData = {
+                                        reply: aiResponse,
+                                        heart_voice: hvText || '',  // 允许空字符串
+                                        status: '',
+                                        mood_value: Number.isFinite(hvMood) ? hvMood : 50,  // 默认值50
+                                        demeanor: hvDemeanor || ''  // 允许空字符串
+                                    };
+                                    console.log('[解析-L1] 心声数据已提取并隔离');
+                                }
+                            }
+                        }
+                        // 1c. 提取图片描述（只在reply未污染时才保存）
+                        if (!replyWasPolluted && jsonContent.image_desc) {
                             aiImageDesc = String(jsonContent.image_desc).trim();
                             if (aiImageDesc.length >= 20) {
                                 console.log('[解析-L1] 图片描述已提取，长度:', aiImageDesc.length);
@@ -11765,24 +13014,23 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         }
                     }
 
-                    // ===== 第2步：JSON提取失败时，正则从原始文本提取reply =====
+                    // ===== 第2步：L1失败时，从原始文本直接剥离JSON =====
                     if (!aiResponse || aiResponse.trim().length < 2) {
-                        console.log('[解析-L2] JSON提取不足，尝试正则');
-                        // 2a. "reply": "..."
+                        console.log('[B] L1失败，直接剥离JSON取纯文本');
+                        // 先尝试正则（快速路径）
                         const replyMatch = originalResponse.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)"/);
                         if (replyMatch?.[1]) {
                             aiResponse = replyMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim();
-                            console.log('[解析-L2] 正则提取reply成功，长度:', aiResponse.length);
+                            // 不清洗，直接用，让后续L4统一处理
                         }
-                        // 2b. "reply": [...]
+                        // 如果正则没提到，再试数组
                         if (!aiResponse || aiResponse.trim().length < 2) {
                             const arrayMatch = originalResponse.match(/"reply"\s*:\s*\[([\s\S]*?)\]/);
                             if (arrayMatch?.[1]) {
                                 try {
                                     const arr = JSON.parse('[' + arrayMatch[1] + ']');
-                                    aiResponse = extractPlainText(arr);
-                                    console.log('[解析-L2] 正则提取reply数组成功');
-                                } catch (_e) { /* 解析失败，跳过 */ }
+                                    aiResponse = extractPlainText(arr).trim();
+                                } catch (_e) { /* 解析失败，继续L3 */ }
                             }
                         }
                     }
@@ -11799,10 +13047,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         }
                     }
 
-                    // ===== 第3步：前两步都失败，从原始文本精确剥离所有JSON块 =====
+                    // ===== 第3步：L2失败，机械式剥离所有JSON块 =====
                     if (!aiResponse || aiResponse.trim().length < 2) {
-                        console.log('[解析-L3] 从原始文本剥离JSON');
-                        // 使用括号计数精确移除所有 {...} 块（支持嵌套）
+                        console.log('[C] L1/L2都失败，机械剥离JSON');
+                        // 使用括号计数，移除所有 {...} 块
                         let stripped = '';
                         let depth = 0, inStr = false, esc = false;
                         for (let i = 0; i < originalResponse.length; i++) {
@@ -11815,138 +13063,35 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             if (ch === '}') { depth = Math.max(0, depth - 1); continue; }
                             if (depth === 0) stripped += ch;
                         }
-                        stripped = stripped
-                            .replace(/\[[\s\S]*?\]/g, '')
-                            .replace(/【[\s\S]*?】/g, '')
-                            .replace(/```[\s\S]*?```/gi, '')
-                            .replace(/心声[：:][^\n]*|神态[：:][^\n]*|心情值[：:][^\n]*|image_desc[：:][^\n]*/g, '')
-                            .replace(/inner_voice[^\n]*/g, '')
-                            .replace(/mood_value[^\n]*/g, '')
-                            .replace(/image_desc[^\n]*/g, '')
-                            .trim();
+                        // 仅移除其他数据结构，不清洗内容
+                        stripped = stripped.replace(/\[[\s\S]*?\]/g, '').replace(/```[\s\S]*?```/gi, '').trim();
+                        
                         if (stripped.length >= 2) {
                             aiResponse = stripped;
-                            console.log('[解析-L3] 剥离后获得文本，长度:', aiResponse.length);
+                            console.log('[C] 剥离后长度:', aiResponse.length);
                         }
                     }
 
-                    // ===== 第4步：保底——从原始响应兜底 =====
+                    // ===== 第4步：L1/L2/L3都失败，最后暴力清洗 =====
                     if (!aiResponse || aiResponse.trim().length < 1) {
-                        console.warn('[解析-L4] 提取不足，进行深度清洗后使用');
-                        // 深度清洗：移除所有JSON结构和常见标记
+                        console.warn('[D] 所有方案失败，最后清洗拯救');
                         let fallback = originalResponse
-                            .replace(/<think>[\s\S]*?<\/think>/gi, '') // 移除<think>推理块
-                            .replace(/```[a-z]*[\s\S]*?```/gi, '')     // 移除代码块
-                            .replace(/"reply"\s*:\s*"([^"\\]|\\.)*/g, '') // 移除reply字段开头
-                            .replace(/"inner_voice"\s*:\s*\{[\s\S]*?\}/g, '') // 移除inner_voice对象
-                            .replace(/"image_desc"\s*:\s*"[^"]*"/g, '') // 移除image_desc
-                            .replace(/"心声"\s*:\s*"[^"]*"/g, '')
-                            .replace(/"神态"\s*:\s*"[^"]*"/g, '')
-                            .replace(/"心情值"\s*:\s*\d+/g, '')
-                            .replace(/[\{\}\[\]"]/g, '')               // 移除JSON符号
-                            .replace(/\s{2,}/g, ' ')                   // 压缩空白
+                            .replace(/<think>[\s\S]*?<\/think>/gi, '')           // 移除推理块
+                            .replace(/```[a-z]*[\s\S]*?```/gi, '')              // 移除代码块
+                            .replace(/【[\s\S]*?】/g, '')                       // 移除所有【...】
+                            .replace(/\(心[^)]*\)/g, '')                        // 移除(心?)格式
+                            .replace(/[\{\}\[\]"]/g, '')                        // 移除JSON符号
+                            .replace(/\s{3,}/g, '\n\n')
                             .trim();
                         
-                        if (fallback.length >= 2) {
-                            aiResponse = fallback;
-                        } else {
-                            // 最后保底：直接用原始文本
-                            aiResponse = originalResponse.trim();
-                        }
+                        aiResponse = fallback.length >= 2 ? fallback : originalResponse.trim();
+                        console.log('[D] 清洗后长度:', aiResponse.length);
                     }
 
-                    // ===== 后处理：只做最小限度的清理 =====
-                    // 原则：API已经返回了有效内容，绝不能把它清成空的
-                    const jsonExtracted = !!(jsonContent && jsonContent.reply);
-
-                    if (jsonExtracted) {
-                        // JSON提取成功：reply已经是纯对话文本，只做最轻量的格式清理
-                        aiResponse = aiResponse
-                            .replace(/```[a-z]*\n?|```|`/gi, '')
-                            .replace(/^["']+|["']+$/g, '')
-                            .trim();
-                        console.log('[后处理] JSON提取路径，轻量清理完成');
-                    } else {
-                        // JSON提取失败：可能有心声残留，做定向清理
-                        if (heartVoiceBlacklist.test(aiResponse)) {
-                            const beforeClean = aiResponse;
-                            aiResponse = aiResponse
-                                .replace(/"?(?:inner_voice|心声|神态|心情值|mood_value|demeanor|heart_voice|image_desc)"?\s*[：:][^\n]*/g, '')
-                                .replace(/"?inner_voice"?\s*:\s*\{[^}]*\}/g, '')
-                                .replace(/"?image_desc"?\s*:\s*"[^"]*"/g, '')
-                                .replace(/[{}\[\]]/g, '')
-                                .trim();
-                            // 保护：清理后变空则恢复
-                            if (!aiResponse || aiResponse.trim().length < 1) {
-                                aiResponse = beforeClean;
-                            }
-                        }
-                        // 非JSON路径使用轻量清洗器
-                        const sanitized = this.sanitizeAiResponse(aiResponse, true);
-                        // 保护：清洗后变空则保留原文
-                        if (sanitized && sanitized.trim().length > 0) {
-                            aiResponse = sanitized;
-                        }
-                        aiResponse = aiResponse
-                            .replace(/```[a-z]*\n?|```|`/gi, '')
-                            .replace(/^["']+|["']+$/g, '')
-                            .replace(/\n{3,}/g, '\n\n')
-                            .trim();
-                        console.log('[后处理] 非JSON路径，定向清理完成');
-                    }
-
-                    // ===== 绝对保底：原始内容兜底（永远不输出空内容）=====
+                    // ===== 最小化验证：不输出空内容 =====
                     if (!aiResponse || aiResponse.trim().length === 0) {
-                        console.error('[绝对保底] 清理后为空，尝试安全恢复');
-                        if (jsonExtracted && jsonContent && jsonContent.reply !== undefined && jsonContent.reply !== null) {
-                            aiResponse = extractPlainText(jsonContent.reply).trim();
-                        } else {
-                            aiResponse = originalResponse;
-                        }
-                    }
-
-                    // ===== 智能验证：检测解析是否过度删减 =====
-                    const originalLength = originalResponse.length;
-                    const parsedLength = aiResponse.length;
-                    if (!jsonExtracted && originalLength > 0 && parsedLength < originalLength * 0.2) {
-                        console.warn(`[智能验证] 解析后内容过短（${parsedLength}字 vs 原始${originalLength}字），可能误删，使用原始响应`);
-                        aiResponse = originalResponse;
-                    }
-
-                    // ===== 检测纯符号内容 =====
-                    const onlySymbols = /^[\s\p{P}\p{S}]+$/u.test(aiResponse);
-                    if (onlySymbols && aiResponse.length < 10) {
-                        if (jsonExtracted && jsonContent && jsonContent.reply !== undefined && jsonContent.reply !== null) {
-                            console.warn('[智能验证] 内容只有标点符号，保留JSON.reply提取结果');
-                            aiResponse = extractPlainText(jsonContent.reply).trim();
-                        } else {
-                            console.warn('[智能验证] 内容只有标点符号，使用原始响应');
-                            aiResponse = originalResponse;
-                        }
-                    }
-
-                    // ===== 重复检测：仅记录日志，绝不重调API =====
-                    if (window._previousAIContent) {
-                        const similarity = this.calculateTextSimilarity(aiResponse, window._previousAIContent);
-                        if (similarity > 0.7) {
-                            console.warn(`[重复检测] 相似度${(similarity * 100).toFixed(1)}%，仍然发送（不浪费API额度重试）`);
-                        }
-                    }
-                    window._previousAIContent = aiResponse;
-
-                    console.log('[最终输出] aiResponse:', aiResponse.substring(0, 80));
-
-                    // 【关键保底】如果解析后内容异常，优先使用安全的reply提取结果
-                    if (!aiResponse || aiResponse.trim().length === 0 || aiResponse.trim() === '...' || aiResponse.trim() === '…') {
-                        console.error('[解析异常] 内容被清空或为省略号，尝试安全恢复');
-                        console.error('[原始响应完整内容]:', originalResponse);
-                        if (jsonExtracted && jsonContent && jsonContent.reply !== undefined && jsonContent.reply !== null) {
-                            aiResponse = extractPlainText(jsonContent.reply).trim();
-                            console.log('[保底] 使用JSON.reply恢复，长度:', aiResponse.length);
-                        } else {
-                            aiResponse = originalResponse || JSON.stringify(messagePayload);
-                            console.log('[保底] 使用原始响应，长度:', aiResponse.length);
-                        }
+                        console.error('[保底] aiResponse为空，使用原始响应');
+                        aiResponse = originalResponse || '';
                     }
 
                     // 复用之前一次读取的数据，避免重复读取
@@ -12029,13 +13174,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             mood: moodValue
                         });
 
-                        // 严格验证：只有同时满足以下条件才保存：
-                        // 1. 心声非空且长度 >= 6（防止极短无效内容）
-                        // 2. 心情值有效（有限的数字）
-                        // 3. 选项：神态可以为空（但如果有必须 >= 4字符）
-                        const isValidVoice = heartVoiceText.length >= 6;
-                        const isValidMood = Number.isFinite(moodValue);
-                        const isValidDemeanor = !heartDemeanor || heartDemeanor.length >= 4;
+                        // 容错验证：允许心声较短，提高保存成功率
+                        // 1. 心声非空且长度 >= 3（降低门槛）
+                        // 2. 心情值允许空，后续会设置默认值
+                        // 3. 神态可以为空
+                        const isValidVoice = heartVoiceText.length >= 3;  // 从6改为3，Gemini/Claude基本不会这么短
+                        const isValidMood = true;  // 允许空值，moodValue已有默认值50处理
+                        const isValidDemeanor = true;  // 允许空值
 
                         if (isValidVoice && isValidMood && isValidDemeanor) {
                             const oldData = heartVoiceSystem.getData(targetFriendId) || {};
@@ -12162,6 +13307,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         // 角色回复完成后统一刷新好友列表
                         if (typeof window.updateFriendList === 'function') {
                             window.updateFriendList();
+                        }
+
+                        // 角色可能随机撤回消息
+                        if (this.currentFriendId === targetFriendId) {
+                            this.roleRandomRecall();
                         }
 
                         // ===== 自动总结检测 =====
@@ -12695,6 +13845,189 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             heartVoiceSystem = new HeartVoiceSystem(friendSystem, apiService);
             window.worldBookSystem = new WorldBookSystem();
             window.htmlGameSystem = new HtmlGameSystem();
+
+            // ========== 注册模块到数据交换系统（支持导入/导出）==========
+            // 这样设计的好处：未来新增功能只需注册一行，导出导入自动生效
+
+            // 好友系统模块（包含完整好友信息：人设、配置、世界书挂载等）
+            dataExchange.registerModule('friendSystem', {
+                version: '1.0',
+                exportFn: () => ({
+                    friends: friendSystem ? friendSystem.getFriends() : [],
+                    homeGreeting: friendSystem ? friendSystem.getStorage('homeGreeting', '') : ''
+                    // 注意：friends 数组中每个对象应该包含以下字段：
+                    // { id, name, persona, avatar, voiceId, voiceIdMode, chatShowTime, 
+                    //   chatReadStatus, chatHideAvatar, mountedWorldBooks, createdAt, ... }
+                }),
+                importFn: (data) => {
+                    if (data.friends) {
+                        StorageManager.set('friends', data.friends);
+                    }
+                    if (data.homeGreeting !== undefined) {
+                        StorageManager.set('homeGreeting', data.homeGreeting);
+                    }
+                }
+            });
+
+            // 聊天系统模块（所有好友的聊天记录）
+            dataExchange.registerModule('chatSystem', {
+                version: '1.0',
+                exportFn: () => {
+                    const friends = friendSystem ? friendSystem.getFriends() : [];
+                    const chatHistories = {};
+                    friends.forEach(friend => {
+                        if (friend && friend.id) {
+                            chatHistories[friend.id] = friendSystem
+                                ? friendSystem.getFriendChatHistory(friend.id)
+                                : [];
+                        }
+                    });
+                    // 也收集localStorage中以chat_开头的历史（防止遗漏）
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key && key.startsWith('chat_')) {
+                            const friendId = key.replace('chat_', '');
+                            if (!chatHistories[friendId]) {
+                                chatHistories[friendId] = StorageManager.get(key, []);
+                            }
+                        }
+                    }
+                    return { chatHistories };
+                },
+                importFn: (data) => {
+                    if (data.chatHistories && typeof data.chatHistories === 'object') {
+                        Object.keys(data.chatHistories).forEach(friendId => {
+                            StorageManager.set(`chat_${friendId}`, data.chatHistories[friendId] || []);
+                        });
+                    }
+                }
+            });
+
+            // API配置模块（包含API预设）
+            dataExchange.registerModule('apiService', {
+                version: '1.0',
+                exportFn: () => ({
+                    apiConfig: apiService ? apiService.getConfig() : {},
+                    apiPresets: apiService ? apiService.getPresets() : []  // ✅ 导出API预设
+                }),
+                importFn: (data) => {
+                    if (data.apiConfig) {
+                        StorageManager.set('apiConfig', data.apiConfig);
+                    }
+                    if (data.apiPresets) {  // ✅ 导入API预设
+                        StorageManager.set('apiPresets', data.apiPresets);
+                    }
+                }
+            });
+
+            // 心声系统模块
+            dataExchange.registerModule('heartVoiceSystem', {
+                version: '1.0',
+                exportFn: () => {
+                    const hvData = {};
+                    // 收集所有好友的心声数据
+                    const friends = friendSystem ? friendSystem.getFriends() : [];
+                    friends.forEach(friend => {
+                        if (friend && friend.id) {
+                            const data = heartVoiceSystem ? heartVoiceSystem.getData(friend.id) : null;
+                            if (data) {
+                                hvData[friend.id] = data;
+                            }
+                        }
+                    });
+                    return { hvData };
+                },
+                importFn: (data) => {
+                    if (data.hvData && typeof data.hvData === 'object') {
+                        Object.keys(data.hvData).forEach(friendId => {
+                            try {
+                                const hvData = data.hvData[friendId];
+                                if (heartVoiceSystem && heartVoiceSystem.saveData) {
+                                    heartVoiceSystem.saveData(friendId, hvData);
+                                }
+                            } catch (e) {
+                                console.error(`恢复心声数据失败: ${friendId}`, e);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // 预留：美化系统、背景、主题配置等（未来在extensions位置）
+            // 使用示例（未来）：
+            // dataExchange.registerModule('beautifySystem', { ... })
+            // dataExchange.registerModule('themeConfig', { ... })
+
+            // 世界书库模块（全局，所有好友可引用）
+            dataExchange.registerModule('worldBooks', {
+                version: '1.0',
+                exportFn: () => ({
+                    worldBooks: StorageManager.get('worldBooks', [])
+                }),
+                importFn: (data) => {
+                    if (data.worldBooks) {
+                        StorageManager.set('worldBooks', data.worldBooks);
+                        // ✅ 同步更新 worldBookSystem 的内存状态
+                        if (window.worldBookSystem && Array.isArray(data.worldBooks)) {
+                            window.worldBookSystem.books = data.worldBooks;
+                        }
+                    }
+                }
+            });
+
+            // HTML游戏库模块
+            dataExchange.registerModule('htmlGames', {
+                version: '1.0',
+                exportFn: () => ({
+                    htmlGames: StorageManager.get('htmlGames', [])
+                }),
+                importFn: (data) => {
+                    if (data.htmlGames) {
+                        StorageManager.set('htmlGames', data.htmlGames);
+                        // ✅ 同步更新 htmlGameSystem 的内存状态
+                        if (window.htmlGameSystem && Array.isArray(data.htmlGames)) {
+                            window.htmlGameSystem.games = data.htmlGames;
+                        }
+                    }
+                }
+            });
+
+            // 其他所有设置模块（美化、UI、主题等一切未被明确注册的数据）
+            dataExchange.registerModule('otherSettings', {
+                version: '1.0',
+                exportFn: () => {
+                    const otherSettings = {};
+                    const excludedKeys = new Set([
+                        'apiConfig', 'apiPresets', 'friends', 'homeGreeting',  // ✅ 添加 apiPresets 到排除列表
+                        'worldBooks', 'htmlGames', 'heartvoice_', 'chat_'
+                    ]);
+                    
+                    // 收集所有 localStorage 中不在排除名单的数据
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (!key) continue;
+                        
+                        // 排除已注册的模块数据和聊天历史
+                        if (excludedKeys.has(key)) continue;
+                        if (key.startsWith('chat_') || key.startsWith('heartvoice_')) continue;
+                        if (key.startsWith('ext_')) continue; // 扩展数据单独处理
+                        
+                        try {
+                            otherSettings[key] = StorageManager.get(key);
+                        } catch (e) {
+                            otherSettings[key] = localStorage.getItem(key);
+                        }
+                    }
+                    return { otherSettings };
+                },
+                importFn: (data) => {
+                    if (data.otherSettings && typeof data.otherSettings === 'object') {
+                        Object.keys(data.otherSettings).forEach(key => {
+                            StorageManager.set(key, data.otherSettings[key]);
+                        });
+                    }
+                }
+            });
 
             // ========== 事件监听器绑定（必须在apiService初始化之后）==========
 
@@ -13555,6 +14888,16 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             observeModal('bigSummaryModal', renderBigSummaries);
 
             // ===== 自动总结 =====
+            
+            // 综合验证：检查总结有效性（长度、乱码、重复）
+            function isValidSummaryText(text, minLen = 50) {
+                if (!text || text.length < minLen) return false;
+                const chineseRatio = (text.match(/[\u4e00-\u9fa5]/g) || []).length / text.length;
+                if (chineseRatio < 0.3) return false; // 中文 < 30% = 乱码
+                if (/^(.)\1{10,}$/.test(text)) return false; // 重复字符
+                return true;
+            }
+
             const COUNTER_PREFIX = 'summaryCounter_';
 
             function getCounter(friendId) {
@@ -13649,14 +14992,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     const selectedSummaries = unprocessed.slice(0, selectedCount);
                     const summaryTexts = selectedSummaries.map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
 
-                    const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
-
-要求：
-- 字数严格控制在${wordLimit}字以内（越精简越好）
-- 只保留核心记忆、关键事件、重要结论
-- 删除重复信息、冗余细节
-- 语言简洁有力，禁止流水账，禁止编故事
-- 直接输出大总结内容，不加标题或编号
+                    const prompt = `你是一位信息压缩与核心记忆提取专家。将以下${selectedCount}条小结合并为1条高度压缩的大总结。要求：拒绝流水账，洞察人性（展现用户动机/角色想法/关系变化），${wordLimit}字以内，「。」结尾。
 
 小结列表：
 ${summaryTexts}`;
@@ -13678,7 +15014,7 @@ ${summaryTexts}`;
                         .replace(/<think>[\s\S]*/gi, '')            // 未闭合标签
                         .replace(/<\/think>/gi, '')                 // 孤立闭合标签
                         .trim();
-                    if (!text || text.length < 100) {
+                    if (!isValidSummaryText(text, 100)) {
                         recordSummaryFailureTime(friendId, 'big');
                         showSummaryFailedToast();
                         return;
@@ -13749,14 +15085,7 @@ ${summaryTexts}`;
                     const selectedSummaries = unprocessed.slice(0, selectedCount);
                     const summaryTexts = selectedSummaries.map((s, idx) => `${idx + 1}. ${s.text}`).join('\n\n');
 
-                    const prompt = `你是一位信息压缩与核心记忆提取专家。以下是${selectedCount}条关于一段对话的小结记录，请将它们合并为1条高度压缩的大总结。
-
-要求：
-- 字数严格控制在${wordLimit}字以内（越精简越好）
-- 只保留核心记忆、关键事件、重要结论
-- 删除重复信息、冗余细节
-- 语言简洁有力，禁止流水账，禁止编故事
-- 直接输出大总结内容，不加标题或编号
+                    const prompt = `你是一位信息压缩与核心记忆提取专家。将以下${selectedCount}条小结合并为1条高度压缩的大总结。要求：拒绝流水账，洞察人性（展现用户动机/角色想法/关系变化），${wordLimit}字以内，「。」结尾。
 
 小结列表：
 ${summaryTexts}`;
@@ -13779,10 +15108,10 @@ ${summaryTexts}`;
                         .replace(/<think>[\s\S]*/gi, '')            // 未闭合标签
                         .replace(/<\/think>/gi, '')                 // 孤立闭合标签
                         .trim();
-                    if (!text || text.length < 100) {
+                    if (!isValidSummaryText(text, 100)) {
                         recordSummaryFailureTime(friendId, 'big');
                         showCuteToast('API 返回内容不足，请稍后重试');
-                        console.warn('[大总结] 返回内容过短:', text?.length || 0);
+                        console.warn('[大总结] 离合性检查不过:', text?.length || 0);
                         return;
                     }
 
@@ -13872,12 +15201,13 @@ ${summaryTexts}`;
                 });
             }
 
-            async function generateAutoSummary(friendId, chatHistory, apiConfig, triggerSource = 'manual') {
+            async function generateAutoSummary(friendId, chatHistory, apiConfig, triggerSource = 'manual', retryCount = 0) {
                 if (!apiConfig.apiUrl || !apiConfig.apiKey || !apiConfig.model) {
                     showCuteToast('API 配置不完整，请检查设置');
                     return;
                 }
                 const isManualTrigger = triggerSource === 'manual';
+                const isAutoTrigger = triggerSource === 'auto';
                 if (smallSummaryInFlight.has(friendId)) {
                     showCuteToast('小结正在生成，请稍候');
                     return;
@@ -13886,7 +15216,7 @@ ${summaryTexts}`;
                 if (isManualTrigger) setManualSummaryLoading(true);
 
                 try {
-                    if (!isManualTrigger) showCuteToast('正在生成小结...');
+                    if (!isManualTrigger && retryCount === 0) showCuteToast('正在生成小结...');
 
                     // 增量总结：只取上次总结之后的新消息
                     const totalCount = Array.isArray(chatHistory) ? chatHistory.length : 0;
@@ -13907,13 +15237,23 @@ ${summaryTexts}`;
                         return;
                     }
 
-                    const prompt = `你是一位文笔精练的总结助手。请根据以下对话记录，生成一段200～450字的精简总结。
+                    const prompt = `你是一位洞察人心的总结助手。请根据以下对话记录，生成5～8条精简总结。
 
-要求：
-- 总结对话中的核心内容、关键事件、情感变化和重要结论
-- 语言精炼有条理，禁止流水账，禁止废话套话
-- 字数严格控制在200～450字之间
-- 直接输出总结内容，不加标题、编号或前缀
+【【【总结生成规则 (重要)】】】
+当需要生成对话总结时，必须遵循以下标准：
+1. **拒绝流水账**：不要写成"用户发了A，AI回复了B"的事件列表。
+2. **洞察人性**：每一条总结，必须至少包含以下三要素之一：
+   - 用户当时的**内心动机**（为什么这么做？）
+   - 角色当时的**真实想法**（角色察觉到了什么？）
+   - 两人关系的**实质性变化**（关系推进/转折点）
+3. **格式要求**：
+   - 每条总结用「。」结尾，形成完整的句子。
+   - 每条总结控制在 15-35字之间。
+   - 按时间顺序排列，但不要出现"第一""第二"的序号。
+4. **示例（高质量）**：
+   - "迟雨终于崩溃，哭着恳求季燃不要离开。"
+   - "季燃察觉到迟雨异常的沉默，告诉她不必在自己面前伪装坚强。"
+   - "迟雨按捺不住提前分享自拍，暴露了她对关系的急切与不安。"
 
 对话记录：
 ${recent}`;
@@ -13937,10 +15277,25 @@ ${recent}`;
                         .replace(/<think>[\s\S]*/gi, '')            // 未闭合标签
                         .replace(/<\/think>/gi, '')                 // 孤立闭合标签
                         .trim();
+                    
+                    // 只在自动总结时进行质量检查并重试（不扣轮数）
+                    if (isAutoTrigger && !isValidSummaryText(text, 20)) {
+                        if (retryCount < 2) {
+                            console.warn(`[自动总结] 内容不合格（乱码/过短/重复），重试第 ${retryCount + 1} 次`);
+                            smallSummaryInFlight.delete(friendId);
+                            return generateAutoSummary(friendId, chatHistory, apiConfig, triggerSource, retryCount + 1);
+                        } else {
+                            showCuteToast('总结生成失败（内容质量不合格），轮数已保留');
+                            console.error('[自动总结] 多次重试后仍不合格，放弃生成');
+                            return;
+                        }
+                    }
+                    
+                    // 手动总结或通过验证，进行最终检查
                     if (!text || text.length < 50) {
                         recordSummaryFailureTime(friendId, 'small');
                         showCuteToast('API 返回内容不足，请稍后重试');
-                        console.warn('[自动总结] 返回内容过短:', text?.length || 0);
+                        console.warn('[自动总结] 内容过短:', text?.length || 0);
                         return;
                     }
                     showSummaryConfirm(friendId, text, {
@@ -14069,10 +15424,17 @@ ${recent}`;
                 const modal = document.getElementById('profileModal');
                 if (!modal) return;
 
-                modal.dataset.from = options.from || '';
-                loadProfileData();
+                const from = (options && options.from) ? options.from : '';
+                modal.dataset.from = from;
                 updateStatusBarTime('profile');
-                ModalManager.show('profile');
+
+                if (from === 'friendList') {
+                    ModalManager.switch('friendList', 'profile');
+                } else {
+                    ModalManager.show('profile');
+                }
+
+                loadProfileData();
             };
 
             // 关闭个人资料页面
@@ -14239,41 +15601,83 @@ ${recent}`;
                 }, 2000);
             }
 
+            function toggleProfileEditMode() {
+                if (isEditMode) {
+                    exitEditMode();
+                } else {
+                    enterEditMode();
+                }
+            }
+
+            function bindProfileNavHotzoneFallback() {
+                if (document.documentElement.dataset.profileNavHotzoneBound) return;
+                document.documentElement.dataset.profileNavHotzoneBound = '1';
+
+                const handler = (e) => {
+                    const modal = document.getElementById('profileModal');
+                    if (!modal || modal.style.display === 'none') return;
+
+                    const nav = modal.querySelector('.settings-nav');
+                    if (!nav) return;
+
+                    const rect = nav.getBoundingClientRect();
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) return;
+
+                    const target = e.target;
+                    if (target && (target.closest('#closeProfileModal') || target.closest('#profileEditBtn'))) return;
+
+                    const hitWidth = Math.min(76, Math.floor(rect.width * 0.22));
+                    if (x <= rect.left + hitWidth) {
+                        e.preventDefault();
+                        closeProfileModal();
+                        return;
+                    }
+                    if (x >= rect.right - hitWidth) {
+                        e.preventDefault();
+                        toggleProfileEditMode();
+                    }
+                };
+
+                document.addEventListener('pointerup', handler, true);
+                document.addEventListener('touchend', handler, true);
+            }
+
             // 绑定事件监听器
-            document.addEventListener('DOMContentLoaded', () => {
+            function bindProfileEventListeners() {
                 // 关闭按钮
                 const closeBtn = document.getElementById('closeProfileModal');
-                if (closeBtn) {
+                if (closeBtn && !closeBtn.dataset.boundClick) {
+                    closeBtn.dataset.boundClick = '1';
                     closeBtn.addEventListener('click', closeProfileModal);
                 }
 
                 // 编辑按钮
                 const editBtn = document.getElementById('profileEditBtn');
-                if (editBtn) {
-                    editBtn.addEventListener('click', () => {
-                        if (isEditMode) {
-                            exitEditMode();
-                        } else {
-                            enterEditMode();
-                        }
-                    });
+                if (editBtn && !editBtn.dataset.boundClick) {
+                    editBtn.dataset.boundClick = '1';
+                    editBtn.addEventListener('click', toggleProfileEditMode);
                 }
 
                 // 保存按钮
                 const saveBtn = document.getElementById('profileSaveBtn');
-                if (saveBtn) {
+                if (saveBtn && !saveBtn.dataset.boundClick) {
+                    saveBtn.dataset.boundClick = '1';
                     saveBtn.addEventListener('click', saveProfileData);
                 }
 
                 // 取消按钮
                 const cancelBtn = document.getElementById('profileCancelBtn');
-                if (cancelBtn) {
+                if (cancelBtn && !cancelBtn.dataset.boundClick) {
+                    cancelBtn.dataset.boundClick = '1';
                     cancelBtn.addEventListener('click', exitEditMode);
                 }
 
                 // 头像点击编辑
                 const avatar = document.getElementById('profileAvatar');
-                if (avatar) {
+                if (avatar && !avatar.dataset.boundClick) {
+                    avatar.dataset.boundClick = '1';
                     avatar.addEventListener('click', () => {
                         if (isEditMode) {
                             showCuteToast('头像上传功能开发中... 🎨');
@@ -14285,16 +15689,25 @@ ${recent}`;
 
                 // 模态框点击背景关闭
                 const modal = document.getElementById('profileModal');
-                if (modal) {
+                if (modal && !modal.dataset.boundClick) {
+                    modal.dataset.boundClick = '1';
                     modal.addEventListener('click', (e) => {
                         if (e.target === modal) {
                             closeProfileModal();
                         }
                     });
                 }
-            });
+            }
+
+            bindProfileEventListeners();
+            bindProfileNavHotzoneFallback();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', bindProfileEventListeners);
+            }
 
             // 暴露给外部
+            window.closeProfileModal = closeProfileModal;
+            window.toggleProfileEditMode = toggleProfileEditMode;
             window.profileSystem = {
                 openProfileModal,
                 loadProfileData,
