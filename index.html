@@ -176,16 +176,168 @@
             --color-warning-bg: #faf5e6;        /* 警告背景 */
             --color-warning-border: #e5d9b3;    /* 警告边框 */
             --color-warning-text: #998866;      /* 警告文字 */
+            --color-delete-red: #f08282;        /* 删除按钮红色 */
 
             /* 柔和阴影 - 玻璃拟态 */
             --box-shadow: 0 8px 32px rgba(107, 125, 143, 0.06);
             --box-shadow-hover: 0 12px 40px rgba(107, 125, 143, 0.08);
             --box-shadow-light: 0 4px 16px rgba(107, 125, 143, 0.04);
             
-            /* 玻璃拟态效果 */
+            /* 玻璃拟态效果 - 基础 */
             --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-bg-light: rgba(255, 255, 255, 0.5);
+            --glass-bg-strong: rgba(255, 255, 255, 0.7);
+            --glass-bg-stronger: rgba(255, 255, 255, 0.8);
             --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-border-light: rgba(255, 255, 255, 0.3);
+            --glass-border-strong: rgba(255, 255, 255, 0.35);
+            --glass-border-white: rgba(255, 255, 255, 0.4);
+            --glass-border-stronger: rgba(255, 255, 255, 0.5);
+            --glass-border-icon: rgba(255, 255, 255, 0.6);
             --glass-blur: blur(20px);
+            --glass-blur-light: blur(10px);
+            --glass-blur-strong: blur(25px);
+            
+            /* 状态栏/导航栏背景 */
+            --status-bar-bg: rgba(250, 251, 252, 0.75);
+            --status-border: rgba(224, 231, 237, 0.25);
+            --status-border-strong: rgba(224, 231, 237, 0.35);
+            
+            /* 图标/头像渐变色 */
+            --avatar-gradient-start: rgba(200, 220, 240, 0.7);
+            --avatar-gradient-end: rgba(212, 227, 240, 0.7);
+            --icon-gradient-1-start: rgba(180, 205, 225, 0.7);
+            --icon-gradient-1-end: rgba(200, 220, 235, 0.7);
+            --icon-gradient-2-start: rgba(180, 200, 220, 0.7);
+            --icon-gradient-2-end: rgba(200, 215, 230, 0.7);
+            --icon-gradient-3-start: rgba(160, 190, 215, 0.7);
+            --icon-gradient-3-end: rgba(180, 205, 225, 0.7);
+            --icon-gradient-4-start: rgba(170, 200, 220, 0.7);
+            --icon-gradient-4-end: rgba(190, 215, 235, 0.7);
+            --icon-gradient-5-start: rgba(190, 205, 220, 0.7);
+            --icon-gradient-5-end: rgba(205, 220, 230, 0.7);
+            --icon-color: rgba(255, 255, 255, 0.9);
+            --icon-color-alt: rgba(255, 255, 255, 0.95);
+            
+            /* 阴影颜色系统 */
+            --shadow-color: rgba(107, 125, 143, 0.06);
+            --shadow-color-hover: rgba(107, 125, 143, 0.08);
+            --shadow-color-light: rgba(107, 125, 143, 0.04);
+            --shadow-color-medium: rgba(107, 125, 143, 0.1);
+            --shadow-color-strong: rgba(107, 125, 143, 0.12);
+            
+            /* 覆盖层颜色 */
+            --overlay-bg: rgba(0, 0, 0, 0.05);
+            --overlay-dark: rgba(0, 0, 0, 0.3);
+            --overlay-darker: rgba(0, 0, 0, 0.5);
+            
+            /* 状态颜色扩展 */
+            --color-success-bg: rgba(72, 187, 120, 0.1);
+            --color-success-border: rgba(72, 187, 120, 0.2);
+            --color-error-bg: rgba(245, 101, 101, 0.1);
+            --color-error-border: rgba(245, 101, 101, 0.2);
+            
+            /* 按钮强调色系统（统一使用冷色调） */
+            --color-accent-pink: #e9dae4;          /* 淡雅粉紫 */
+            --color-accent-lavender: #e7daed;      /* 淡雅薰衣草 */
+            --color-accent-blue: #c5d7e8;          /* 淡雅蓝 */
+            --color-button-primary: #c8dce8;       /* 主按钮(浅青) */
+            --color-button-secondary: #e5ebf0;     /* 次要按钮(浅灰) */
+            
+            /* UI控件颜色 */
+            --color-ui-gray: #8b99a8;              /* UI灰色文字 */
+            --color-ui-bg: #f7f9fb;                /* UI背景 */
+            --color-ui-border: #f0f3f6;            /* UI边框 */
+            --color-vip-gold: #e8d5a8;             /* VIP金色(低饱和) */
+            --color-active-link: #8ba8c5;          /* 活跃链接(冷蓝) */
+            
+            /* ========== 🎨 美化系统配置（改这里就能自定义样式！）========== */
+            /* 主屏幕网格布局 */
+            --grid-columns: 3;                     /* 网格列数（3、4、5、6...） */
+            --grid-gap: 16px;                      /* 图标间距 */
+            --grid-row-height: 100px;              /* 每行高度 */
+            --grid-offset-top: 24px;               /* 顶部偏移 */
+            
+            /* 应用图标尺寸 */
+            --app-icon-size: 60px;                 /* 图标大小 */
+            --app-icon-radius: 18px;               /* 图标圆角（0=方形, 30=圆形） */
+            --app-icon-font: 28px;                 /* 图标内字体大小 */
+            --app-label-font: 12px;                /* 图标标签字号 */
+            --app-label-width: 90px;               /* 图标标签最大宽度 */
+            
+            /* Dock栏图标 */
+            --dock-icon-size:55px;                /* Dock图标大小 */
+            --dock-icon-radius: 18px;              /* Dock图标圆角 */
+            --dock-icon-font: 26px;                /* Dock图标字体 */
+            --dock-height: 96px;                   /* Dock栏高度 */
+            --dock-padding: 10px 24px 16px;        /* Dock内边距 */
+            
+            /* 玻璃质感组件系统 - 位置与尺寸控制 */
+            --profile-widget-top: 35px;            /* 个人资料卡片顶部位置 */
+            --profile-widget-height: 260px;        /* 个人资料卡片高度 */
+            --profile-widget-width: 78%;           /* 个人资料卡片宽度 */
+            --profile-widget-radius: 26px;         /* 个人资料卡片圆角 */
+            
+            /* iOS备忘录卡片参数 */
+            --memo-card-top: 380px;                /* 备忘录卡片顶部位置 */
+            --memo-card-left: 7%;                  /* 备忘录卡片左侧位置 */
+            --memo-card-width: 38%;                /* 备忘录卡片宽度 */
+            --memo-card-height: 165px;             /* 备忘录卡片高度 */
+            --memo-card-radius: 20px;              /* 备忘录卡片圆角 */
+            --memo-header-height: 40px;            /* 备忘录标题栏高度 */
+            
+            --icon-area-top: 375px;                /* 右侧图标区域顶部位置 */
+            --icon-area-left: 48%;                 /* 右侧图标区域左侧位置 */
+            --icon-area-width: 46%;                /* 右侧图标区域宽度 */
+            --icon-grid-cols: 2;                   /* 右侧图标列数（2x2） */
+            --icon-grid-gap: 18px;                 /* 右侧图标间距 */
+            
+            --search-bar-top: 710px;               /* 搜索栏顶部位置 */
+            --search-bar-width: 88%;               /* 搜索栏宽度 */
+            --search-bar-height: 48px;             /* 搜索栏高度 */
+            --search-bar-radius: 24px;             /* 搜索栏圆角 */
+            
+            /* 玻璃效果参数 */
+            --glass-blur: 20px;                    /* 毛玻璃模糊度 */
+            --glass-opacity: 0.65;                 /* 玻璃透明度 */
+            --glass-border: rgba(255,255,255,0.18); /* 玻璃边框颜色 */
+            --glass-shadow: 0 8px 32px rgba(0,0,0,0.12); /* 玻璃阴影 */
+            
+            /* ========== 组件颜色系统 - 所有颜色都可以修改 ========== */
+            
+            /* 个人资料卡片颜色 */
+            --profile-gradient-start: rgba(235, 208, 241, 0.25);    /* 渐变起始色 */
+            --profile-gradient-mid: rgba(199, 175, 222, 0.2);      /* 渐变中间色 */
+            --profile-gradient-end: rgba(244, 114, 182, 0.18);     /* 渐变结束色 */
+            --profile-overlay: rgba(0,0,0,0.3);                    /* 顶部遮罩色 */
+            --profile-text-color: white;                           /* 文字颜色 */
+            --profile-avatar-bg-start: rgba(255,255,255,0.9);      /* 头像背景起始色 */
+            --profile-avatar-bg-end: rgba(240,240,255,0.85);       /* 头像背景结束色 */
+            --profile-avatar-border: rgba(236, 227, 235, 0.5);        /* 头像边框色 */
+            --profile-avatar-icon-color: #dfddeb;                  /* 头像图标颜色 */
+            
+            /* iOS备忘录卡片颜色 */
+            --memo-header-bg: #dcd1e4;             /* 标题栏背景色 */
+            --memo-content-bg: #f3f0f0;            /* 内容区背景色 */
+            --memo-title-color: #928989;           /* 标题文字颜色 */
+            --memo-icon-color: rgba(227, 217, 217, 0.6);    /* 标题栏图标颜色 */
+            --memo-divider: rgba(0,0,0,0.12);      /* 分隔线颜色 */
+            --memo-shadow: rgba(0, 0, 0, 0.1);     /* 卡片阴影颜色 */
+            --memo-content-text: #e8e2e2;             /* 内容文字颜色 */
+            
+            /* 搜索栏颜色 */
+            --search-bg: rgba(255, 255, 255, 0.7);                 /* 背景色 */
+            --search-text-color: #333;                             /* 文字颜色 */
+            --search-placeholder-color: #999;                      /* 占位符颜色 */
+            --search-icon-color: #666;                             /* 图标颜色 */
+            
+            /* Dock大容器颜色 */
+            --dock-container-bg: rgba(255, 255, 255, 0.55);        /* Dock容器背景 */
+            --dock-container-border: rgba(255,255,255,0.3);        /* Dock容器边框 */
+            --dock-bottom: 10px;                                   /* Dock底部距离 */
+            --dock-container-height: 85px;                         /* Dock容器高度 */
+            --dock-container-radius: 26px;                         /* Dock容器圆角 */
+            --dock-container-padding: 12px 20px;                   /* Dock容器内边距 */
         }
 
         /* ============================================================
@@ -262,17 +414,17 @@
 
         .status-bar {
             height: 50px;
-            background: rgba(250, 251, 252, 0.75);
+            background: var(--status-bar-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 0 26px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #6b7d8f;
+            color: var(--color-text);
             font-weight: 600;
             font-size: 14px;
-            border-bottom: 1px solid rgba(224, 231, 237, 0.25);
+            border-bottom: 1px solid var(--status-border);
             position: sticky;
             top: 0;
             z-index: 101;
@@ -281,9 +433,9 @@
         /* 非主屏幕页面的状态栏统一与返回栏保持玻璃拟态 */
         /* 使用通用选择器确保所有弹窗页面的状态栏都是玻璃拟态，无需手动添加 */
         .modal .status-bar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
         }
 
         .time {
@@ -307,12 +459,159 @@
 
         .home-screen {
             width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: visible;
+        }
+        
+        /* ========== 玻璃质感组件系统 ========== */
+        
+        /* 个人资料大卡片 */
+        .profile-widget-glass {
+            position: absolute;
+            top: var(--profile-widget-top);
+            left: 50%;
+            transform: translateX(-50%);
+            width: var(--profile-widget-width);
+            height: var(--profile-widget-height);
+            background: linear-gradient(135deg, var(--profile-gradient-start) 0%, var(--profile-gradient-mid) 50%, var(--profile-gradient-end) 100%);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: var(--profile-widget-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+        }
+        
+        .profile-widget-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(180deg, var(--profile-overlay) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .profile-avatar-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--profile-avatar-bg-start), var(--profile-avatar-bg-end));
+            border: 3px solid var(--profile-avatar-border);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: var(--profile-avatar-icon-color);
+            margin: 0 auto 16px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .profile-info {
+            text-align: center;
+            color: var(--profile-text-color);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .profile-username {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .profile-handle {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+        
+        .profile-bio {
+            font-size: 12px;
+            opacity: 0.75;
+            margin-bottom: 6px;
+        }
+        
+        .profile-location {
+            font-size: 12px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        /* iOS备忘录卡片 */
+        .memo-card {
+            position: absolute;
+            top: var(--memo-card-top);
+            left: var(--memo-card-left);
+            width: var(--memo-card-width);
+            height: var(--memo-card-height);
+            border-radius: var(--memo-card-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--memo-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .memo-header {
+            height: var(--memo-header-height);
+            background: var(--memo-header-bg);
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            gap: 8px;
+            border-bottom: 1px dashed var(--memo-divider);
+        }
+        
+        .memo-header i {
+            font-size: 16px;
+            color: var(--memo-icon-color);
+        }
+        
+        .memo-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--memo-title-color);
+        }
+        
+        .memo-content {
+            flex: 1;
+            background: var(--memo-content-bg);
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--memo-content-text);
+            line-height: 1.5;
+        }
+        
+        /* 右侧图标区域 */
+        .icon-area-glass {
+            position: absolute;
+            top: var(--icon-area-top);
+            left: var(--icon-area-left);
+            width: var(--icon-area-width);
+            display: grid;
+            grid-template-columns: repeat(var(--icon-grid-cols), 1fr);
+            gap: var(--icon-grid-gap);
+            align-items: start;
+        }
+        
+        .icon-area-glass .app-item {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            margin-top: 20px;
-            padding-bottom: 20px;
+            gap: 8px;
         }
 
         .frost-widget {
@@ -345,14 +644,14 @@
         }
 
         .widget-weather i {
-            color: var(--color-secondary);
+            color: var(--color-text-light);
             font-size: 22px;
         }
 
         .widget-temp {
             font-size: 22px;
-            font-weight: 700;
-            color: var(--color-secondary);
+            font-weight: 600;
+            color: var(--color-text-medium);
         }
 
         .widget-greeting {
@@ -361,14 +660,17 @@
             cursor: pointer;
             padding: 6px 10px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.6);
-            transition: background 0.2s ease, color 0.2s ease;
+            background: var(--glass-bg-light);
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 400;
         }
 
         .widget-greeting:focus {
             outline: none;
-            background: var(--color-bg-white);
-            color: var(--color-text);
+            background: var(--glass-bg-strong);
+            color: var(--color-text-dark);
         }
 
 
@@ -399,34 +701,41 @@
             width: 68px;
             height: 68px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
+            background: linear-gradient(135deg, 
+                var(--avatar-gradient-start) 0%, 
+                var(--avatar-gradient-end) 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 4px solid white;
-            box-shadow: 0 6px 16px rgba(120, 119, 133, 0.12);
+            border: 3px solid var(--glass-border-icon);
+            box-shadow: 0 6px 20px var(--shadow-color-medium);
             z-index: 3;
             overflow: hidden;
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
         }
 
         .avatar i {
             font-size: 40px;
-            color: white;
+            color: var(--icon-color);
         }
 
         .info-card {
-            width: 90%;
-            height: 100px;
-            background-color: white;
+            width: 88%;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 12px rgba(107, 125, 143, 0.04);
             position: absolute;
-            top: 40px;
+            top: 45px;
             z-index: 1;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
-            padding-bottom: 15px;
+            align-items: center;
+            padding: 0 20px;
         }
 
         .user-info {
@@ -435,15 +744,15 @@
 
         .user-name {
             font-size: 18px;
-            font-weight: 700;
-            color: var(--color-text);
+            font-weight: 600;
+            color: var(--color-text-dark);
             margin-bottom: 4px;
         }
 
         .user-status {
             font-size: 14px;
-            color: var(--color-primary);
-            font-weight: 500;
+            color: var(--color-text-medium);
+            font-weight: 400;
         }
 
         .icons-section {
@@ -474,42 +783,24 @@
             width: 130px;
         }
 
-        .app-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 18px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 26px;
-            color: white;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.15s ease;
-            cursor: pointer;
-        }
-
-        .app-icon:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-
+        /* ========== 主屏幕图标网格布局 ========== */
         .app-grid {
+            display: none; /* 隐藏旧的网格布局，使用新的玻璃效果布局 */
             width: 88%;
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            grid-auto-rows: 100px;
-            gap: 16px;
+            grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+            grid-auto-rows: var(--grid-row-height);
+            gap: var(--grid-gap);
             justify-items: center;
             align-items: start;
         }
 
         .app-grid-offset {
-            margin-top: 24px;
+            margin-top: var(--grid-offset-top);
         }
 
         .app-item {
             width: 100%;
-            max-width: 90px;
+            max-width: var(--app-label-width);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -518,17 +809,19 @@
             position: relative;
         }
 
+        /* ========== 主屏幕图标样式 ========== */
         .app-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 18px;
+            width: var(--app-icon-size);
+            height: var(--app-icon-size);
+            border-radius: var(--app-icon-radius);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
+            font-size: var(--app-icon-font);
             color: white;
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.15s ease;
+            cursor: pointer;
         }
 
         .app-item:hover .app-icon {
@@ -537,7 +830,7 @@
         }
 
         .app-name {
-            font-size: 12px;
+            font-size: var(--app-label-font);
             color: var(--color-text);
             max-width: 100%;
             white-space: nowrap;
@@ -547,8 +840,19 @@
 
 
 
+        /* ========== 各个图标的配色方案 (✅ 可以随意修改) ========== */
+        /* 你可以改变任何颜色、渐变角度、透明度等，不会影响布局 */
+        
         .message-icon {
             background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
+        }
+        
+        .chat-icon {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent-pink) 100%);
+        }
+        
+        .worldbook-icon {
+            background: linear-gradient(135deg, var(--color-accent-blue) 0%, var(--color-accent-lavender) 100%);
         }
 
         .feixin-icon {
@@ -567,50 +871,63 @@
             background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary) 100%);
         }
 
-        .dock {
-            height: 96px;
-            min-height: 96px;
-            background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            border-top: none;
+        /* ========== 底部Dock柔光毛玻璃 (中等大小极简风格) ========== */
+        .dock-glass {
+            position: absolute;
+            bottom: var(--dock-bottom);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 86%;
+            height: var(--dock-container-height);
+            background: var(--dock-container-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: var(--dock-container-radius);
+            border: 1px solid var(--dock-container-border);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(255, 255, 255, 0.4) inset;
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
-            padding: 10px 24px 16px;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            box-shadow: none;
+            gap: 45px;
+            padding: var(--dock-container-padding);
         }
 
-        .dock-icon {
-            width: 75px;
-            height: 75px;
+        /* ========== Dock图标样式 (中等尺寸柔光设计) ========== */
+        .dock-icon-glass {
+            width: 58px;
+            height: 58px;
             border-radius: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 26px;
             color: white;
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
-            transition: transform 0.2s ease, opacity 0.15s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(255, 255, 255, 0.2) inset;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
 
-        .dock-icon:hover {
-            transform: scale(1.05);
+        .dock-icon-glass:hover {
+            transform: scale(1.06) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(255, 255, 255, 0.3) inset;
         }
 
-        .phone-icon {
-            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary) 100%);
+        .dock-icon-glass:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .novel-icon {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
+        /* ========== Dock图标配色 (柔光渐变) ========== */
+        .dock-phone {
+            background: linear-gradient(135deg, #A8A4CE 0%, #9B97C8 100%);
         }
 
-        .forum-icon {
-            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+        .dock-novel {
+            background: linear-gradient(135deg, #C4B5E0 0%, #B5A1D8 100%);
+        }
+
+        .dock-forum {
+            background: linear-gradient(135deg, #B8C4E0 0%, #A5B3D5 100%);
         }
 
         /* ============================================================
@@ -626,7 +943,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: var(--overlay-darker);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -634,13 +951,13 @@
         }
 
         .modal-content {
-            background-color: white;
+            background-color: var(--color-bg-white);
             border-radius: 20px;
             width: 90%;
             max-width: 400px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 50px var(--shadow-color-strong);
             animation: modalSlideIn 0.3s ease;
         }
 
@@ -699,7 +1016,7 @@
         .model-picker-button:focus-visible {
             outline: none;
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 2px rgba(240, 214, 215, 0.12);
+            box-shadow: 0 0 0 2px var(--color-bg-user-msg);
         }
 
         .model-picker-button .caret {
@@ -717,7 +1034,7 @@
             background: var(--color-bg-white);
             border: 1px solid var(--color-border-light);
             border-radius: 14px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 24px var(--shadow-color-medium);
             overflow-y: auto;
             z-index: 10;
             display: none;
@@ -743,7 +1060,7 @@
         }
 
         .model-picker-item.is-selected {
-            background: rgba(240, 214, 215, 0.2);
+            background: var(--color-bg-selected);
             color: var(--color-primary);
             font-weight: 600;
         }
@@ -1028,14 +1345,14 @@
             width: 100%;
             height: 48px;
             padding: 0 18px;
-            border: 1.5px solid rgba(224, 231, 237, 0.6);
+            border: 1.5px solid var(--glass-border-icon);
             border-radius: 16px;
             font-size: 14px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--glass-bg-light);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            color: #4a5968;
+            color: var(--color-text-dark);
             font-weight: 400;
         }
 
@@ -1048,28 +1365,28 @@
 
         #modelSelect {
             height: 48px;
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--glass-bg-light);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: rgba(212, 227, 240, 0.8);
-            box-shadow: 0 4px 16px rgba(107, 125, 143, 0.08);
-            background: rgba(255, 255, 255, 0.75);
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 16px var(--shadow-color-light);
+            background: var(--glass-bg-strong);
         }
 
         /* 占位符样式 */
         .form-control::placeholder,
         .form-control::-webkit-input-placeholder {
-            color: #9aa8b5;
+            color: var(--color-text-light);
             opacity: 0.7;
             font-weight: 300;
         }
 
         .form-control::-moz-placeholder {
-            color: #9aa8b5;
+            color: var(--color-text-light);
             opacity: 0.7;
             font-weight: 300;
         }
@@ -1083,7 +1400,7 @@
         .btn {
             padding: 14px 24px;
             height: 50px;
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border: 1.5px solid var(--glass-border-light);
             border-radius: 20px;
             font-weight: 500;
             font-size: 14px;
@@ -1097,33 +1414,33 @@
 
         .btn-primary {
             background: linear-gradient(135deg, 
-                rgba(200, 220, 240, 0.7) 0%, 
-                rgba(212, 227, 240, 0.7) 100%);
+                var(--avatar-gradient-start) 0%, 
+                var(--color-primary) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            color: rgba(74, 89, 104, 0.9);
+            color: var(--color-text-darker);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 125, 143, 0.12);
+            box-shadow: 0 6px 20px var(--shadow-color-medium);
             background: linear-gradient(135deg, 
-                rgba(200, 220, 240, 0.85) 0%, 
-                rgba(212, 227, 240, 0.85) 100%);
-            border-color: rgba(255, 255, 255, 0.5);
+                var(--color-primary) 0%, 
+                var(--color-secondary) 100%);
+            border-color: var(--glass-border-stronger);
         }
 
         .btn-secondary {
-            background: rgba(240, 244, 247, 0.6);
+            background: var(--color-widget-bg);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            color: #7a8a9a;
+            color: var(--color-text-medium);
         }
 
         .btn-secondary:hover {
-            background: rgba(240, 244, 247, 0.8);
+            background: var(--color-bg-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(107, 125, 143, 0.08);
+            box-shadow: 0 4px 16px var(--shadow-color-light);
         }
 
         .btn-small {
@@ -1152,16 +1469,16 @@
         }
 
         .status-message.success {
-            background-color: rgba(72, 187, 120, 0.1);
+            background-color: var(--color-success-bg, rgba(72, 187, 120, 0.1));
             color: var(--color-success);
-            border: 1px solid rgba(72, 187, 120, 0.2);
+            border: 1px solid var(--color-success-border, rgba(72, 187, 120, 0.2));
             display: block;
         }
 
         .status-message.error {
-            background-color: rgba(245, 101, 101, 0.1);
+            background-color: var(--color-error-bg, rgba(245, 101, 101, 0.1));
             color: var(--color-error);
-            border: 1px solid rgba(245, 101, 101, 0.2);
+            border: 1px solid var(--color-error-border, rgba(245, 101, 101, 0.2));
             display: block;
         }
 
@@ -1218,7 +1535,7 @@
             word-break: break-word;
             font-size: 15px;
             line-height: 1.5;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 4px var(--shadow-color-light);
             animation: messageAppear 0.3s ease-out;
             height: auto;
             min-height: auto;
@@ -1271,11 +1588,11 @@
             max-width: 80%;
             font-size: 12px;
             color: var(--color-text-medium);
-            background: rgba(0, 0, 0, 0.06);
+            background: var(--color-bg-pressed);
             padding: 6px 10px;
             border-radius: 10px;
             margin-bottom: 6px;
-            border-left: 3px solid rgba(0, 0, 0, 0.12);
+            border-left: 3px solid var(--color-border);
             word-break: break-word;
             /* 禁用长按菜单 */
             user-select: none;
@@ -1330,7 +1647,7 @@
             color: var(--color-primary);
             font-size: 12px;
             margin-bottom: 8px;
-            border: 1px dashed rgba(240, 214, 215, 0.35);
+            border: 1px dashed var(--glass-border-light);
         }
 
         .image-upload-thumb {
@@ -1338,7 +1655,7 @@
             height: 34px;
             border-radius: 8px;
             object-fit: cover;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px var(--shadow-color-light);
         }
 
         .image-upload-name {
@@ -1363,7 +1680,7 @@
             max-width: 220px;
             border-radius: 12px;
             margin-top: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 12px var(--shadow-color-medium);
         }
 
         .message-image-wrap {
@@ -1397,8 +1714,8 @@
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+            color: var(--icon-color);
+            text-shadow: 0 1px 2px var(--shadow-color-strong);
             pointer-events: none;
         }
 
@@ -1419,10 +1736,10 @@
             position: fixed;
             display: none;
             z-index: 2300;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--glass-bg-stronger);
             border-radius: 12px;
             padding: 8px 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px var(--shadow-color-hover);
             font-size: 12px;
             color: var(--color-text-dark);
             align-items: center;
@@ -1462,7 +1779,7 @@
         .message-recalled {
             font-size: 12px;
             color: var(--color-text-light);
-            background: rgba(0, 0, 0, 0.06);
+            background: var(--color-bg-pressed);
             padding: 4px 10px;
             border-radius: 12px;
         }
@@ -1472,7 +1789,7 @@
             inset: 0;
             display: none;
             z-index: 2200;
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--overlay-bg, rgba(0, 0, 0, 0.05));
         }
 
         .message-action-menu {
@@ -1481,10 +1798,10 @@
             gap: 8px;
             padding: 8px 10px;
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.88);
+            background: var(--glass-bg-stronger);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+            box-shadow: 0 10px 30px var(--shadow-color-hover);
             transform: scale(0.96);
             opacity: 0;
             transition: transform 0.16s ease, opacity 0.16s ease;
@@ -1581,12 +1898,12 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(120, 119, 133, 0.1);
+            box-shadow: 0 2px 8px var(--shadow-color-light);
         }
 
         .multi-select-delete-btn:active {
             transform: scale(0.93);
-            background-color: #efe8e6;
+            background-color: var(--color-bg-pressed);
         }
 
         .multi-select-checkbox {
@@ -1633,18 +1950,18 @@
             inset: 0;
             display: none;
             z-index: 2001;
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: var(--overlay-dark, rgba(0, 0, 0, 0.3));
             justify-content: center;
             align-items: center;
         }
 
         .multi-select-confirm-box {
-            background-color: white;
+            background-color: var(--color-bg-white);
             border-radius: 30px;
             padding: 20px 25px;
             width: 75%;
             max-width: 260px;
-            box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2);
+            box-shadow: 0 10px 40px var(--shadow-color-medium);
             text-align: center;
         }
 
@@ -1708,7 +2025,7 @@
             margin-top: 8px;
             padding: 12px 10px;
             border-radius: 14px;
-            background: #f6f6f7;
+            background: var(--color-widget-bg);
             border: 1px solid var(--color-border-light);
         }
 
@@ -1731,7 +2048,7 @@
             border-radius: 14px;
             background: var(--color-bg-white);
             border: 1px solid var(--color-border-lighter);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 6px 16px var(--shadow-color-light);
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
@@ -1745,7 +2062,7 @@
         }
 
         .chat-extra-item.is-placeholder .chat-extra-icon {
-            background: #f1f1f1;
+            background: var(--color-bg-disabled);
             color: var(--color-text-muted);
         }
 
@@ -1824,24 +2141,26 @@
             padding: 14px 16px;
             margin-bottom: 8px;
             border: none;
-            border-radius: 12px;
-            background: var(--color-bg-white);
-            backdrop-filter: none;
-            box-shadow: 0 2px 8px rgba(120, 119, 133, 0.05);
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-light);
+            box-shadow: 0 4px 12px var(--shadow-color-light);
             cursor: pointer;
-            transition: background 0.15s ease;
-            border: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .friend-item:hover {
-            background: var(--color-widget-bg);
-            transform: none;
-            box-shadow: 0 2px 12px rgba(120, 119, 133, 0.08);
+            background: var(--glass-bg-stronger);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color-medium);
+            border-color: var(--glass-border-stronger);
         }
 
         .friend-item:active {
             transform: translateY(0);
-            box-shadow: 0 4px 12px rgba(240, 214, 215, 0.1);
+            box-shadow: 0 4px 12px var(--shadow-color-hover);
         }
 
         .friend-avatar {
@@ -1849,17 +2168,21 @@
             height: 48px;
             min-width: 48px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary) 100%);
+            background: linear-gradient(135deg, 
+                var(--icon-gradient-1-start) 0%, 
+                var(--icon-gradient-1-end) 100%);
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
+            border: 1.5px solid var(--glass-border-white);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
+            color: var(--icon-color-alt);
             font-size: 22px;
             margin-right: 14px;
             overflow: hidden;
-            box-shadow: none;
+            box-shadow: 0 4px 12px var(--shadow-color-hover);
             flex-shrink: 0;
-            border: none;
         }
 
         .friend-avatar img {
@@ -1875,7 +2198,7 @@
 
         .friend-name {
             font-weight: 600;
-            color: var(--color-text);
+            color: var(--color-text-dark);
             margin-bottom: 2px;
             font-size: 15px;
             letter-spacing: 0;
@@ -1958,7 +2281,7 @@
         .profile-widget-feedback {
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.35);
+            background: var(--glass-bg-light);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -1985,10 +2308,10 @@
             align-items: center;
             justify-content: space-between;
             padding-right: 16px;
-            border-bottom: 1px solid rgba(224, 231, 237, 0.35);
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--status-border-strong);
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
             flex-shrink: 0;
             position: sticky;
             top: 0;
@@ -1999,7 +2322,7 @@
         .settings-title {
             font-size: 17px;
             font-weight: 600;
-            color: #4a5968;
+            color: var(--color-text-dark);
             letter-spacing: 0.3px;
         }
 
@@ -2011,12 +2334,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: var(--glass-bg-light);
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
+            border: 1px solid var(--glass-border-light);
             font-size: 18px;
-            color: #7a8a9a;
+            color: var(--color-text-medium);
             cursor: pointer;
             width: 34px;
             height: 34px;
@@ -2026,10 +2349,10 @@
         }
 
         .settings-back:hover {
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--glass-bg-strong);
             transform: translateX(-2px);
-            box-shadow: 0 4px 12px rgba(107, 125, 143, 0.08);
-            color: #6b7d8f;
+            box-shadow: 0 4px 12px var(--shadow-color-hover);
+            color: var(--color-text);
         }
 
 
@@ -2137,8 +2460,10 @@
             justify-content: space-around;
             align-items: center;
             height: 60px;
-            background: var(--color-bg-white);
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
+            border-top: 1px solid var(--glass-border-light);
             padding-bottom: 8px;
         }
 
@@ -2149,8 +2474,8 @@
             justify-content: center;
             gap: 4px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--color-text);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--color-text-medium);
             font-size: 12px;
             flex: 1;
         }
@@ -2160,7 +2485,7 @@
         }
 
         .friend-list-nav-item.active {
-            color: var(--color-primary);
+            color: var(--color-active-link);
         }
 
         .friend-list-nav-item:active {
@@ -2168,20 +2493,24 @@
         }
 
         .settings-card {
-            background: var(--color-bg-white);
-            border-radius: 16px;
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 18px;
             padding: 16px 18px;
-            box-shadow: 0 8px 20px rgba(120, 119, 133, 0.06);
+            box-shadow: 0 4px 16px var(--shadow-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            border: 1px solid var(--color-border-lighter);
-            min-height: 68px;
+            border: 1px solid var(--glass-border-strong);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .settings-card:hover {
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            background: var(--glass-bg-stronger);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-color-medium);
         }
 
         .settings-card-content {
@@ -2363,12 +2692,12 @@
             color: var(--color-text);
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(120, 119, 133, 0.05);
+            box-shadow: 0 2px 8px var(--shadow-color-light);
         }
 
         .wb-mount-btn:hover {
             background: var(--color-bg-active);
-            box-shadow: 0 4px 12px rgba(120, 119, 133, 0.1);
+            box-shadow: 0 4px 12px var(--shadow-color-hover);
         }
 
         .wb-mount-btn:active {
@@ -2415,18 +2744,18 @@
             background: var(--color-bg-white);
             border-radius: 18px;
             padding: 14px 16px;
-            box-shadow: 0 4px 14px rgba(120, 119, 133, 0.07);
-            border: 1px solid #f5f0f0;
+            box-shadow: 0 4px 14px var(--shadow-color);
+            border: 1px solid var(--color-border-light);
             transition: box-shadow 0.2s ease;
         }
 
         .summary-card:hover {
-            box-shadow: 0 6px 20px rgba(120, 119, 133, 0.12);
+            box-shadow: 0 6px 20px var(--shadow-color-medium);
         }
 
         .summary-card-body {
             font-size: 13.5px;
-            color: #555;
+            color: var(--color-text-dark);
             line-height: 1.65;
             max-height: 100px;
             overflow-y: auto;
@@ -2443,7 +2772,7 @@
 
         .summary-card-time {
             font-size: 11px;
-            color: #c8c0c0;
+            color: var(--color-text-muted);
         }
 
         .summary-card-actions {
@@ -2456,8 +2785,8 @@
             height: 30px;
             border: none;
             border-radius: 10px;
-            background: #faf5f5;
-            color: #c0b0b0;
+            background: var(--color-bg-light);
+            color: var(--color-text-lighter);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -2467,8 +2796,8 @@
         }
 
         .summary-card-btn:hover {
-            background: #f5eaea;
-            color: #a08888;
+            background: var(--color-bg-hover);
+            color: var(--color-text-medium);
         }
 
         .summary-card-processed {
@@ -2484,14 +2813,14 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-primary), #e8c4d0);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
             color: var(--color-bg-white);
             font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(240, 200, 210, 0.45);
+            box-shadow: 0 4px 16px var(--shadow-color-medium);
             z-index: 100;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             user-select: none;
@@ -2539,7 +2868,7 @@
         }
 
         .summary-fab-action:hover {
-            background: #faf5f5;
+            background: var(--color-bg-light);
         }
 
         .ios-switch {
@@ -2561,7 +2890,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: #d1d5db;
+            background: var(--color-border-input);
             border-radius: 999px;
             transition: 0.2s ease;
         }
@@ -2575,7 +2904,7 @@
             top: 2px;
             background: var(--color-bg-white);
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 6px var(--shadow-color-hover);
             transition: 0.2s ease;
         }
 
@@ -2599,14 +2928,14 @@
             width: 84px;
             height: 84px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #fff 0%, #fff 100%);
+            background: linear-gradient(135deg, var(--color-bg-white) 0%, var(--color-bg-white) 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #d0d0d8;
+            color: var(--color-text-muted);
             font-size: 40px;
-            border: 4px solid #fff;
-            box-shadow: 0 10px 24px rgba(120, 119, 133, 0.08);
+            border: 4px solid var(--color-bg-white);
+            box-shadow: 0 10px 24px var(--shadow-color-hover);
             background-size: cover;
             background-position: center;
             cursor: pointer;
@@ -2616,7 +2945,7 @@
 
         .friend-avatar-display:hover {
             transform: scale(1.08);
-            box-shadow: 0 12px 28px rgba(120, 119, 133, 0.12);
+            box-shadow: 0 12px 28px var(--shadow-color-medium);
         }
 
         .friend-avatar-display::after {
@@ -2697,12 +3026,12 @@
         }
 
         .data-manage-item:hover {
-            background: #f7f7fb;
+            background: var(--color-bg-light);
         }
 
         #triggerAiBtn:hover {
             transform: scale(1.08);
-            background-color: #f6f2f1 !important;
+            background-color: var(--color-bg-hover) !important;
         }
 
         #triggerAiBtn:active {
@@ -2718,15 +3047,15 @@
             height: auto;
             max-height: 520px;
             max-width: calc(100% - 24px);
-            background: rgba(255, 255, 255, 0.75);
+            background: var(--glass-bg-strong);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
-            box-shadow: 0 8px 24px rgba(120, 119, 133, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 24px var(--shadow-color-light), inset 0 1px 2px var(--glass-border-stronger);
             padding: 0;
             z-index: 2100;
             display: none;
-            border: 0.5px solid rgba(255, 255, 255, 0.9);
+            border: 0.5px solid var(--glass-border-icon);
             flex-direction: column;
             transform-origin: top right;
             animation: hv-popup-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -2773,7 +3102,7 @@
             flex-direction: column;
             gap: 20px;
             padding: 24px 24px 0 24px;
-            background: linear-gradient(180deg, rgba(250, 245, 248, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%);
+            background: linear-gradient(180deg, var(--color-bg-light) 0%, var(--glass-bg-light) 100%);
             max-height: 320px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
@@ -2788,7 +3117,7 @@
         }
 
         .heart-voice-core-panel::-webkit-scrollbar-thumb {
-            background: rgba(120, 119, 133, 0.15);
+            background: var(--color-border);
             border-radius: 2px;
         }
 
@@ -2801,7 +3130,7 @@
 
         .heart-voice-label {
             font-size: 12px;
-            color: #8a7f8c;
+            color: var(--color-text-medium);
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
@@ -2809,7 +3138,7 @@
 
         .heart-voice-text {
             font-size: 15px;
-            color: #4a4654;
+            color: var(--color-text-dark);
             line-height: 1.6;
             word-wrap: break-word;
             font-weight: 500;
@@ -2818,9 +3147,9 @@
             min-height: 80px;
             overflow-y: auto;
             padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--glass-bg-light);
             border-radius: 12px;
-            border: 1px solid rgba(250, 230, 235, 0.4);
+            border: 1px solid var(--glass-border-light);
             -webkit-overflow-scrolling: touch;
         }
 
@@ -2833,7 +3162,7 @@
         }
 
         .heart-voice-text::-webkit-scrollbar-thumb {
-            background: rgba(120, 119, 133, 0.2);
+            background: var(--color-border);
             border-radius: 2px;
         }
 
@@ -2845,7 +3174,7 @@
         .heart-voice-footer-panel {
             flex: 0 0 auto;
             padding: 20px 24px 24px 24px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(250, 245, 248, 0.5) 100%);
+            background: linear-gradient(180deg, var(--glass-bg-light) 0%, var(--color-bg-light) 100%);
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -2860,14 +3189,14 @@
 
         .heart-voice-mood-label-text {
             font-size: 12px;
-            color: #8a7f8c;
+            color: var(--color-text-medium);
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .heart-voice-demeanor {
             font-size: 13px;
-            color: #6d6578;
+            color: var(--color-text-dark);
             line-height: 1.6;
             font-style: normal;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -2876,9 +3205,9 @@
             min-height: 60px;
             overflow-y: auto;
             padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--glass-bg-light);
             border-radius: 12px;
-            border: 1px solid rgba(250, 230, 235, 0.4);
+            border: 1px solid var(--glass-border-light);
             -webkit-overflow-scrolling: touch;
         }
 
@@ -2891,16 +3220,16 @@
         }
 
         .heart-voice-demeanor::-webkit-scrollbar-thumb {
-            background: rgba(120, 119, 133, 0.2);
+            background: var(--color-border);
             border-radius: 2px;
         }
 
         .heart-voice-mood-bar {
             height: 6px;
-            background: rgba(246, 242, 241, 0.6);
+            background: var(--color-widget-bg);
             border-radius: 3px;
             overflow: hidden;
-            box-shadow: inset 0 0.5px 1px rgba(255, 255, 255, 0.5);
+            box-shadow: inset 0 0.5px 1px var(--glass-border-stronger);
         }
 
         .heart-voice-mood-fill {
@@ -2913,7 +3242,7 @@
 
         .heart-voice-mood-label {
             font-size: 12px;
-            color: #8a7f8c;
+            color: var(--color-text-medium);
             text-align: left;
             font-weight: 500;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -2923,7 +3252,7 @@
         .heart-voice-history-btn {
             align-self: flex-end;
             font-size: 13px;
-            color: #d4a5cc;
+            color: var(--color-accent);
             background: none;
             border: none;
             cursor: pointer;
@@ -2944,7 +3273,7 @@
         }
 
         .hv-label {
-            color: #5c5765;
+            color: var(--color-text-dark);
             font-weight: 600;
             margin-right: 4px;
         }
@@ -3004,8 +3333,8 @@
 
         .hv-history-item.selected {
             border-color: var(--color-primary);
-            background: linear-gradient(135deg, rgba(240, 214, 215, 0.25) 0%, rgba(222, 190, 235, 0.15) 100%), var(--color-bg-white);
-            box-shadow: 0 4px 16px rgba(240, 214, 215, 0.25);
+            background: linear-gradient(135deg, var(--color-bg-selected) 0%, var(--glass-bg-light) 100%), var(--color-bg-white);
+            box-shadow: 0 4px 16px var(--shadow-color-medium);
         }
 
         .hv-history-item.selected::after {
@@ -3030,23 +3359,23 @@
 
         .hv-history-time {
             font-size: 12px;
-            color: #a09caa;
+            color: var(--color-text-light);
             font-weight: 500;
         }
 
         .hv-history-mood {
             font-size: 11px;
-            color: #debeeb;
-            background: linear-gradient(135deg, rgba(222, 190, 235, 0.18), rgba(240, 214, 215, 0.18));
+            color: var(--color-accent);
+            background: linear-gradient(135deg, var(--glass-bg-light), var(--glass-bg));
             padding: 3px 10px;
             border-radius: 10px;
             font-weight: 600;
-            border: 1px solid rgba(222, 190, 235, 0.2);
+            border: 1px solid var(--glass-border-light);
         }
 
         .hv-history-content {
             font-size: 14px;
-            color: #5c5b66;
+            color: var(--color-text-dark);
             line-height: 1.7;
             letter-spacing: 0.02em;
         }
@@ -3317,20 +3646,20 @@
         @keyframes heartVoicePulse {
             0% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(240, 214, 215, 0.4);
-                background-color: rgba(240, 214, 215, 0.1);
+                box-shadow: 0 0 0 0 var(--color-bg-user-msg);
+                background-color: var(--glass-bg-light);
             }
 
             50% {
                 transform: scale(1.15);
-                box-shadow: 0 0 0 8px rgba(240, 214, 215, 0.2);
-                background-color: rgba(240, 214, 215, 0.25);
+                box-shadow: 0 0 0 8px var(--glass-border-light);
+                background-color: var(--color-bg-user-msg);
             }
 
             100% {
                 transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(240, 214, 215, 0);
-                background-color: rgba(240, 214, 215, 0.1);
+                box-shadow: 0 0 0 0 transparent;
+                background-color: var(--glass-bg-light);
             }
         }
 
@@ -3341,7 +3670,7 @@
         }
 
         .hover-text-style:hover {
-            color: #999;
+            color: var(--color-text-muted);
         }
 
         /* ========== 个人资料页面样式 - 清透玻璃拟态 ========== */
@@ -3394,27 +3723,27 @@
             margin: 0 auto 10px;
             border-radius: 50%;
             background: linear-gradient(135deg, 
-                rgba(200, 220, 240, 0.5) 0%, 
-                rgba(220, 235, 245, 0.5) 100%);
+                var(--avatar-gradient-start) 0%, 
+                var(--avatar-gradient-end) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border: 2px solid var(--glass-border-white);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 50px;
-            color: rgba(107, 125, 143, 0.7);
+            color: var(--color-text);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 24px rgba(107, 125, 143, 0.08),
-                        0 2px 8px rgba(107, 125, 143, 0.04);
+            box-shadow: 0 8px 24px var(--shadow-color-hover),
+                        0 2px 8px var(--shadow-color-light);
         }
 
         .profile-avatar:hover {
             transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 32px rgba(107, 125, 143, 0.12),
-                        0 4px 12px rgba(107, 125, 143, 0.06);
-            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 12px 32px var(--shadow-color-medium),
+                        0 4px 12px var(--shadow-color);
+            border-color: var(--glass-border-icon);
         }
 
         .avatar-edit-overlay {
@@ -3423,7 +3752,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(107, 125, 143, 0.75);
+            background: var(--color-text);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border-radius: 50%;
@@ -3445,12 +3774,12 @@
             align-items: center;
             gap: 4px;
             padding: 4px 12px;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            background: linear-gradient(135deg, var(--color-vip-gold) 0%, var(--color-accent) 100%);
             border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
-            color: #8b4513;
-            box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5);
+            color: var(--color-text-darker);
+            box-shadow: 0 3px 10px var(--shadow-color-medium);
         }
 
         .profile-basic-info {
@@ -3470,26 +3799,26 @@
             margin: 0;
             font-size: 26px;
             font-weight: 600;
-            color: #4a5968;
+            color: var(--color-text-dark);
             letter-spacing: 0.3px;
         }
 
         .profile-gender-icon {
             font-size: 20px;
-            color: #9aa8b5;
+            color: var(--color-text-light);
             opacity: 0.8;
         }
 
         .profile-id {
             font-size: 14px;
-            color: #7a8a9a;
+            color: var(--color-text-medium);
             margin-bottom: 14px;
             font-weight: 400;
         }
 
         .profile-signature {
             font-size: 14px;
-            color: #8b99a8;
+            color: var(--color-text-placeholder);
             font-style: normal;
             max-width: 300px;
             margin: 0 auto;
@@ -3500,14 +3829,14 @@
         /* 编辑表单样式 - 玻璃拟态 */
         .profile-edit-form {
             padding: 28px 24px;
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--glass-bg-strong);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border-radius: 32px 32px 0 0;
             margin-top: -10px;
             position: relative;
             z-index: 3;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--glass-border-light);
             border-bottom: none;
         }
 
@@ -3519,7 +3848,7 @@
             display: block;
             font-size: 13px;
             font-weight: 500;
-            color: #6b7d8f;
+            color: var(--color-text);
             margin-bottom: 10px;
             letter-spacing: 0.2px;
         }
@@ -3542,7 +3871,7 @@
         }
 
         .gender-option:hover {
-            background: rgba(212, 227, 240, 0.15);
+            background: var(--color-bg-selected);
         }
 
         .gender-option input[type="radio"] {
@@ -3557,40 +3886,40 @@
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            color: rgba(255, 255, 255, 0.95);
+            color: var(--icon-color-alt);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border: 1.5px solid var(--glass-border-light);
         }
 
         .gender-icon.female {
             background: linear-gradient(135deg, 
-                rgba(180, 200, 220, 0.65) 0%, 
-                rgba(200, 215, 230, 0.65) 100%);
+                var(--icon-gradient-2-start) 0%, 
+                var(--icon-gradient-2-end) 100%);
         }
 
         .gender-icon.male {
             background: linear-gradient(135deg, 
-                rgba(160, 190, 215, 0.65) 0%, 
-                rgba(180, 205, 225, 0.65) 100%);
+                var(--icon-gradient-3-start) 0%, 
+                var(--icon-gradient-3-end) 100%);
         }
 
         .gender-icon.other {
             background: linear-gradient(135deg, 
-                rgba(170, 185, 210, 0.65) 0%, 
-                rgba(190, 200, 220, 0.65) 100%);
+                var(--icon-gradient-4-start) 0%, 
+                var(--icon-gradient-4-end) 100%);
         }
 
         .gender-option input[type="radio"]:checked + .gender-icon {
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(107, 125, 143, 0.12);
-            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 6px 20px var(--shadow-color-medium);
+            border-color: var(--glass-border-stronger);
         }
 
         .form-help-text {
             font-size: 12px;
-            color: #9aa8b5;
+            color: var(--color-text-light);
             margin-top: 8px;
             font-weight: 300;
         }
@@ -3624,22 +3953,22 @@
             display: flex;
             align-items: center;
             padding: 18px 20px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
             border-radius: 24px;
             margin-bottom: 14px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow: 0 4px 16px rgba(107, 125, 143, 0.05);
+            border: 1px solid var(--glass-border-strong);
+            box-shadow: 0 4px 16px var(--shadow-color-light);
         }
 
         .profile-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(107, 125, 143, 0.1);
-            border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 28px var(--shadow-color-medium);
+            border-color: var(--glass-border-stronger);
+            background: var(--glass-bg-stronger);
         }
 
         .card-icon {
@@ -3651,34 +3980,34 @@
             justify-content: center;
             margin-right: 16px;
             font-size: 19px;
-            color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: var(--icon-color-alt);
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
+            border: 1.5px solid var(--glass-border-light);
         }
 
         .profile-card:nth-child(1) .card-icon {
             background: linear-gradient(135deg, 
-                rgba(180, 200, 220, 0.7) 0%, 
-                rgba(200, 215, 230, 0.7) 100%);
+                var(--icon-gradient-2-start) 0%, 
+                var(--icon-gradient-2-end) 100%);
         }
 
         .profile-card:nth-child(2) .card-icon {
             background: linear-gradient(135deg, 
-                rgba(160, 195, 210, 0.7) 0%, 
-                rgba(180, 210, 225, 0.7) 100%);
+                var(--icon-gradient-3-start) 0%, 
+                var(--icon-gradient-3-end) 100%);
         }
 
         .profile-card:nth-child(3) .card-icon {
             background: linear-gradient(135deg, 
-                rgba(170, 200, 220, 0.7) 0%, 
-                rgba(190, 215, 235, 0.7) 100%);
+                var(--icon-gradient-4-start) 0%, 
+                var(--icon-gradient-4-end) 100%);
         }
 
         .profile-card:nth-child(4) .card-icon {
             background: linear-gradient(135deg, 
-                rgba(190, 205, 220, 0.7) 0%, 
-                rgba(205, 220, 230, 0.7) 100%);
+                var(--icon-gradient-5-start) 0%, 
+                var(--icon-gradient-5-end) 100%);
         }
 
         .card-content {
@@ -3688,29 +4017,29 @@
         .card-title {
             font-size: 15px;
             font-weight: 500;
-            color: #4a5968;
+            color: var(--color-text-dark);
             margin-bottom: 4px;
             letter-spacing: 0.2px;
         }
 
         .card-desc {
             font-size: 13px;
-            color: #7a8a9a;
+            color: var(--color-text-medium);
             font-weight: 300;
         }
 
         .profile-card i.fa-chevron-right {
-            color: #b5c1cc;
+            color: var(--color-text-lighter);
             font-size: 13px;
         }
 
         /* 顶部编辑按钮样式 */
         .profile-edit-btn {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #7a8a9a;
+            background: var(--glass-bg-light);
+            backdrop-filter: var(--glass-blur-light);
+            -webkit-backdrop-filter: var(--glass-blur-light);
+            border: 1px solid var(--glass-border-light);
+            color: var(--color-text-medium);
             font-size: 17px;
             cursor: pointer;
             padding: 10px;
@@ -3719,15 +4048,15 @@
         }
 
         .profile-edit-btn:hover {
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--glass-bg-strong);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(107, 125, 143, 0.1);
-            color: #6b7d8f;
+            box-shadow: 0 4px 12px var(--shadow-color-light);
+            color: var(--color-text);
         }
 
         /* 个人资料页按“页面切换”呈现，不使用弹窗动画 */
         #profileModal {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: var(--overlay-darker);
         }
 
         #profileModal .modal-content {
@@ -3771,12 +4100,12 @@
         }
 
         #imageDescText::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.15);
+            background: var(--color-border);
             border-radius: 4px;
         }
 
         #imageDescText::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.25);
+            background: var(--color-border-input);
         }
 
         .worldbook-button {
@@ -3791,7 +4120,7 @@
             /* 大圆角 */
             font-size: 15px;
             font-weight: 600;
-            color: #333;
+            color: var(--color-text-darker);
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             min-height: 130px;
@@ -3830,18 +4159,18 @@
 
         .hg-glass-btn {
             border-radius: 24px;
-            background: linear-gradient(135deg, rgba(240, 214, 215, 0.3) 0%, rgba(200, 220, 240, 0.2) 100%), rgba(255, 255, 255, 0.85);
+            background: linear-gradient(135deg, var(--color-bg-user-msg) 0%, var(--color-bg-selected) 100%), var(--glass-bg-stronger);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--glass-border-icon);
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: 0 8px 20px rgba(200, 170, 210, 0.25);
+            box-shadow: 0 8px 20px var(--shadow-color-medium);
         }
 
         .hg-glass-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(120, 119, 133, 0.15);
+            box-shadow: 0 10px 24px var(--shadow-color-hover);
         }
 
         .hg-glass-btn:active {
@@ -3850,10 +4179,10 @@
 
         /* 世界书卡片样式 */
         .wb-card {
-            background-color: #FFFFFF;
+            background-color: var(--color-bg-white);
             border-radius: 18px;
             padding: 16px;
-            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.1);
+            box-shadow: 0 4px 12px var(--shadow-color-light);
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -3862,19 +4191,19 @@
         }
 
         .wb-card:hover {
-            box-shadow: 0 6px 16px rgba(200, 170, 210, 0.15);
+            box-shadow: 0 6px 16px var(--shadow-color-medium);
         }
 
         .wb-card-title {
             font-size: 16px;
             font-weight: 700;
-            color: #333;
+            color: var(--color-text-darker);
             margin: 0;
         }
 
         .wb-card-preview {
             font-size: 13px;
-            color: #999;
+            color: var(--color-text-muted);
             margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -3897,22 +4226,22 @@
             width: 32px;
             height: 32px;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(240, 214, 215, 0.2) 0%, rgba(200, 220, 240, 0.15) 100%), rgba(255, 255, 255, 0.7);
+            background: linear-gradient(135deg, var(--color-bg-user-msg) 0%, var(--color-bg-selected) 100%), var(--glass-bg-strong);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--glass-border-stronger);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #888;
+            color: var(--color-text-medium);
             font-size: 14px;
             transition: all 0.15s ease;
         }
 
         .wb-card-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.2);
+            box-shadow: 0 4px 12px var(--shadow-color-medium);
         }
 
         .wb-card-btn:active {
@@ -3921,10 +4250,10 @@
 
         /* HTML游戏卡片样式 (复用世界书样式) */
         .hg-card {
-            background-color: #FFFFFF;
+            background-color: var(--color-bg-white);
             border-radius: 18px;
             padding: 16px;
-            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.1);
+            box-shadow: 0 4px 12px var(--shadow-color-light);
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -3933,19 +4262,19 @@
         }
 
         .hg-card:hover {
-            box-shadow: 0 6px 16px rgba(200, 170, 210, 0.15);
+            box-shadow: 0 6px 16px var(--shadow-color-medium);
         }
 
         .hg-card-title {
             font-size: 16px;
             font-weight: 700;
-            color: #333;
+            color: var(--color-text-darker);
             margin: 0;
         }
 
         .hg-card-preview {
             font-size: 13px;
-            color: #999;
+            color: var(--color-text-muted);
             margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -3968,27 +4297,57 @@
             width: 32px;
             height: 32px;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(240, 214, 215, 0.2) 0%, rgba(200, 220, 240, 0.15) 100%), rgba(255, 255, 255, 0.7);
+            background: linear-gradient(135deg, var(--color-bg-user-msg) 0%, var(--color-bg-selected) 100%), var(--glass-bg-strong);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--glass-border-stronger);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #888;
+            color: var(--color-text-medium);
             font-size: 14px;
             transition: all 0.15s ease;
         }
 
         .hg-card-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(200, 170, 210, 0.2);
+            box-shadow: 0 4px 12px var(--shadow-color-medium);
         }
 
         .hg-card-btn:active {
             transform: translateY(0);
         }
+        
+        /* ============================================================
+           实用CSS类 - 用于替代inline style
+           ============================================================ */
+        
+        /* 文字颜色类 */
+        .text-ui-gray { color: var(--color-ui-gray) !important; }
+        .text-ui-dark { color: var(--color-text-dark) !important; }
+        .text-accent { color: var(--color-accent) !important; }
+        .text-muted { color: var(--color-text-muted) !important; }
+        
+        /* 背景颜色类 */
+        .bg-ui-light { background-color: var(--color-ui-bg) !important; }
+        .bg-button-secondary { background-color: var(--color-button-secondary) !important; }
+        .bg-white-soft { background-color: var(--color-bg-white) !important; }
+        
+        /* 按钮渐变类 */
+        .btn-gradient-cold {
+            background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-blue) 100%) !important;
+            color: white !important;
+        }
+        
+        .btn-gradient-lavender {
+            background: linear-gradient(135deg, var(--color-accent-lavender) 0%, var(--color-accent-blue) 100%) !important;
+            color: white !important;
+        }
+        
+        /* 边框颜色类 */
+        .border-ui { border-color: var(--color-ui-border) !important; }
+        .border-accent { border-color: var(--color-accent) !important; }
     </style>
 
 </head>
@@ -4011,94 +4370,74 @@
         <!-- 主内容区域 -->
         <div class="main-content">
             <div class="home-screen">
-                <!-- 可自定义个人资料小组件 -->
-                <div class="w-full flex justify-center">
-                    <div id="profileWidgetV2"
-                        class="w-[88%] h-[340px] bg-white rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col overflow-hidden relative mx-auto transition-all duration-300">
-                        <!-- 顶部背景图区域 -->
-                        <div id="profileWidgetCover"
-                            class="w-full h-[45%] bg-zinc-200 bg-cover bg-center relative cursor-pointer group">
-                            <div
-                                class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
-                                <i
-                                    class="fas fa-image text-white/0 group-hover:text-white/60 transition-all text-2xl drop-shadow-md"></i>
-                            </div>
-                        </div>
-
-                        <!-- 底部内容区域 -->
-                        <div id="profileWidgetBottom"
-                            class="flex-1 bg-white bg-cover bg-center relative flex flex-col items-center pt-[52px] pb-5 px-6 cursor-pointer group/bottom transition-all duration-300">
-                            <div
-                                class="absolute inset-0 bg-black/0 group-hover/bottom:bg-black/5 transition-colors pointer-events-none">
-                            </div>
-
-                            <!-- 头像 (悬浮在交界处) -->
-                            <div class="absolute -top-[46px] left-1/2 -translate-x-1/2 z-20">
-                                <button id="editProfileAvatarImage" data-no-bg-change
-                                    class="w-[92px] h-[92px] rounded-full border-[5px] border-white bg-white shadow-sm focus:outline-none focus:ring-4 focus:ring-purple-100 overflow-hidden transition-transform active:scale-95"
-                                    aria-label="编辑头像图片">
-                                    <div class="w-full h-full rounded-full overflow-hidden relative bg-zinc-50">
-                                        <img id="profileAvatarImage" src="" alt="Avatar"
-                                            class="w-full h-full object-cover hidden" />
-                                        <div id="profileAvatarImagePlaceholder"
-                                            class="w-full h-full bg-purple-200 flex items-center justify-center"
-                                            style="background-image: radial-gradient(#fff 15%, transparent 16%), radial-gradient(#fff 15%, transparent 16%); background-size: 10px 10px; background-position: 0 0, 5px 5px;">
-                                            <i class="fas fa-user text-white text-3xl drop-shadow-sm"></i>
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-
-                            <!-- 姓名 -->
-                            <div data-no-bg-change
-                                class="w-full text-center rounded-xl px-2 py-1 hover:bg-gray-50/50 transition-colors relative z-10 mb-1">
-                                <div id="profileName" contenteditable="true"
-                                    class="text-[22px] font-bold text-zinc-800 truncate tracking-tight outline-none cursor-text">
-                                </div>
-                            </div>
-
-                            <!-- Handle -->
-                            <div data-no-bg-change
-                                class="w-full text-center rounded-lg px-2 py-0.5 hover:bg-gray-50/50 transition-colors relative z-10 mb-4">
-                                <div id="profileHandle" contenteditable="true"
-                                    class="text-[13px] text-gray-400 font-medium truncate outline-none cursor-text">
-                                </div>
-                            </div>
-
-                            <!-- 状态/Bio -->
-                            <div data-no-bg-change
-                                class="w-full text-center rounded-xl px-2 py-1 hover:bg-gray-50/50 transition-colors relative z-10 mb-auto">
-                                <div id="profileStatus" contenteditable="true"
-                                    class="text-[14px] text-zinc-600 leading-relaxed line-clamp-2 outline-none cursor-text">
-                                </div>
-                            </div>
-
-                            <!-- 定位 (装饰性) -->
-                            <div data-no-bg-change
-                                class="w-full flex items-center gap-1.5 text-zinc-300 text-xs font-semibold mt-4 select-none hover:text-purple-300 transition-colors relative z-10 justify-center">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span id="profileLocation" contenteditable="true"
-                                    class="outline-none min-w-[20px] cursor-text">Seoul</span>
-                            </div>
+                <!-- 主页资料大卡片 -->
+                <div class="profile-widget-glass">
+                    <div class="profile-avatar-circle">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-username">小雨=</div>
+                        <div class="profile-handle">disappear</div>
+                        <div class="profile-bio">' ELL IS FELL '</div>
+                        <div class="profile-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>孤岛</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- 应用入口区域 -->
+                
+                <!-- iOS备忘录卡片 -->
+                <div class="memo-card">
+                    <div class="memo-header">
+                        <i class="fas fa-folder"></i>
+                        <span class="memo-title">备忘录</span>
+                    </div>
+                    <div class="memo-content">
+                    </div>
+                </div>
+                
+                <!-- 右侧图标区域 (4个图标: 消息、甜聊、创世书、设置) -->
+                <div class="icon-area-glass">
+                    <div class="app-item" data-app="message">
+                        <div class="app-icon message-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="app-name">消息</div>
+                    </div>
+                    <div class="app-item" data-app="feixin">
+                        <div class="app-icon chat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="app-name">甜聊</div>
+                    </div>
+                    <div class="app-item" data-app="worldbook">
+                        <div class="app-icon worldbook-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="app-name">创世书</div>
+                    </div>
+                    <div class="app-item" data-app="settings">
+                        <div class="app-icon settings-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="app-name">设置</div>
+                    </div>
+                </div>
+                <!-- 应用入口区域 (保留但隐藏) -->
                 <div id="appGrid" class="app-grid app-grid-offset"></div>
 
             </div>
         </div>
 
-        <!-- Dock栏 -->
-        <div class="dock">
-            <div class="dock-icon phone-icon" id="phoneIcon">
+        <!-- Dock栏 (新版玻璃设计) -->
+        <div class="dock-glass">
+            <div class="dock-icon-glass dock-phone" id="phoneIcon">
                 <i class="fas fa-mobile-alt"></i>
             </div>
-            <div class="dock-icon novel-icon" id="novelIcon">
+            <div class="dock-icon-glass dock-novel" id="novelIcon">
                 <i class="fas fa-book"></i>
             </div>
-            <div class="dock-icon forum-icon" id="forumIcon">
+            <div class="dock-icon-glass dock-forum" id="forumIcon">
                 <i class="fas fa-comments"></i>
             </div>
         </div>
@@ -4187,7 +4526,7 @@
                 <div id="apiPresetSection" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E8E4E9;">
                     <div style="margin-bottom: 16px;">
                         <label
-                            style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设管理</label>
+                            style="display: block; font-weight: 600; color: var(--color-ui-gray); margin-bottom: 10px; font-size: 14px;">API预设管理</label>
                         <div style="display: flex; gap: 8px;">
                             <input type="text" id="presetName" class="form-control" placeholder="输入预设名称"
                                 style="flex: 1; font-size: 14px;">
@@ -4198,7 +4537,7 @@
 
                     <div style="margin-top: 16px;">
                         <label
-                            style="display: block; font-weight: 600; color: #787785; margin-bottom: 10px; font-size: 14px;">API预设列表</label>
+                            style="display: block; font-weight: 600; color: var(--color-ui-gray); margin-bottom: 10px; font-size: 14px;">API预设列表</label>
                         <div id="presetListContainer"
                             style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
                             <!-- 按钮由 JS 动态生成 -->
@@ -4211,7 +4550,7 @@
                             style="width: 260px; height: 280px; max-width: 260px; max-height: 280px; border-radius: 14px; padding: 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden;">
                             <div style="padding: 10px 12px; border-bottom: 1px solid #E8E4E9; flex-shrink: 0;">
                                 <h3
-                                    style="margin: 0; font-size: 13px; color: #333; text-align: center; font-weight: 600;">
+                                    style="margin: 0; font-size: 13px; color: var(--color-text-darker); text-align: center; font-weight: 600;">
                                     选择API预设</h3>
                             </div>
                             <div id="apiPresetDrawerList"
@@ -4221,7 +4560,7 @@
                             <div
                                 style="padding: 8px 10px; border-top: 1px solid #E8E4E9; display: flex; gap: 8px; justify-content: center; flex-shrink: 0;">
                                 <button id="closeApiPresetModal" type="button"
-                                    style="padding: 4px 20px; background: #F5F3F6; border: none; border-radius: 6px; cursor: pointer; color: #666; font-size: 12px; font-weight: 500;">取消</button>
+                                    style="padding: 4px 20px; background: var(--color-button-secondary); border: none; border-radius: 6px; cursor: pointer; color: var(--color-text-medium); font-size: 12px; font-weight: 500;">取消</button>
                             </div>
                         </div>
                     </div>
@@ -4248,7 +4587,7 @@
                 </button>
                 <div class="settings-title">好友列表</div>
                 <button class="settings-back"
-                    style="background: none; border: none; cursor: pointer; padding: 0; font-size: 18px; color: #f0d6d7; width: 42px; text-align: center;"
+                    style="background: none; border: none; cursor: pointer; padding: 0; font-size: 18px; color: var(--color-accent-pink); width: 42px; text-align: center;"
                     id="addFriendFromList">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -4342,16 +4681,16 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <h3 id="chatTitle"
-                    style="margin: 0; color: #787785; font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-align: center;">
+                    style="margin: 0; color: var(--color-ui-gray); font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; text-align: center;">
                     芋圆</h3>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <button id="heartVoiceBtn"
-                        style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
+                        style="background: none; border: none; font-size: 18px; color: var(--color-accent-pink); cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
                         aria-label="心声">
                         <i class="fas fa-heart"></i>
                     </button>
                     <button id="charSettingsBtn"
-                        style="background: none; border: none; font-size: 20px; color: #787785; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;">
+                        style="background: none; border: none; font-size: 20px; color: var(--color-ui-gray); cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
@@ -4364,7 +4703,7 @@
             </div>
 
             <div id="apiWarning" class="api-warning"
-                style="display: none; background-color: #f6f2f1; border-bottom: 1px solid #debb7b; padding: 12px 20px; color: #debb7b; font-size: 13px; text-align: center;">
+                style="display: none; background-color: var(--color-ui-bg); border-bottom: 1px solid #debb7b; padding: 12px 20px; color: #debb7b; font-size: 13px; text-align: center;">
                 ⚠️ 未配置API，请先进行API配置
             </div>
 
@@ -4407,7 +4746,7 @@
 
             <!-- 输入框区域 -->
             <div
-                style="background-color: #FFFFFF; border-top: 1px solid #f6f2f1; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px);">
+                style="background-color: #FFFFFF; border-top: 1px solid var(--color-ui-border); flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px);">
                 <div id="chatInputAreaWrap" class="chat-input-area-wrap" style="padding: 8px 12px 2px;">
                     <div id="replyPreview" class="reply-preview">
                         <span id="replyPreviewText" class="reply-preview-text"></span>
@@ -4422,26 +4761,26 @@
                     <div class="chat-function-row"
                         style="display: flex; justify-content: space-around; padding: 4px 0 2px;">
                         <button id="voiceInputBtn"
-                            style="background: none; border: none; color: #787785; font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
+                            style="background: none; border: none; color: var(--color-ui-gray); font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
                                 class="fas fa-microphone"></i></button>
                         <button id="imageUploadBtn"
-                            style="background: none; border: none; color: #787785; font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
+                            style="background: none; border: none; color: var(--color-ui-gray); font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
                                 class="fas fa-image"></i></button>
                         <button id="cameraInputBtn"
-                            style="background: none; border: none; color: #787785; font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
+                            style="background: none; border: none; color: var(--color-ui-gray); font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
                                 class="fas fa-camera"></i></button>
                         <button
-                            style="background: none; border: none; color: #787785; font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
+                            style="background: none; border: none; color: var(--color-ui-gray); font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
                                 class="fas fa-laugh"></i></button>
                         <button id="chatPlusBtn"
-                            style="background: none; border: none; color: #787785; font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
+                            style="background: none; border: none; color: var(--color-ui-gray); font-size: 22px; cursor: pointer; padding: 10px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i
                                 class="fas fa-plus-circle"></i></button>
                     </div>
 
                     <div class="chat-input-row"
                         style="display: flex; gap: 8px; margin-bottom: 2px; align-items: flex-end;">
                         <button id="triggerAiBtn"
-                            style="width: 38px; height: 38px; padding: 0; border-radius: 50%; flex-shrink: 0; background: #f6f2f1; border: none; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(120,119,133,0.05); display: flex; align-items: center; justify-content: center; color: #debeeb;"
+                            style="width: 38px; height: 38px; padding: 0; border-radius: 50%; flex-shrink: 0; background: var(--color-ui-bg); border: none; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(120,119,133,0.05); display: flex; align-items: center; justify-content: center; color: var(--color-accent-lavender);"
                             aria-label="呼唤AI">
                             <i class="fas fa-wand-magic-sparkles" style="font-size: 18px;"></i>
                         </button>
@@ -4549,11 +4888,11 @@
             style="background-color: white; border-radius: 15px; width: 85%; max-width: 300px; padding: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); position: relative;">
             <!-- 关闭按钮 -->
             <button id="closeVoiceModal"
-                style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; color: var(--color-ui-gray); cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-times"></i>
             </button>
 
-            <h3 style="margin: 0 0 15px 0; color: #787785; font-size: 16px; font-weight: 600;">语音输入</h3>
+            <h3 style="margin: 0 0 15px 0; color: var(--color-ui-gray); font-size: 16px; font-weight: 600;">语音输入</h3>
 
             <div style="margin-bottom: 20px;">
                 <textarea id="voiceText" placeholder="输入或说出的文字..."
@@ -4562,9 +4901,9 @@
 
             <div style="display: flex; gap: 10px;">
                 <button id="cancelVoiceInput"
-                    style="flex: 1; padding: 10px; background-color: #f6f2f1; border: none; border-radius: 8px; cursor: pointer; color: #787785; font-weight: 500;">取消</button>
+                    style="flex: 1; padding: 10px; background-color: var(--color-ui-bg); border: none; border-radius: 8px; cursor: pointer; color: var(--color-ui-gray); font-weight: 500;">取消</button>
                 <button id="confirmVoiceInput"
-                    style="flex: 1; padding: 10px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 500;">发送</button>
+                    style="flex: 1; padding: 10px; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 500;">发送</button>
             </div>
         </div>
     </div>
@@ -4575,11 +4914,11 @@
             style="background-color: white; border-radius: 15px; width: 85%; max-width: 300px; padding: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); position: relative;">
             <!-- 关闭按钮 -->
             <button id="closeCameraDescModal"
-                style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; color: #787785; cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; color: var(--color-ui-gray); cursor: pointer; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-times"></i>
             </button>
 
-            <h3 style="margin: 0 0 15px 0; color: #787785; font-size: 16px; font-weight: 600;">图片描述</h3>
+            <h3 style="margin: 0 0 15px 0; color: var(--color-ui-gray); font-size: 16px; font-weight: 600;">图片描述</h3>
 
             <div style="margin-bottom: 20px;">
                 <textarea id="cameraDescText" placeholder="描述图片内容..."
@@ -4588,9 +4927,9 @@
 
             <div style="display: flex; gap: 10px;">
                 <button id="cancelCameraDesc"
-                    style="flex: 1; padding: 10px; background-color: #f6f2f1; border: none; border-radius: 8px; cursor: pointer; color: #787785; font-weight: 500;">取消</button>
+                    style="flex: 1; padding: 10px; background-color: var(--color-ui-bg); border: none; border-radius: 8px; cursor: pointer; color: var(--color-ui-gray); font-weight: 500;">取消</button>
                 <button id="confirmCameraDesc"
-                    style="flex: 1; padding: 10px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 500;">发送</button>
+                    style="flex: 1; padding: 10px; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 500;">发送</button>
             </div>
         </div>
     </div>
@@ -4621,14 +4960,14 @@
         style="z-index: 2001; display: none; background-color: rgba(0, 0, 0, 0.3);">
         <div
             style="background-color: white; border-radius: 30px; padding: 20px 25px; width: 75%; max-width: 240px; box-shadow: 0 10px 40px rgba(120, 119, 133, 0.2); text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #787785; font-size: 15px; font-weight: 600;">确认删除？</h3>
-            <p style="margin: 0 0 15px 0; color: #787785; font-size: 13px;">删除后将无法恢复</p>
+            <h3 style="margin: 0 0 10px 0; color: var(--color-ui-gray); font-size: 15px; font-weight: 600;">确认删除？</h3>
+            <p style="margin: 0 0 15px 0; color: var(--color-ui-gray); font-size: 13px;">删除后将无法恢复</p>
 
             <div style="display: flex; gap: 12px; justify-content: center;">
                 <button id="confirmDeleteYes"
                     style="padding: 10px 25px; background-color: #d32f2f; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 13px; min-width: 70px;">是</button>
                 <button id="confirmDeleteNo"
-                    style="padding: 10px 25px; background-color: white; color: #787785; border: 1px solid #f6f2f1; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 13px; min-width: 70px;">否</button>
+                    style="padding: 10px 25px; background-color: white; color: var(--color-ui-gray); border: 1px solid var(--color-ui-border); border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 13px; min-width: 70px;">否</button>
             </div>
         </div>
     </div>
@@ -4640,11 +4979,11 @@
                 <h3 id="heartVoiceHistoryTitle">心声历史</h3>
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <button id="hv-delete-select-btn" title="选择删除"
-                        style="background: linear-gradient(135deg, #f0d6d7, #ffc4d0); border: none; color: #fff; cursor: pointer; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(240, 214, 215, 0.3); transition: all 0.2s; font-weight: bold;">
+                        style="background: linear-gradient(135deg, var(--color-accent-pink), var(--color-accent-lavender)); border: none; color: #fff; cursor: pointer; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(120, 119, 133, 0.15); transition: all 0.2s; font-weight: bold;">
                         删
                     </button>
                     <button id="hv-export-select-btn" title="选择导出"
-                        style="background: linear-gradient(135deg, #debeeb, #d4a5e0); border: none; color: #fff; cursor: pointer; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(222, 190, 235, 0.3); transition: all 0.2s; font-weight: bold;">
+                        style="background: linear-gradient(135deg, var(--color-accent-lavender), var(--color-accent-blue)); border: none; color: #fff; cursor: pointer; font-size: 16px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(120, 119, 133, 0.15); transition: all 0.2s; font-weight: bold;">
                         导
                     </button>
                     <button class="modal-close" id="closeHeartVoiceHistoryModal">
@@ -4668,9 +5007,9 @@
             <p style="margin: 0 0 20px 0; color: #999; font-size: 13px;">删除后无法找回哦</p>
             <div style="display: flex; gap: 12px; justify-content: center;">
                 <button id="hvDeleteConfirm"
-                    style="flex: 1; padding: 10px 0; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px;">删除</button>
+                    style="flex: 1; padding: 10px 0; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px;">删除</button>
                 <button id="hvDeleteCancel"
-                    style="flex: 1; padding: 10px 0; background-color: #f6f2f1; color: #787785; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px;">取消</button>
+                    style="flex: 1; padding: 10px 0; background-color: var(--color-ui-bg); color: var(--color-ui-gray); border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px;">取消</button>
             </div>
         </div>
     </div>
@@ -4770,9 +5109,9 @@
 
                 <div style="display: flex; gap: 10px;">
                     <button id="saveCharSettingsBtn"
-                        style="flex: 1; padding: 12px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">保存</button>
+                        style="flex: 1; padding: 12px; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">保存</button>
                     <button id="deleteCharBtn"
-                        style="flex: 1; padding: 12px; background-color: #f6f2f1; color: #d32f2f; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">删除好友</button>
+                        style="flex: 1; padding: 12px; background-color: var(--color-ui-bg); color: var(--color-delete-red); border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">删除好友</button>
                 </div>
             </div>
         </div>
@@ -4828,7 +5167,7 @@
                         <input type="number" id="memoryChatCountInput"
                             style="width: 60px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; text-align: center;"
                             min="1" max="999" value="50">
-                        <span style="font-size: 14px; color: #787785;">条</span>
+                        <span style="font-size: 14px; color: var(--color-ui-gray);">条</span>
                     </div>
                 </div>
 
@@ -4847,26 +5186,26 @@
     <div class="modal" id="avatarPickerModal" style="z-index: 2105; display: none; background-color: rgba(0,0,0,0.35);">
         <div
             style="background-color: #FFFFFF; border-radius: 20px; width: 86%; max-width: 320px; padding: 18px; box-shadow: 0 14px 40px rgba(120,119,133,0.2);">
-            <h3 style="margin: 0 0 12px 0; color: #787785; font-size: 16px; font-weight: 600; text-align: center;">更换头像
+            <h3 style="margin: 0 0 12px 0; color: var(--color-ui-gray); font-size: 16px; font-weight: 600; text-align: center;">更换头像
             </h3>
             <div id="charAvatarModalPreview"
-                style="width: 74px; height: 74px; border-radius: 50%; background: #f6f2f1; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; color: #787785; font-size: 26px; background-size: cover; background-position: center;">
+                style="width: 74px; height: 74px; border-radius: 50%; background: var(--color-ui-bg); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; color: var(--color-ui-gray); font-size: 26px; background-size: cover; background-position: center;">
                 <i class="fas fa-user"></i>
             </div>
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <input id="charAvatarUrlModalInput" type="text" placeholder="粘贴头像图片URL"
                     style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 14px;">
                 <label
-                    style="display: block; width: 100%; padding: 10px 12px; border: 1px dashed #f0d6d7; border-radius: 12px; font-size: 14px; color: #f0d6d7; text-align: center; cursor: pointer;">
+                    style="display: block; width: 100%; padding: 10px 12px; border: 1px dashed var(--color-accent-pink); border-radius: 12px; font-size: 14px; color: var(--color-accent-pink); text-align: center; cursor: pointer;">
                     选择本地图片
                     <input id="charAvatarFileModalInput" type="file" accept="image/*" style="display: none;">
                 </label>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 16px;">
                 <button id="cancelAvatarPicker"
-                    style="flex: 1; padding: 10px; background: #f6f2f1; border: none; border-radius: 12px; cursor: pointer; color: #787785; font-weight: 600;">取消</button>
+                    style="flex: 1; padding: 10px; background: var(--color-ui-bg); border: none; border-radius: 12px; cursor: pointer; color: var(--color-ui-gray); font-weight: 600;">取消</button>
                 <button id="confirmAvatarPicker"
-                    style="flex: 1; padding: 10px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); border: none; border-radius: 12px; cursor: pointer; color: #fff; font-weight: 600;">确定</button>
+                    style="flex: 1; padding: 10px; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); border: none; border-radius: 12px; cursor: pointer; color: #fff; font-weight: 600;">确定</button>
             </div>
         </div>
     </div>
@@ -4892,54 +5231,6 @@
         </div>
     </div>
 
-    <!-- 个人资料小组件编辑弹窗 -->
-    <div id="profileWidgetModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="profileWidgetModalTitle"
-        style="z-index: 3000;">
-        <div id="profileWidgetModalContent" class="modal-content" style="max-width: 320px;">
-            <div class="modal-header">
-                <h3 id="profileWidgetModalTitle">编辑</h3>
-                <button class="modal-close" id="closeProfileWidgetModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="profileWidgetImageEditor" style="display: none;" class="space-y-4">
-                    <img id="profileWidgetImagePreview" src="" alt="预览"
-                        class="w-full h-48 object-contain rounded-lg bg-gray-100 hidden" />
-                    <div class="form-group">
-                        <label for="profileWidgetImageUrlInput">图片链接</label>
-                        <input id="profileWidgetImageUrlInput" type="text" class="form-control"
-                            placeholder="https://example.com/image.png" />
-                    </div>
-                    <div class="relative flex items-center" style="margin: 10px 0;">
-                        <div style="flex: 1; border-top: 1px solid #ddd;"></div>
-                        <span style="margin: 0 10px; color: #999; font-size: 12px;">或</span>
-                        <div style="flex: 1; border-top: 1px solid #ddd;"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="file" accept="image/*" id="profileWidgetFileInput" class="form-control"
-                            style="display: none;" aria-hidden="true" />
-                        <button id="profileWidgetUploadButton" class="btn btn-secondary"
-                            style="width: 100%;">选择图片</button>
-                    </div>
-                </div>
-
-                <div id="profileWidgetTextEditor" style="display: none;">
-                    <input id="profileWidgetTextInput" type="text" class="form-control" />
-                </div>
-
-                <div id="profileWidgetTextareaEditor" style="display: none;">
-                    <textarea id="profileWidgetTextareaInput" rows="4" class="form-control"></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button id="profileWidgetCancelButton" type="button" class="btn btn-secondary">取消</button>
-                    <button id="profileWidgetSaveButton" type="button" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- 世界书挂载弹窗 -->
     <div id="worldbookMountModal" class="modal"
         style="display: none; z-index: 2100; background-color: rgba(0, 0, 0, 0.3);">
@@ -4959,9 +5250,9 @@
             <!-- 底部按钮 -->
             <div style="display: flex; gap: 12px; margin-top: 16px;">
                 <button id="worldbookMountCancel"
-                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background-color: #f6f2f1; color: #666; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">取消</button>
+                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background-color: var(--color-ui-bg); color: #666; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">取消</button>
                 <button id="worldbookMountSave"
-                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">保存</button>
+                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">保存</button>
             </div>
         </div>
     </div>
@@ -4986,9 +5277,9 @@
             <!-- 底部按钮 -->
             <div style="display: flex; gap: 12px; margin-top: 16px;">
                 <button id="htmlGameMountCancel"
-                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background-color: #f6f2f1; color: #666; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">取消</button>
+                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background-color: var(--color-ui-bg); color: #666; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">取消</button>
                 <button id="htmlGameMountSave"
-                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">保存</button>
+                    style="flex: 1; padding: 12px 16px; border-radius: 22px; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">保存</button>
             </div>
         </div>
     </div>
@@ -5774,7 +6065,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             let friendSystem;
             let apiService;
             let chatSession;
-            let profileWidget;
             let heartVoiceSystem;
 
             /**
@@ -6146,76 +6436,104 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             const profileStatusSignal = document.getElementById('profileStatusSignal');
             const profileStatusWifi = document.getElementById('profileStatusWifi');
             const profileStatusBattery = document.getElementById('profileStatusBattery');
-            const apiStatusSignal = document.getElementById('apiStatusSignal');
-            const apiStatusWifi = document.getElementById('apiStatusWifi');
-            const apiStatusBattery = document.getElementById('apiStatusBattery');
-
-            function setStatusIcon(el, iconClass) {
-                if (!el || !iconClass) return;
-                el.className = `fas ${iconClass}`;
-            }
-
-            function applyStatusBar(status) {
-                if (!status) return;
-                if (statusTimeEl && status.time) {
-                    statusTimeEl.textContent = status.time;
+            // ========== 通用状态栏管理系统（可扩展方案） ==========
+            const StatusBarManager = {
+                pages: {}, // 存储所有页面的状态栏元素引用
+                mainTimeEl: null,
+                
+                /**
+                 * 初始化主状态栏元素
+                 */
+                initMainStatusBar(timeEl, signalEl, wifiEl, batteryEl) {
+                    this.mainTimeEl = timeEl;
+                    this.pages['main'] = { time: timeEl, signal: signalEl, wifi: wifiEl, battery: batteryEl };
+                },
+                
+                /**
+                 * 为新页面注册状态栏元素
+                 * @param {string} pageName - 页面名称（如 'chat', 'settings', 'profile'）
+                 * @param {object} elements - 元素对象 { time, signal, wifi, battery }
+                 * 使用示例：
+                 * StatusBarManager.register('chat', {
+                 *     time: document.getElementById('chatStatusTime'),
+                 *     signal: document.getElementById('chatStatusSignal'),
+                 *     wifi: document.getElementById('chatStatusWifi'),
+                 *     battery: document.getElementById('chatStatusBattery')
+                 * });
+                 */
+                register(pageName, elements) {
+                    this.pages[pageName] = elements;
+                },
+                
+                /**
+                 * 批量注册多个页面（更方便）
+                 * @param {array} pageConfigs - 配置数组
+                 * 使用示例：
+                 * StatusBarManager.registerBatch([
+                 *     { name: 'chat', time: 'chatStatusTime', signal: 'chatStatusSignal', wifi: 'chatStatusWifi', battery: 'chatStatusBattery' },
+                 *     { name: 'profile', time: 'profileStatusTime', signal: 'profileStatusSignal', wifi: 'profileStatusWifi', battery: 'profileStatusBattery' }
+                 * ]);
+                 */
+                registerBatch(pageConfigs) {
+                    pageConfigs.forEach(config => {
+                        const elements = {};
+                        if (config.time) elements.time = document.getElementById(config.time);
+                        if (config.signal) elements.signal = document.getElementById(config.signal);
+                        if (config.wifi) elements.wifi = document.getElementById(config.wifi);
+                        if (config.battery) elements.battery = document.getElementById(config.battery);
+                        this.register(config.name, elements);
+                    });
+                },
+                
+                /**
+                 * 更新所有已注册页面的状态栏
+                 */
+                updateAllPages(status) {
+                    if (!status) return;
+                    
+                    Object.entries(this.pages).forEach(([pageName, elements]) => {
+                        // 更新时间
+                        if (elements.time && status.time) {
+                            elements.time.textContent = status.time;
+                        }
+                        // 更新信号、WiFi、电池图标
+                        if (elements.signal && status.signal) {
+                            elements.signal.className = `fas ${status.signal}`;
+                        }
+                        if (elements.wifi && status.wifi) {
+                            elements.wifi.className = `fas ${status.wifi}`;
+                        }
+                        if (elements.battery && status.battery) {
+                            elements.battery.className = `fas ${status.battery}`;
+                        }
+                    });
                 }
-                setStatusIcon(statusSignalEl, status.signal);
-                setStatusIcon(statusWifiEl, status.wifi);
-                setStatusIcon(statusBatteryEl, status.battery);
+            };
 
-                // 更新聊天页状态栏图标
-                setStatusIcon(chatStatusSignal, status.signal);
-                setStatusIcon(chatStatusWifi, status.wifi);
-                setStatusIcon(chatStatusBattery, status.battery);
+            // 初始化主状态栏
+            StatusBarManager.initMainStatusBar(statusTimeEl, statusSignalEl, statusWifiEl, statusBatteryEl);
 
-                // 更新好友设置页状态栏图标
-                setStatusIcon(friendSettingsStatusSignal, status.signal);
-                setStatusIcon(friendSettingsStatusWifi, status.wifi);
-                setStatusIcon(friendSettingsStatusBattery, status.battery);
+            // 批量注册所有页面（一次性配置，以后只需在这里添加新页面）
+            StatusBarManager.registerBatch([
+                { name: 'chat', time: 'chatStatusTime', signal: 'chatStatusSignal', wifi: 'chatStatusWifi', battery: 'chatStatusBattery' },
+                { name: 'friendSettings', time: 'friendSettingsStatusTime', signal: 'friendSettingsStatusSignal', wifi: 'friendSettingsStatusWifi', battery: 'friendSettingsStatusBattery' },
+                { name: 'profile', time: 'profileStatusTime', signal: 'profileStatusSignal', wifi: 'profileStatusWifi', battery: 'profileStatusBattery' },
+                { name: 'api', time: 'apiStatusTime', signal: 'apiStatusSignal', wifi: 'apiStatusWifi', battery: 'apiStatusBattery' },
+                { name: 'worldbookList', time: 'wbListStatusTime', signal: 'wbListStatusSignal', wifi: 'wbListStatusWifi', battery: 'wbListStatusBattery' },
+                { name: 'worldbookEdit', time: 'wbEditStatusTime', signal: 'wbEditStatusSignal', wifi: 'wbEditStatusWifi', battery: 'wbEditStatusBattery' },
+                { name: 'htmlGameList', time: 'hgListStatusTime', signal: 'hgListStatusSignal', wifi: 'hgListStatusWifi', battery: 'hgListStatusBattery' },
+                { name: 'htmlGameEdit', time: 'hgEditStatusTime', signal: 'hgEditStatusSignal', wifi: 'hgEditStatusWifi', battery: 'hgEditStatusBattery' },
+                { name: 'settings', time: 'settingsStatusTime', signal: null, wifi: null, battery: null },
+                { name: 'friendList', time: 'friendListStatusTime', signal: null, wifi: null, battery: null },
+                { name: 'worldbook', time: 'worldbookStatusTime', signal: null, wifi: null, battery: null }
+            ]);
 
-                // 更新个人资料页状态栏图标
-                setStatusIcon(profileStatusSignal, status.signal);
-                setStatusIcon(profileStatusWifi, status.wifi);
-                setStatusIcon(profileStatusBattery, status.battery);
-
-                // 更新API配置页状态栏图标
-                setStatusIcon(apiStatusSignal, status.signal);
-                setStatusIcon(apiStatusWifi, status.wifi);
-                setStatusIcon(apiStatusBattery, status.battery);
-
-                // 更新世界书页面状态栏图标
-                const wbListStatusSignal = document.getElementById('wbListStatusSignal');
-                const wbListStatusWifi = document.getElementById('wbListStatusWifi');
-                const wbListStatusBattery = document.getElementById('wbListStatusBattery');
-                const wbEditStatusSignal = document.getElementById('wbEditStatusSignal');
-                const wbEditStatusWifi = document.getElementById('wbEditStatusWifi');
-                const wbEditStatusBattery = document.getElementById('wbEditStatusBattery');
-
-                setStatusIcon(wbListStatusSignal, status.signal);
-                setStatusIcon(wbListStatusWifi, status.wifi);
-                setStatusIcon(wbListStatusBattery, status.battery);
-                setStatusIcon(wbEditStatusSignal, status.signal);
-                setStatusIcon(wbEditStatusWifi, status.wifi);
-                setStatusIcon(wbEditStatusBattery, status.battery);
-
-                // 更新HTML游戏页面状态栏图标
-                const hgListStatusSignal = document.getElementById('hgListStatusSignal');
-                const hgListStatusWifi = document.getElementById('hgListStatusWifi');
-                const hgListStatusBattery = document.getElementById('hgListStatusBattery');
-                const hgEditStatusSignal = document.getElementById('hgEditStatusSignal');
-                const hgEditStatusWifi = document.getElementById('hgEditStatusWifi');
-                const hgEditStatusBattery = document.getElementById('hgEditStatusBattery');
-
-                setStatusIcon(hgListStatusSignal, status.signal);
-                setStatusIcon(hgListStatusWifi, status.wifi);
-                setStatusIcon(hgListStatusBattery, status.battery);
-                setStatusIcon(hgEditStatusSignal, status.signal);
-                setStatusIcon(hgEditStatusWifi, status.wifi);
-                setStatusIcon(hgEditStatusBattery, status.battery);
+            // 新的统一状态栏更新函数（替代之前的 applyStatusBar）
+            function applyStatusBar(status) {
+                StatusBarManager.updateAllPages(status);
             }
 
-            // 更新时间（北京时间实时更新）
+            // 新的统一时间更新函数（替代之前的 updateTime）
             function updateTime() {
                 // 获取北京时间（UTC+8）
                 const now = new Date();
@@ -6224,71 +6542,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const m = String(beijingTime.getMinutes()).padStart(2, '0');
                 const timeStr = `${h}:${m}`;
 
-                // 更新主页面时间
-                if (statusTimeEl) {
-                    statusTimeEl.textContent = timeStr;
-                }
-
-                // 更新聊天页面时间
-                if (chatStatusTime) {
-                    chatStatusTime.textContent = timeStr;
-                }
-
-                // 更新好友设置页面时间
-                if (friendSettingsStatusTime) {
-                    friendSettingsStatusTime.textContent = timeStr;
-                }
-
-                // 更新世界书页面时间
-                if (worldbookStatusTime) {
-                    worldbookStatusTime.textContent = timeStr;
-                }
-
-                // 更新世界书列表页时间
-                const wbListStatusTime = document.getElementById('wbListStatusTime');
-                if (wbListStatusTime) {
-                    wbListStatusTime.textContent = timeStr;
-                }
-
-                // 更新世界书编辑页时间
-                const wbEditStatusTime = document.getElementById('wbEditStatusTime');
-                if (wbEditStatusTime) {
-                    wbEditStatusTime.textContent = timeStr;
-                }
-
-                // 更新HTML游戏列表页时间
-                const hgListStatusTime = document.getElementById('hgListStatusTime');
-                if (hgListStatusTime) {
-                    hgListStatusTime.textContent = timeStr;
-                }
-
-                // 更新HTML游戏编辑页时间
-                const hgEditStatusTime = document.getElementById('hgEditStatusTime');
-                if (hgEditStatusTime) {
-                    hgEditStatusTime.textContent = timeStr;
-                }
-
-                // 更新设置页面时间
-                if (settingsStatusTime) {
-                    settingsStatusTime.textContent = timeStr;
-                }
-
-                // 更新好友列表页面时间
-                if (friendListStatusTime) {
-                    friendListStatusTime.textContent = timeStr;
-                }
-
-                // 更新API配置页面时间
-                const apiStatusTime = document.getElementById('apiStatusTime');
-                if (apiStatusTime) {
-                    apiStatusTime.textContent = timeStr;
-                }
-
-                // 更新个人资料页面时间
-                const profileStatusTime = document.getElementById('profileStatusTime');
-                if (profileStatusTime) {
-                    profileStatusTime.textContent = timeStr;
-                }
+                // 一次性更新所有页面
+                StatusBarManager.updateAllPages({ time: timeStr });
 
                 if (window.appManager && typeof window.appManager.setStatus === 'function') {
                     window.appManager.setStatus({ time: timeStr });
@@ -6404,265 +6659,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             const exportFriendsDataBtn = document.getElementById('exportFriendsData');
             const exportChatsDataBtn = document.getElementById('exportChatsData');
             const importFileInput = document.getElementById('importFileInput');
-
-            // 个人资料小组件（新）
-            class ProfileWidget {
-                constructor() {
-                    this.storageKey = 'profileWidgetV2Data';
-                    this.data = {
-                        avatarImage: '',
-                        bodyImage: '',
-                        bottomImage: '',
-                        name: 'FirstSnow_',
-                        handle: '@Sovow1212',
-                        status: '会在初雪日再次相遇(*^. ^*)',
-                        location: 'Seoul'
-                    };
-                    this.currentField = null;
-                    this.tempValue = '';
-                    this.els = {
-                        widget: document.getElementById('profileWidgetV2'),
-                        cover: document.getElementById('profileWidgetCover'),
-                        bottom: document.getElementById('profileWidgetBottom'),
-                        avatarImage: document.getElementById('profileAvatarImage'),
-                        avatarImagePlaceholder: document.getElementById('profileAvatarImagePlaceholder'),
-                        name: document.getElementById('profileName'),
-                        handle: document.getElementById('profileHandle'),
-                        status: document.getElementById('profileStatus'),
-                        location: document.getElementById('profileLocation'),
-                        modal: document.getElementById('profileWidgetModal'),
-                        modalContent: document.getElementById('profileWidgetModalContent'),
-                        modalTitle: document.getElementById('profileWidgetModalTitle'),
-                        imageEditor: document.getElementById('profileWidgetImageEditor'),
-                        textEditor: document.getElementById('profileWidgetTextEditor'),
-                        textareaEditor: document.getElementById('profileWidgetTextareaEditor'),
-                        imagePreview: document.getElementById('profileWidgetImagePreview'),
-                        imageUrlInput: document.getElementById('profileWidgetImageUrlInput'),
-                        textInput: document.getElementById('profileWidgetTextInput'),
-                        textareaInput: document.getElementById('profileWidgetTextareaInput'),
-                        fileInput: document.getElementById('profileWidgetFileInput'),
-                        saveButton: document.getElementById('profileWidgetSaveButton'),
-                        cancelButton: document.getElementById('profileWidgetCancelButton'),
-                        uploadButton: document.getElementById('profileWidgetUploadButton'),
-                        closeButton: document.getElementById('closeProfileWidgetModal')
-                    };
-                }
-
-                load() {
-                    try {
-                        const saved = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
-                        Object.assign(this.data, saved || {});
-                    } catch (e) {
-                        // ignore
-                    }
-                }
-
-                save() {
-                    localStorage.setItem(this.storageKey, JSON.stringify(this.data));
-                }
-
-                updateUI() {
-                    Object.keys(this.data).forEach((key) => {
-                        const el = this.els[key];
-                        if (key === 'bodyImage') {
-                            if (this.els.cover) {
-                                if (this.data.bodyImage) {
-                                    this.els.cover.style.backgroundImage = `url('${this.data.bodyImage}')`;
-                                } else {
-                                    this.els.cover.style.backgroundImage = '';
-                                }
-                            }
-                            return;
-                        }
-                        if (key === 'bottomImage') {
-                            if (this.els.bottom) {
-                                if (this.data.bottomImage) {
-                                    this.els.bottom.style.backgroundImage = `url('${this.data.bottomImage}')`;
-                                } else {
-                                    this.els.bottom.style.backgroundImage = '';
-                                }
-                            }
-                            return;
-                        }
-                        if (!el) return;
-                        if (key === 'avatarImage') {
-                            const placeholder = this.els[key + 'Placeholder'];
-                            if (this.data[key]) {
-                                el.src = this.data[key];
-                                el.classList.remove('hidden');
-                                if (placeholder) placeholder.classList.add('hidden');
-                            } else {
-                                el.classList.add('hidden');
-                                if (placeholder) placeholder.classList.remove('hidden');
-                            }
-                        } else {
-                            if (key === 'handle') {
-                                el.textContent = this.data.handle.startsWith('@')
-                                    ? this.data.handle
-                                    : `@${this.data.handle}`;
-                            } else {
-                                el.textContent = this.data[key];
-                            }
-                        }
-                    });
-                }
-
-                openModal(field, type, label) {
-                    this.currentField = field;
-                    this.tempValue = this.data[field] || '';
-                    if (this.els.modalTitle) {
-                        this.els.modalTitle.textContent = `编辑${label}`;
-                    }
-
-                    if (this.els.imageEditor) this.els.imageEditor.style.display = 'none';
-                    if (this.els.textEditor) this.els.textEditor.style.display = 'none';
-                    if (this.els.textareaEditor) this.els.textareaEditor.style.display = 'none';
-
-                    if (type === 'image') {
-                        if (this.els.imageEditor) this.els.imageEditor.style.display = 'block';
-                        if (this.els.imageUrlInput) {
-                            this.els.imageUrlInput.value = this.tempValue.startsWith('data:') ? '' : this.tempValue;
-                        }
-                        if (this.els.imagePreview) {
-                            this.els.imagePreview.src = this.tempValue;
-                            this.els.imagePreview.classList.toggle('hidden', !this.tempValue);
-                        }
-                    } else if (type === 'text') {
-                        if (this.els.textEditor) this.els.textEditor.style.display = 'block';
-                        if (this.els.textInput) this.els.textInput.value = this.tempValue;
-                    } else if (type === 'textarea') {
-                        if (this.els.textareaEditor) this.els.textareaEditor.style.display = 'block';
-                        if (this.els.textareaInput) this.els.textareaInput.value = this.tempValue;
-                    }
-
-                    if (this.els.modal) this.els.modal.style.display = 'flex';
-                    if (this.els.modalContent) this.els.modalContent.classList.add('animate-fade-in-scale');
-                }
-
-                closeModal() {
-                    if (this.els.modalContent) this.els.modalContent.classList.remove('animate-fade-in-scale');
-                    if (this.els.modal) this.els.modal.style.display = 'none';
-                    this.currentField = null;
-                    this.tempValue = '';
-                    if (this.els.fileInput) this.els.fileInput.value = '';
-                }
-
-                saveChanges() {
-                    if (this.currentField) {
-                        // 只有在tempValue不为空时才保存，避免清空现有数据
-                        if (this.tempValue) {
-                            this.data[this.currentField] = this.tempValue;
-                            this.save();
-                            this.updateUI();
-                        }
-                    }
-                    this.closeModal();
-                }
-
-                bindEvents() {
-                    const editProfileAvatarImage = document.getElementById('editProfileAvatarImage');
-                    if (editProfileAvatarImage) {
-                        editProfileAvatarImage.addEventListener('click', () => this.openModal('avatarImage', 'image', '头像图片'));
-                    }
-
-                    const setupInlineEdit = (key) => {
-                        const el = this.els[key];
-                        if (!el) return;
-
-                        el.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                el.blur();
-                            }
-                        });
-
-                        el.addEventListener('blur', () => {
-                            let val = el.textContent.trim();
-                            if (key === 'handle' && val && !val.startsWith('@')) {
-                                val = '@' + val;
-                            }
-                            this.data[key] = val;
-                            this.save();
-                            this.updateUI();
-                        });
-                    };
-
-                    ['name', 'handle', 'status', 'location'].forEach(key => setupInlineEdit(key));
-
-                    if (this.els.cover) {
-                        this.els.cover.addEventListener('click', (event) => {
-                            if (event.target.closest('[data-no-bg-change]')) return;
-                            this.openModal('bodyImage', 'image', '背景图片');
-                        });
-                    }
-
-                    if (this.els.bottom) {
-                        this.els.bottom.addEventListener('click', (event) => {
-                            if (event.target.closest('[data-no-bg-change]')) return;
-                            this.openModal('bottomImage', 'image', '底部背景');
-                        });
-                    }
-
-                    if (this.els.saveButton) {
-                        this.els.saveButton.addEventListener('click', () => this.saveChanges());
-                    }
-                    if (this.els.cancelButton) {
-                        this.els.cancelButton.addEventListener('click', () => this.closeModal());
-                    }
-                    if (this.els.closeButton) {
-                        this.els.closeButton.addEventListener('click', () => this.closeModal());
-                    }
-                    if (this.els.modal) {
-                        this.els.modal.addEventListener('click', (e) => {
-                            if (e.target === this.els.modal) this.closeModal();
-                        });
-                    }
-
-                    if (this.els.imageUrlInput) {
-                        this.els.imageUrlInput.addEventListener('input', (e) => {
-                            this.tempValue = e.target.value;
-                            if (this.els.imagePreview) {
-                                this.els.imagePreview.src = this.tempValue;
-                                this.els.imagePreview.classList.toggle('hidden', !this.tempValue);
-                            }
-                        });
-                    }
-                    if (this.els.textInput) {
-                        this.els.textInput.addEventListener('input', (e) => {
-                            this.tempValue = e.target.value;
-                        });
-                    }
-                    if (this.els.textareaInput) {
-                        this.els.textareaInput.addEventListener('input', (e) => {
-                            this.tempValue = e.target.value;
-                        });
-                    }
-
-                    if (this.els.uploadButton && this.els.fileInput) {
-                        this.els.uploadButton.addEventListener('click', () => this.els.fileInput.click());
-                        this.els.fileInput.addEventListener('change', async (event) => {
-                            const file = event.target.files && event.target.files[0];
-                            if (!file) return;
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                                this.tempValue = String(reader.result || '');
-                                if (this.els.imageUrlInput) this.els.imageUrlInput.value = '';
-                                if (this.els.imagePreview) {
-                                    this.els.imagePreview.src = this.tempValue;
-                                    this.els.imagePreview.classList.remove('hidden');
-                                }
-                            };
-                            reader.readAsDataURL(file);
-                        });
-                    }
-                }
-
-                init() {
-                    this.load();
-                    this.updateUI();
-                    this.bindEvents();
-                }
-            }
 
             // ========== APP入口清单（集中管理） ==========
             const APP_ENTRY_POINTS = {
@@ -6821,8 +6817,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 addFriendModal.style.display = 'none';
                 resetAddFriendForm();
             });
-
-            // 个人资料小组件交互（新）由 ProfileWidget 统一管理
 
             // 好友设置相关
             const charSettingsModal = document.getElementById('charSettingsModal');
@@ -7351,7 +7345,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const reservedKeys = new Set([
                     'apiConfig',
                     'friends',
-                    'profileWidgetV2Data',
                     'homeGreeting'
                 ]);
                 for (let i = 0; i < localStorage.length; i++) {
@@ -7405,7 +7398,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     apiConfig: apiService ? apiService.getConfig() : {},
                     friends: friends,
                     chatHistories: collectChatHistories(friends),
-                    profileWidget: friendSystem ? friendSystem.getStorage('profileWidgetV2Data', {}) : {},
                     homeGreeting: friendSystem ? friendSystem.getStorage('homeGreeting', '') : '',
                     otherSettings: collectOtherSettings()
                 });
@@ -7442,9 +7434,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (data.friends) {
                     localStorage.setItem('friends', JSON.stringify(data.friends));
                 }
-                if (data.profileWidget) {
-                    localStorage.setItem('profileWidgetV2Data', JSON.stringify(data.profileWidget));
-                }
                 if (data.homeGreeting !== undefined) {
                     localStorage.setItem('homeGreeting', JSON.stringify(data.homeGreeting));
                 }
@@ -7461,10 +7450,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 if (friendSystem) friendSystem.init();
                 if (apiService) apiService.updateSettingsDisplay();
-                if (profileWidget) {
-                    profileWidget.load();
-                    profileWidget.updateUI();
-                }
                 renderFriendList();
             }
 
@@ -8551,8 +8536,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(245, 245, 250, 0.5)); border-radius: 12px; margin-bottom: 12px; gap: 8px;">
                                 <span style="color: #8b7d9c; font-size: 12px; font-weight: 600;">已选 <span id="hv-multi-count">${this.multiSelectItems.size}</span> 项</span>
                                 <div style="display: flex; gap: 8px;">
-                                    <button id="hv-multi-delete-btn" style="padding: 6px 16px; background: linear-gradient(135deg, #f0d6d7, #ffc4d0); color: #fff; border: none; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(240, 214, 215, 0.3); transition: all 0.2s;">删除</button>
-                                    <button id="hv-multi-export-btn" style="padding: 6px 16px; background: linear-gradient(135deg, #debeeb, #d4a5e0); color: #fff; border: none; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(222, 190, 235, 0.3); transition: all 0.2s;">导出</button>
+                                    <button id="hv-multi-delete-btn" style="padding: 6px 16px; background: linear-gradient(135deg, var(--color-accent-pink), var(--color-accent-lavender)); color: #fff; border: none; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(120, 119, 133, 0.15); transition: all 0.2s;">删除</button>
+                                    <button id="hv-multi-export-btn" style="padding: 6px 16px; background: linear-gradient(135deg, var(--color-accent-lavender), var(--color-accent-blue)); color: #fff; border: none; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(120, 119, 133, 0.15); transition: all 0.2s;">导出</button>
                                     <button id="hv-multi-cancel-btn" style="padding: 6px 16px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">取消</button>
                                 </div>
                             </div>
@@ -8603,7 +8588,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                                 </div>
                                 <div class="hv-history-content"></div>
                             </div>
-                            <button class="hv-delete-btn" style="background: none; border: none; color: #f0d6d7; cursor: pointer; font-size: 14px; padding: 4px 8px; flex-shrink: 0; display: flex; align-items: center; opacity: 0.7; transition: opacity 0.2s; ${this.isMultiSelectMode ? 'display: none;' : ''}">
+                            <button class="hv-delete-btn" style="background: none; border: none; color: var(--color-accent-pink); cursor: pointer; font-size: 14px; padding: 4px 8px; flex-shrink: 0; display: flex; align-items: center; opacity: 0.7; transition: opacity 0.2s; ${this.isMultiSelectMode ? 'display: none;' : ''}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -8765,7 +8750,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             <h3 style="color: #4a4858; font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">确认删除</h3>
                             <p style="color: #8b7d9c; font-size: 14px; margin: 0 0 24px 0;">确认删除选中的 ${this.multiSelectItems.size} 条记录吗？</p>
                             <div style="display: flex; gap: 12px; justify-content: center;">
-                                <button id="hv-multi-delete-yes" style="padding: 10px 24px; background: linear-gradient(135deg, #f0d6d7, #ffc4d0); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(240, 214, 215, 0.3);">删除</button>
+                                <button id="hv-multi-delete-yes" style="padding: 10px 24px; background: linear-gradient(135deg, var(--color-accent-pink), var(--color-accent-lavender)); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(120, 119, 133, 0.15);">删除</button>
                                 <button id="hv-multi-delete-no" style="padding: 10px 24px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 20px; font-weight: 600; cursor: pointer;">取消</button>
                             </div>
                         </div>
@@ -8820,7 +8805,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             <h3 style="color: #4a4858; font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">确认导出</h3>
                             <p style="color: #8b7d9c; font-size: 14px; margin: 0 0 24px 0;">确认导出选中的 ${this.multiSelectItems.size} 条记录吗？</p>
                             <div style="display: flex; gap: 12px; justify-content: center;">
-                                <button id="hv-multi-export-yes" style="padding: 10px 24px; background: linear-gradient(135deg, #debeeb, #d4a5e0); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(222, 190, 235, 0.3);">导出</button>
+                                <button id="hv-multi-export-yes" style="padding: 10px 24px; background: linear-gradient(135deg, var(--color-accent-lavender), var(--color-accent-blue)); color: #fff; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(120, 119, 133, 0.15);">导出</button>
                                 <button id="hv-multi-export-no" style="padding: 10px 24px; background: rgba(255, 255, 255, 0.8); color: #8b7d9c; border: 1px solid rgba(240, 220, 250, 0.4); border-radius: 20px; font-weight: 600; cursor: pointer;">取消</button>
                             </div>
                         </div>
@@ -9150,8 +9135,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     overlay.innerHTML = `
                     <img src="${dataUrl}" style="max-width:90%;max-height:65vh;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.25);object-fit:contain;margin-bottom:20px;" />
                     <div style="display:flex;gap:12px;">
-                        <button id="hvExportSave" style="padding:12px 32px;background:linear-gradient(135deg,#debeeb,#f0d6d7);color:#fff;border:none;border-radius:25px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 16px rgba(222,190,235,0.3);">保存图片</button>
-                        <button id="hvExportCancel" style="padding:12px 32px;background:rgba(255,255,255,0.9);color:#787785;border:1px solid #f6f2f1;border-radius:25px;font-weight:600;font-size:14px;cursor:pointer;">取消</button>
+                        <button id="hvExportSave" style="padding:12px 32px;background:linear-gradient(135deg,var(--color-accent-lavender),var(--color-accent-pink));color:#fff;border:none;border-radius:25px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 16px rgba(120,119,133,0.15);">保存图片</button>
+                        <button id="hvExportCancel" style="padding:12px 32px;background:rgba(255,255,255,0.9);color:var(--color-ui-gray);border:1px solid var(--color-ui-border);border-radius:25px;font-weight:600;font-size:14px;cursor:pointer;">取消</button>
                     </div>
                 `;
                     document.body.appendChild(overlay);
@@ -9225,8 +9210,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             // 超过100：金色/橙色（超满）
                             this.moodFillEl.style.background = 'linear-gradient(90deg, #ffd700, #ffb347)';
                         } else {
-                            // 正常范围：默认紫粉色
-                            this.moodFillEl.style.background = 'linear-gradient(90deg, #debeeb, #f0d6d7)';
+                            // 正常范围：默认冷调色
+                            this.moodFillEl.style.background = 'linear-gradient(90deg, var(--color-accent-lavender), var(--color-accent-pink))';
                         }
 
                         this.moodLabelEl.textContent = `${mood}%`;
@@ -12488,7 +12473,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             window.summarySystemApiService = apiService;
             chatSession = new ChatSession(friendSystem, apiService);
             heartVoiceSystem = new HeartVoiceSystem(friendSystem, apiService);
-            profileWidget = new ProfileWidget();
             window.worldBookSystem = new WorldBookSystem();
             window.htmlGameSystem = new HtmlGameSystem();
 
@@ -12628,7 +12612,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             })();
             // ========== 虚拟键盘自适应功能结束 ==========
             if (apiService) apiService.updateSettingsDisplay();
-            if (profileWidget) profileWidget.init();
 
             // 初始化隐藏状态栏功能
             initHideStatusBar();
@@ -12645,6 +12628,16 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         icon.style.transform = '';
                     }, 150);
                 });
+            });
+            
+            // 为新的玻璃效果图标区域添加点击事件
+            document.querySelectorAll('.icon-area-glass .app-item').forEach(item => {
+                const appId = item.dataset.app;
+                if (appId) {
+                    item.addEventListener('click', () => {
+                        handleAppClick(appId);
+                    });
+                }
             });
 
             // 加载已保存的模型列表
@@ -12771,13 +12764,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
                 <div style="margin-bottom: 12px;">
                     <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
+                        style="display: block; font-size: 13px; font-weight: 600; color: var(--color-ui-gray); margin-bottom: 6px;">标题</label>
                     <input id="wbEditTitleInput" type="text" placeholder="输入世界书标题"
                         style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
                 </div>
                 <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
                     <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">内容</label>
+                        style="display: block; font-size: 13px; font-weight: 600; color: var(--color-ui-gray); margin-bottom: 6px;">内容</label>
                     <textarea id="wbEditContentInput" placeholder="输入世界书内容"
                         style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: inherit;"></textarea>
                 </div>
@@ -12785,7 +12778,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             <!-- 保存按钮 -->
             <div style="padding: 16px; display: flex; justify-content: center;">
                 <button id="wbSaveBtn" class="wb-glass-btn"
-                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
+                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
                     保存
                 </button>
             </div>
@@ -12844,13 +12837,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             <div class="settings-scroll" style="flex: 1; display: flex; flex-direction: column; padding: 16px;">
                 <div style="margin-bottom: 12px;">
                     <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">标题</label>
+                        style="display: block; font-size: 13px; font-weight: 600; color: var(--color-ui-gray); margin-bottom: 6px;">标题</label>
                     <input id="hgEditTitleInput" type="text" placeholder="输入游戏名称"
                         style="width: 100%; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333;">
                 </div>
                 <div style="margin-bottom: 12px; flex: 1; display: flex; flex-direction: column;">
                     <label
-                        style="display: block; font-size: 13px; font-weight: 600; color: #787785; margin-bottom: 6px;">HTML
+                        style="display: block; font-size: 13px; font-weight: 600; color: var(--color-ui-gray); margin-bottom: 6px;">HTML
                         代码</label>
                     <textarea id="hgEditContentInput" placeholder="输入HTML代码"
                         style="flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 14px; color: #333; resize: none; font-family: 'Courier New', monospace; line-height: 1.5;"></textarea>
@@ -12859,7 +12852,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             <!-- 保存按钮 -->
             <div style="padding: 16px; display: flex; justify-content: center;">
                 <button id="hgSaveBtn" class="hg-glass-btn"
-                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7 0%, #f0d6d7 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
+                    style="width: 100%; max-width: 200px; padding: 12px 24px; font-size: 16px; font-weight: 600; color: #fff; background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-lavender) 100%), rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6);">
                     保存
                 </button>
             </div>
@@ -12886,7 +12879,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 </button>
                 <div class="settings-title">总结</div>
                 <button id="summaryHeartBtn"
-                    style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
+                    style="background: none; border: none; font-size: 18px; color: var(--color-accent-pink); cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
                     aria-label="一锫">
                     <i class="fas fa-heart"></i>
                 </button>
@@ -12896,20 +12889,20 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 <div
                     style="background: #fff; border-radius: 16px; padding: 16px 18px; box-shadow: 0 8px 20px rgba(120, 119, 133, 0.06); display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <span style="font-size: 15px; font-weight: 600; color: #787785;">自动总结</span>
-                        <span style="font-size: 12px; color: #b0b0b0;">每隔指定轮数自动生成总结</span>
+                        <span style="font-size: 15px; font-weight: 600; color: var(--color-ui-gray);">自动总结</span>
+                        <span style="font-size: 12px; color: var(--color-text-lighter);">每隔指定轮数自动生成总结</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <input id="summaryRoundsInput" type="text" value="25"
-                            style="width: 48px; height: 32px; text-align: center; border: 1.5px solid #f0e0e0; border-radius: 10px; font-size: 14px; font-weight: 600; color: #787785; background: #faf7fa; outline: none;">
-                        <span style="font-size: 13px; color: #b0b0b0; white-space: nowrap;">轮/次</span>
+                            style="width: 48px; height: 32px; text-align: center; border: 1.5px solid var(--color-border-lighter); border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--color-ui-gray); background: var(--color-ui-bg); outline: none;">
+                        <span style="font-size: 13px; color: var(--color-text-lighter); white-space: nowrap;">轮/次</span>
                     </div>
                 </div>
 
                 <!-- 大总结按钮 -->
                 <div style="display: flex; justify-content: center; margin-top: 24px;">
                     <button id="bigSummaryBtn" type="button"
-                        style="padding: 14px 40px; border-radius: 24px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #f0d6d7, #e8c4d0); box-shadow: 0 4px 15px rgba(240, 214, 215, 0.4); transition: transform 0.15s ease, box-shadow 0.15s ease; display: flex; align-items: center; gap: 8px;">
+                        style="padding: 14px 40px; border-radius: 24px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; color: #fff; background: linear-gradient(135deg, var(--color-accent-pink), var(--color-accent-lavender)); box-shadow: 0 4px 15px var(--shadow-color-medium); transition: transform 0.15s ease, box-shadow 0.15s ease; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-book-open" style="font-size: 16px;"></i>
                         大总结
                     </button>
@@ -12945,7 +12938,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 </button>
                 <div class="settings-title">大总结</div>
                 <button id="bigSummaryHeartBtn"
-                    style="background: none; border: none; font-size: 18px; color: #f0d6d7; cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
+                    style="background: none; border: none; font-size: 18px; color: var(--color-accent-pink); cursor: pointer; width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center;"
                     aria-label="一锫">
                     <i class="fas fa-heart"></i>
                 </button>
@@ -13012,7 +13005,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         const overlay = document.createElement('div');
                         overlay.id = MANUAL_SUMMARY_LOADING_ID;
                         overlay.style.cssText = 'position:fixed;top:16px;right:16px;z-index:10000;pointer-events:none;';
-                        overlay.innerHTML = '<div style="background:rgba(255,255,255,0.96);backdrop-filter:blur(4px);border:1px solid #f2e4e8;border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;border:2px solid #f0d6d7;border-top-color:#d9a9b6;border-radius:50%;animation:manualSummarySpin 0.8s linear infinite;flex:0 0 auto;"></div><div style="font-size:12px;color:#666;font-weight:600;white-space:nowrap;">总结生成中...</div></div>';
+                        overlay.innerHTML = '<div style="background:rgba(255,255,255,0.96);backdrop-filter:blur(4px);border:1px solid #f2e4e8;border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;border:2px solid var(--color-accent-pink);border-top-color:var(--color-accent-lavender);border-radius:50%;animation:manualSummarySpin 0.8s linear infinite;flex:0 0 auto;"></div><div style="font-size:12px;color:#666;font-weight:600;white-space:nowrap;">总结生成中...</div></div>';
                         document.body.appendChild(overlay);
                     }
                     if (summaryHeartBtn) {
@@ -13137,7 +13130,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     <p style="color:#999;font-size:13px;text-align:center;margin:0 0 20px;">是否立即生成本轮小结？</p>
                     <div style="display:flex;gap:8px;justify-content:center;">
                         <button class="cancel-btn" style="padding:10px 24px;border-radius:16px;border:1px solid #e8e0e0;background:#fff;color:#999;cursor:pointer;font-weight:600;">取消</button>
-                        <button class="confirm-btn" style="padding:10px 24px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;cursor:pointer;font-weight:600;">确定</button>
+                        <button class="confirm-btn" style="padding:10px 24px;border-radius:16px;border:none;background:linear-gradient(135deg,var(--color-accent-pink),var(--color-accent-lavender));color:#fff;cursor:pointer;font-weight:600;">确定</button>
                     </div>
                 </div>`;
 
@@ -13222,7 +13215,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     <p style="color:#999;font-size:13px;text-align:center;margin:0 0 20px;">是否立即生成大总结？<br><span style="font-size:12px;color:#bbb;">(需要至少5条未归档小结)</span></p>
                     <div style="display:flex;gap:8px;justify-content:center;">
                         <button class="cancel-btn" style="padding:10px 24px;border-radius:16px;border:1px solid #e8e0e0;background:#fff;color:#999;cursor:pointer;font-weight:600;">取消</button>
-                        <button class="confirm-btn" style="padding:10px 24px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;cursor:pointer;font-weight:600;">确定</button>
+                        <button class="confirm-btn" style="padding:10px 24px;border-radius:16px;border:none;background:linear-gradient(135deg,var(--color-accent-pink),var(--color-accent-lavender));color:#fff;cursor:pointer;font-weight:600;">确定</button>
                     </div>
                 </div>`;
 
@@ -13293,10 +13286,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         const textarea = document.createElement('textarea');
                         textarea.className = 'summary-edit-area';
                         textarea.value = list[idx].text;
-                        textarea.style.cssText = 'width:100%;min-height:60px;padding:8px 10px;border:1.5px solid #f0d6d7;border-radius:12px;font-size:13px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;';
+                        textarea.style.cssText = 'width:100%;min-height:60px;padding:8px 10px;border:1.5px solid var(--color-accent-pink);border-radius:12px;font-size:13px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;';
                         const btnRow = document.createElement('div');
                         btnRow.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin-top:8px;';
-                        btnRow.innerHTML = '<button class="summary-edit-cancel" style="padding:6px 14px;border-radius:14px;border:1px solid #e8e0e0;background:#fff;color:#999;font-size:12px;font-weight:600;cursor:pointer;">取消</button><button class="summary-edit-save" style="padding:6px 14px;border-radius:14px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;font-size:12px;font-weight:600;cursor:pointer;">保存</button>';
+                        btnRow.innerHTML = '<button class="summary-edit-cancel" style="padding:6px 14px;border-radius:14px;border:1px solid #e8e0e0;background:#fff;color:#999;font-size:12px;font-weight:600;cursor:pointer;">取消</button><button class="summary-edit-save" style="padding:6px 14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--color-accent-pink),var(--color-accent-lavender));color:#fff;font-size:12px;font-weight:600;cursor:pointer;">保存</button>';
                         body.style.display = 'none';
                         card.querySelector('.summary-card-footer').before(textarea, btnRow);
                         btnRow.querySelector('.summary-edit-cancel').addEventListener('click', () => { textarea.remove(); btnRow.remove(); body.style.display = ''; });
@@ -13311,7 +13304,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         const idx = parseInt(deleteBtn.dataset.index);
                         const overlay = document.createElement('div');
                         overlay.style.cssText = 'position:fixed;inset:0;z-index:2400;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;padding:24px;';
-                        overlay.innerHTML = '<div style="background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,245,255,0.92));border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-width:280px;text-align:center;border:1px solid rgba(245,220,250,0.5);"><h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 12px;">删除' + typeName + '</h3><p style="color:#8b7d9c;font-size:14px;margin:0 0 24px;">确认删除这条' + typeName + '吗？</p><div style="display:flex;gap:12px;justify-content:center;"><button class="sd-yes" style="padding:10px 24px;background:linear-gradient(135deg,#f0d6d7,#ffc4d0);color:#fff;border:none;border-radius:20px;font-weight:600;cursor:pointer;">删除</button><button class="sd-no" style="padding:10px 24px;background:rgba(255,255,255,0.8);color:#8b7d9c;border:1px solid rgba(240,220,250,0.4);border-radius:20px;font-weight:600;cursor:pointer;">取消</button></div></div>';
+                        overlay.innerHTML = '<div style="background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,245,255,0.92));border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-width:280px;text-align:center;border:1px solid rgba(245,220,250,0.5);"><h3 style="color:#4a4858;font-size:16px;font-weight:600;margin:0 0 12px;">删除' + typeName + '</h3><p style="color:#8b7d9c;font-size:14px;margin:0 0 24px;">确认删除这条' + typeName + '吗？</p><div style="display:flex;gap:12px;justify-content:center;"><button class="sd-yes" style="padding:10px 24px;background:linear-gradient(135deg,var(--color-accent-pink),var(--color-accent-lavender));color:#fff;border:none;border-radius:20px;font-weight:600;cursor:pointer;">删除</button><button class="sd-no" style="padding:10px 24px;background:rgba(255,255,255,0.8);color:#8b7d9c;border:1px solid rgba(240,220,250,0.4);border-radius:20px;font-weight:600;cursor:pointer;">取消</button></div></div>';
                         document.body.appendChild(overlay);
                         overlay.querySelector('.sd-yes').addEventListener('click', () => {
                             const list = getList(storagePrefix, friendId);
@@ -13757,9 +13750,9 @@ ${recent}`;
                         </button>
                     </div>
                     <div class="sc-text-display" style="font-size:13.5px;color:#555;line-height:1.7;max-height:200px;overflow-y:auto;word-break:break-word;white-space:pre-wrap;padding:12px 14px;background:#fdfbfd;border-radius:14px;border:1px solid #f5eff0;"></div>
-                    <textarea class="sc-text-edit" style="display:none;width:100%;min-height:140px;max-height:200px;padding:12px 14px;border:1.5px solid #f0d6d7;border-radius:14px;font-size:13.5px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;box-sizing:border-box;line-height:1.7;"></textarea>
+                    <textarea class="sc-text-edit" style="display:none;width:100%;min-height:140px;max-height:200px;padding:12px 14px;border:1.5px solid var(--color-accent-pink);border-radius:14px;font-size:13.5px;color:#555;resize:none;font-family:inherit;outline:none;background:#fff;box-sizing:border-box;line-height:1.7;"></textarea>
                     <div style="display:flex;justify-content:center;margin-top:16px;">
-                        <button class="sc-confirm" style="padding:10px 36px;border-radius:20px;border:none;background:linear-gradient(135deg,#f0d6d7,#e8c4d0);color:#fff;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(240,214,215,0.35);transition:transform 0.15s;">确定</button>
+                        <button class="sc-confirm" style="padding:10px 36px;border-radius:20px;border:none;background:linear-gradient(135deg,var(--color-accent-pink),var(--color-accent-lavender));color:#fff;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(120,119,133,0.15);transition:transform 0.15s;">确定</button>
                     </div>
                 </div>
             `;
@@ -13780,7 +13773,7 @@ ${recent}`;
                         display.style.display = 'none';
                         editArea.style.display = '';
                         editArea.focus();
-                        editToggle.style.background = '#f0d6d7';
+                        editToggle.style.background = 'var(--color-accent-pink)';
                         editToggle.style.color = '#fff';
                     } else {
                         const val = editArea.value.trim();
@@ -13896,13 +13889,13 @@ ${recent}`;
                 const genderIcon = document.getElementById('profileGenderIcon');
                 if (profile.gender === 'male') {
                     genderIcon.className = 'fas fa-mars';
-                    genderIcon.style.color = '#4169e1';
+                    genderIcon.style.color = '#8b99a8';
                 } else if (profile.gender === 'other') {
                     genderIcon.className = 'fas fa-genderless';
-                    genderIcon.style.color = '#9370db';
+                    genderIcon.style.color = '#9aa8b5';
                 } else {
                     genderIcon.className = 'fas fa-venus';
-                    genderIcon.style.color = '#ff69b4';
+                    genderIcon.style.color = '#b5a8c8';
                 }
 
                 // 填充表单
@@ -13950,7 +13943,7 @@ ${recent}`;
                 
                 const editBtn = document.getElementById('profileEditBtn');
                 editBtn.innerHTML = '<i class="fas fa-times"></i>';
-                editBtn.style.color = '#ff6b6b';
+                editBtn.style.color = '#d89595';
             }
 
             // 退出编辑模式
@@ -13961,7 +13954,7 @@ ${recent}`;
                 
                 const editBtn = document.getElementById('profileEditBtn');
                 editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-                editBtn.style.color = '#ff69b4';
+                editBtn.style.color = '#7a8a9a';
             }
 
             // 更新状态栏时间
