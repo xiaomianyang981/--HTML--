@@ -392,16 +392,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ============================================================
-           移动端布局加固 - 仅防止页面拖动，保持原有尺寸
-           ============================================================ */
-        
-        html {
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            overscroll-behavior-x: none;
-        }
-
         body {
             background: linear-gradient(135deg, 
                 #f5f8fa 0%, 
@@ -412,17 +402,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overscroll-behavior-x: none;
-            touch-action: pan-y pinch-zoom;
-        }
-
-        /* 防止意外拖拽元素 */
-        * {
-            -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
-            user-drag: none;
         }
 
         /* ============================================================
@@ -516,7 +495,7 @@
             flex-direction: column;
             align-items: center;
             -webkit-overflow-scrolling: touch;
-            position: relative;
+            overscroll-behavior: contain;
         }
 
         .home-screen {
@@ -1043,7 +1022,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overscroll-behavior: contain;
         }
 
         .modal-content {
@@ -1054,7 +1032,6 @@
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 50px var(--shadow-color-strong);
-            overscroll-behavior: contain;
             animation: modalSlideIn 0.3s ease;
         }
 
@@ -1623,6 +1600,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             -webkit-touch-callout: none;
+            overscroll-behavior: contain;
         }
 
         /* ============================================================
@@ -3898,6 +3876,13 @@
                 background-color: transparent;
             }
 
+            /* 全屏模态在移动端用实色背景，防止键盘弹出时主屏幕露出 */
+            #chatModal,
+            #apiModal,
+            #profileModal {
+                background-color: var(--color-bg-white);
+            }
+
             #chatModal .modal-content,
             .friend-settings-screen,
             #apiModal .modal-content,
@@ -4077,6 +4062,7 @@
             overflow: hidden;
             height: 100%;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
         }
 
         /* 统一焦点样式 */
@@ -14138,31 +14124,38 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // ========== 虚拟键盘自适应功能 ==========
             // 使用 visualViewport API 动态调整容器高度，确保键盘弹出时输入框始终可见
             (function () {
+                const chatModalEl = document.getElementById('chatModal');
                 const chatModalContent = document.querySelector('#chatModal .modal-content');
-                if (!chatModalContent) return;
+                if (!chatModalContent || !chatModalEl) return;
 
+                let rafId = 0;
                 function adjustForKeyboard() {
-                    if (!window.visualViewport) return;
-                    const vv = window.visualViewport;
-                    // 计算键盘+浏览器配件栏占据的高度
-                    const keyboardHeight = window.innerHeight - vv.height;
+                    cancelAnimationFrame(rafId);
+                    rafId = requestAnimationFrame(() => {
+                        if (!window.visualViewport) return;
+                        const vv = window.visualViewport;
+                        const keyboardHeight = window.innerHeight - vv.height;
 
-                    if (keyboardHeight > 50 && document.activeElement &&
-                        (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                        // 键盘弹出：把容器高度缩小到可视区域
-                        chatModalContent.style.height = vv.height + 'px';
-                        chatModalContent.style.maxHeight = vv.height + 'px';
-                        // 滚动消息到底部
-                        if (chatMessages) {
-                            requestAnimationFrame(() => {
+                        if (keyboardHeight > 50 && document.activeElement &&
+                            (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
+                            // 键盘弹出：把整个 modal 和内容都钉到可视区域
+                            chatModalEl.style.height = vv.height + 'px';
+                            chatModalEl.style.top = vv.offsetTop + 'px';
+                            chatModalContent.style.height = vv.height + 'px';
+                            chatModalContent.style.maxHeight = vv.height + 'px';
+                            if (chatMessages) {
                                 chatMessages.scrollTop = chatMessages.scrollHeight;
-                            });
+                            }
+                        } else {
+                            // 键盘收起：恢复
+                            chatModalEl.style.height = '';
+                            chatModalEl.style.top = '';
+                            chatModalContent.style.height = '';
+                            chatModalContent.style.maxHeight = '';
+                            // 重置视口滚动偏移
+                            window.scrollTo(0, 0);
                         }
-                    } else {
-                        // 键盘收起：恢复原始高度
-                        chatModalContent.style.height = '';
-                        chatModalContent.style.maxHeight = '';
-                    }
+                    });
                 }
 
                 if (window.visualViewport) {
@@ -14170,20 +14163,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     window.visualViewport.addEventListener('scroll', adjustForKeyboard);
                 }
 
-                // 焦点事件作为补充（处理 visualViewport 不支持的情况）
                 if (chatInput) {
                     chatInput.addEventListener('focus', () => {
-                        // 延迟等待键盘完全弹出
                         setTimeout(adjustForKeyboard, 150);
                         setTimeout(adjustForKeyboard, 400);
-                        setTimeout(() => {
-                            if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
-                        }, 500);
                     });
                     chatInput.addEventListener('blur', () => {
                         setTimeout(() => {
+                            chatModalEl.style.height = '';
+                            chatModalEl.style.top = '';
                             chatModalContent.style.height = '';
                             chatModalContent.style.maxHeight = '';
+                            window.scrollTo(0, 0);
                         }, 100);
                     });
                 }
