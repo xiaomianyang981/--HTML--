@@ -14138,9 +14138,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                         if (keyboardHeight > 50 && document.activeElement &&
                             (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                            // 键盘弹出：把整个 modal 和内容都钉到可视区域
-                            chatModalEl.style.height = vv.height + 'px';
+                            // 键盘弹出：把整个弹窗钉在可视区域顶部
+                            chatModalEl.style.position = 'fixed';
                             chatModalEl.style.top = vv.offsetTop + 'px';
+                            chatModalEl.style.height = vv.height + 'px';
+                            chatModalEl.style.backgroundColor = 'var(--color-bg-white)';
                             chatModalContent.style.height = vv.height + 'px';
                             chatModalContent.style.maxHeight = vv.height + 'px';
                             if (chatMessages) {
@@ -14148,8 +14150,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             }
                         } else {
                             // 键盘收起：恢复
-                            chatModalEl.style.height = '';
+                            chatModalEl.style.position = '';
                             chatModalEl.style.top = '';
+                            chatModalEl.style.height = '';
+                            chatModalEl.style.backgroundColor = '';
                             chatModalContent.style.height = '';
                             chatModalContent.style.maxHeight = '';
                             // 重置视口滚动偏移
@@ -14170,8 +14174,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     });
                     chatInput.addEventListener('blur', () => {
                         setTimeout(() => {
-                            chatModalEl.style.height = '';
+                            chatModalEl.style.position = '';
                             chatModalEl.style.top = '';
+                            chatModalEl.style.height = '';
+                            chatModalEl.style.backgroundColor = '';
                             chatModalContent.style.height = '';
                             chatModalContent.style.maxHeight = '';
                             window.scrollTo(0, 0);
