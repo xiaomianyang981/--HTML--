@@ -14136,36 +14136,70 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         const visibleModal = Array.from(document.querySelectorAll('.modal')).find(modal => 
                             modal.style.display === 'flex' || modal.style.display === 'block');
                         
+                        // 获取主屏幕元素
+                        const homeScreen = document.querySelector('.home-screen');
+                        const mainContent = document.querySelector('.main-content');
+                        
                         if (keyboardHeight > 50 && document.activeElement &&
                             (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
                             
                             if (visibleModal) {
-                                // 键盘弹出：确保当前活动界面在最上层
+                                // 键盘弹出：确保当前活动界面完全覆盖背景
                                 const modalContent = visibleModal.querySelector('.modal-content');
-                                visibleModal.style.zIndex = '9999';
-                                visibleModal.style.height = vv.height + 'px';
-                                visibleModal.style.top = vv.offsetTop + 'px';
+                                
+                                // 设置极高z-index确保在最上层
+                                visibleModal.style.zIndex = '99999';
+                                visibleModal.style.position = 'fixed';
+                                visibleModal.style.height = '100vh';
+                                visibleModal.style.width = '100vw';
+                                visibleModal.style.top = '0';
+                                visibleModal.style.left = '0';
+                                visibleModal.style.backgroundColor = 'rgba(0,0,0,0.95)';
+                                
                                 if (modalContent) {
                                     modalContent.style.height = vv.height + 'px';
                                     modalContent.style.maxHeight = vv.height + 'px';
+                                    modalContent.style.width = '100%';
+                                    modalContent.style.position = 'relative';
+                                    modalContent.style.top = vv.offsetTop + 'px';
                                 }
+                                
+                                // 隐藏主屏幕背景
+                                if (homeScreen) homeScreen.style.visibility = 'hidden';
+                                if (mainContent) mainContent.style.visibility = 'hidden';
+                                
                                 // 聊天消息滚动到底部
                                 if (chatMessages && visibleModal.id === 'chatModal') {
                                     chatMessages.scrollTop = chatMessages.scrollHeight;
                                 }
                             }
                         } else {
-                            // 键盘收起：恢复所有模态框
+                            // 键盘收起：恢复所有状态
                             document.querySelectorAll('.modal').forEach(modal => {
-                                if (modal.style.zIndex === '9999') modal.style.zIndex = '';
+                                if (modal.style.zIndex === '99999') {
+                                    modal.style.zIndex = '';
+                                    modal.style.position = '';
+                                    modal.style.backgroundColor = '';
+                                }
                                 modal.style.height = '';
+                                modal.style.width = '';
                                 modal.style.top = '';
+                                modal.style.left = '';
+                                
                                 const modalContent = modal.querySelector('.modal-content');
                                 if (modalContent) {
                                     modalContent.style.height = '';
                                     modalContent.style.maxHeight = '';
+                                    modalContent.style.width = '';
+                                    modalContent.style.position = '';
+                                    modalContent.style.top = '';
                                 }
                             });
+                            
+                            // 恢复主屏幕背景
+                            if (homeScreen) homeScreen.style.visibility = '';
+                            if (mainContent) mainContent.style.visibility = '';
+                            
                             window.scrollTo(0, 0);
                         }
                     });
@@ -14185,16 +14219,34 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 
                 document.addEventListener('focusout', () => {
                     setTimeout(() => {
+                        const homeScreen = document.querySelector('.home-screen');
+                        const mainContent = document.querySelector('.main-content');
+                        
                         document.querySelectorAll('.modal').forEach(modal => {
-                            if (modal.style.zIndex === '9999') modal.style.zIndex = '';
+                            if (modal.style.zIndex === '99999') {
+                                modal.style.zIndex = '';
+                                modal.style.position = '';
+                                modal.style.backgroundColor = '';
+                            }
                             modal.style.height = '';
+                            modal.style.width = '';
                             modal.style.top = '';
+                            modal.style.left = '';
+                            
                             const modalContent = modal.querySelector('.modal-content');
                             if (modalContent) {
                                 modalContent.style.height = '';
                                 modalContent.style.maxHeight = '';
+                                modalContent.style.width = '';
+                                modalContent.style.position = '';
+                                modalContent.style.top = '';
                             }
                         });
+                        
+                        // 恢复主屏幕背景
+                        if (homeScreen) homeScreen.style.visibility = '';
+                        if (mainContent) mainContent.style.visibility = '';
+                        
                         window.scrollTo(0, 0);
                     }, 100);
                 });
