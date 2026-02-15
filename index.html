@@ -14141,7 +14141,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const resetHostLayout = (host) => {
                     if (!host) return;
                     host.style.height = '';
-                    host.style.top = '';
                     const content = host.querySelector('.modal-content');
                     if (content) {
                         content.style.height = '';
@@ -14167,7 +14166,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     rafId = requestAnimationFrame(() => {
                         const vv = window.visualViewport;
                         const focused = document.activeElement;
-                        const keyboardHeight = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+                        const keyboardHeight = Math.max(0, window.innerHeight - vv.height);
                         const editableFocused = isEditable(focused);
                         const host = editableFocused ? getActiveHost(focused) : null;
 
@@ -14175,7 +14174,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             if (activeHost && activeHost !== host) resetHostLayout(activeHost);
                             activeHost = host;
                             activeHost.style.height = vv.height + 'px';
-                            activeHost.style.top = vv.offsetTop + 'px';
                             const content = activeHost.querySelector('.modal-content');
                             if (content) {
                                 content.style.height = vv.height + 'px';
