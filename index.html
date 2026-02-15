@@ -14122,58 +14122,86 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             });
 
             // ========== 虚拟键盘自适应功能 ==========
-            // 简单修复：键盘弹出时确保当前模态框层级最高
+            // 使用 visualViewport API 动态调整当前焦点所在界面，避免键盘下层露出主屏
             (function () {
+                if (!window.visualViewport) return;
+
+                const isEditable = (el) => !!el && (
+                    el.tagName === 'TEXTAREA' ||
+                    (el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|file|image|range|color)$/i.test(el.type || 'text')) ||
+                    el.isContentEditable
+                );
+
+                const isVisible = (el) => {
+                    if (!el) return false;
+                    const cs = getComputedStyle(el);
+                    return cs.display !== 'none' && cs.visibility !== 'hidden';
+                };
+
+                const resetHostLayout = (host) => {
+                    if (!host) return;
+                    host.style.height = '';
+                    host.style.top = '';
+                    const content = host.querySelector('.modal-content');
+                    if (content) {
+                        content.style.height = '';
+                        content.style.maxHeight = '';
+                    }
+                };
+
+                const getActiveHost = (activeEl) => {
+                    if (!activeEl) return null;
+                    const directHost = activeEl.closest('.modal, [id$="Modal"], [class*="modal"], [class*="Modal"]');
+                    if (isVisible(directHost)) return directHost;
+                    const allHosts = Array.from(document.querySelectorAll('.modal, [id$="Modal"], [class*="modal"], [class*="Modal"]'));
+                    for (let i = allHosts.length - 1; i >= 0; i--) {
+                        if (isVisible(allHosts[i])) return allHosts[i];
+                    }
+                    return null;
+                };
+
                 let rafId = 0;
-                function adjustForKeyboard() {
+                let activeHost = null;
+                const adjustForKeyboard = () => {
                     cancelAnimationFrame(rafId);
                     rafId = requestAnimationFrame(() => {
-                        if (!window.visualViewport) return;
                         const vv = window.visualViewport;
-                        const keyboardHeight = window.innerHeight - vv.height;
+                        const focused = document.activeElement;
+                        const keyboardHeight = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+                        const editableFocused = isEditable(focused);
+                        const host = editableFocused ? getActiveHost(focused) : null;
 
-                        // 获取当前显示的模态框
-                        const visibleModal = Array.from(document.querySelectorAll('.modal')).find(modal => 
-                            modal.style.display === 'flex' || modal.style.display === 'block');
-                        
-                        if (keyboardHeight > 50 && document.activeElement &&
-                            (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                            
-                            if (visibleModal) {
-                                // 键盘弹出：只提高z-index，不动其他任何样式
-                                visibleModal.style.zIndex = '99999';
+                        if (keyboardHeight > 50 && host) {
+                            if (activeHost && activeHost !== host) resetHostLayout(activeHost);
+                            activeHost = host;
+                            activeHost.style.height = vv.height + 'px';
+                            activeHost.style.top = vv.offsetTop + 'px';
+                            const content = activeHost.querySelector('.modal-content');
+                            if (content) {
+                                content.style.height = vv.height + 'px';
+                                content.style.maxHeight = vv.height + 'px';
+                            }
+                            if (activeHost.id === 'chatModal' && typeof chatMessages !== 'undefined' && chatMessages) {
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
                             }
                         } else {
-                            // 键盘收起：恢复z-index
-                            document.querySelectorAll('.modal').forEach(modal => {
-                                if (modal.style.zIndex === '99999') {
-                                    modal.style.zIndex = '';
-                                }
-                            });
+                            if (activeHost) resetHostLayout(activeHost);
+                            activeHost = null;
+                            window.scrollTo(0, 0);
                         }
                     });
-                }
+                };
 
-                if (window.visualViewport) {
-                    window.visualViewport.addEventListener('resize', adjustForKeyboard);
-                }
-
-                // 全局输入框聚焦/失焦处理
+                window.visualViewport.addEventListener('resize', adjustForKeyboard);
+                window.visualViewport.addEventListener('scroll', adjustForKeyboard);
                 document.addEventListener('focusin', (e) => {
-                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                        setTimeout(adjustForKeyboard, 150);
-                    }
-                });
-                
+                    if (!isEditable(e.target)) return;
+                    setTimeout(adjustForKeyboard, 150);
+                    setTimeout(adjustForKeyboard, 400);
+                }, true);
                 document.addEventListener('focusout', () => {
-                    setTimeout(() => {
-                        document.querySelectorAll('.modal').forEach(modal => {
-                            if (modal.style.zIndex === '99999') {
-                                modal.style.zIndex = '';
-                            }
-                        });
-                    }, 100);
-                });
+                    setTimeout(adjustForKeyboard, 100);
+                }, true);
             })();
             // ========== 虚拟键盘自适应功能结束 ==========
             if (apiService) apiService.updateSettingsDisplay();
