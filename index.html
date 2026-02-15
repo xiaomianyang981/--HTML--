@@ -14122,32 +14122,50 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             });
 
             // ========== 虚拟键盘自适应功能 ==========
-            // 使用 visualViewport API 动态调整容器高度，确保键盘弹出时输入框始终可见
+            // 全局键盘适配：自动检测当前活动界面，确保键盘弹出时当前界面在最上层
             (function () {
-                const chatModalContent = document.querySelector('#chatModal .modal-content');
-                if (!chatModalContent) return;
-
                 let rafId = 0;
                 function adjustForKeyboard() {
                     cancelAnimationFrame(rafId);
                     rafId = requestAnimationFrame(() => {
                         if (!window.visualViewport) return;
                         const vv = window.visualViewport;
-                        const keyboardHeight = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+                        const keyboardHeight = window.innerHeight - vv.height;
 
+                        // 获取当前显示的模态框
+                        const visibleModal = Array.from(document.querySelectorAll('.modal')).find(modal => 
+                            modal.style.display === 'flex' || modal.style.display === 'block');
+                        
                         if (keyboardHeight > 50 && document.activeElement &&
                             (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                            // 键盘弹出：仅调整聊天内容高度，保持 modal 全屏覆盖避免露出主屏
-                            chatModalContent.style.height = vv.height + 'px';
-                            chatModalContent.style.maxHeight = vv.height + 'px';
-                            if (chatMessages) {
-                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                            
+                            if (visibleModal) {
+                                // 键盘弹出：确保当前活动界面在最上层
+                                const modalContent = visibleModal.querySelector('.modal-content');
+                                visibleModal.style.zIndex = '9999';
+                                visibleModal.style.height = vv.height + 'px';
+                                visibleModal.style.top = vv.offsetTop + 'px';
+                                if (modalContent) {
+                                    modalContent.style.height = vv.height + 'px';
+                                    modalContent.style.maxHeight = vv.height + 'px';
+                                }
+                                // 聊天消息滚动到底部
+                                if (chatMessages && visibleModal.id === 'chatModal') {
+                                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                                }
                             }
                         } else {
-                            // 键盘收起：恢复
-                            chatModalContent.style.height = '';
-                            chatModalContent.style.maxHeight = '';
-                            // 重置视口滚动偏移
+                            // 键盘收起：恢复所有模态框
+                            document.querySelectorAll('.modal').forEach(modal => {
+                                if (modal.style.zIndex === '9999') modal.style.zIndex = '';
+                                modal.style.height = '';
+                                modal.style.top = '';
+                                const modalContent = modal.querySelector('.modal-content');
+                                if (modalContent) {
+                                    modalContent.style.height = '';
+                                    modalContent.style.maxHeight = '';
+                                }
+                            });
                             window.scrollTo(0, 0);
                         }
                     });
@@ -14158,19 +14176,28 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     window.visualViewport.addEventListener('scroll', adjustForKeyboard);
                 }
 
-                if (chatInput) {
-                    chatInput.addEventListener('focus', () => {
+                // 全局输入框聚焦/失焦处理
+                document.addEventListener('focusin', (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                         setTimeout(adjustForKeyboard, 150);
-                        setTimeout(adjustForKeyboard, 400);
-                    });
-                    chatInput.addEventListener('blur', () => {
-                        setTimeout(() => {
-                            chatModalContent.style.height = '';
-                            chatModalContent.style.maxHeight = '';
-                            window.scrollTo(0, 0);
-                        }, 100);
-                    });
-                }
+                    }
+                });
+                
+                document.addEventListener('focusout', () => {
+                    setTimeout(() => {
+                        document.querySelectorAll('.modal').forEach(modal => {
+                            if (modal.style.zIndex === '9999') modal.style.zIndex = '';
+                            modal.style.height = '';
+                            modal.style.top = '';
+                            const modalContent = modal.querySelector('.modal-content');
+                            if (modalContent) {
+                                modalContent.style.height = '';
+                                modalContent.style.maxHeight = '';
+                            }
+                        });
+                        window.scrollTo(0, 0);
+                    }, 100);
+                });
             })();
             // ========== 虚拟键盘自适应功能结束 ==========
             if (apiService) apiService.updateSettingsDisplay();
