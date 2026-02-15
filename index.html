@@ -3880,7 +3880,21 @@
             #chatModal,
             #apiModal,
             #profileModal {
+                background-color: var(--color-bg-white) !important;
+                /* 强制覆盖，确保键盘弹出时不会透出主屏幕 */
+            }
+
+            /* 聊天界面额外背景保护 - 防止键盘区域透出 */
+            #chatModal::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 background-color: var(--color-bg-white);
+                z-index: -1;
+                pointer-events: none;
             }
 
             #chatModal .modal-content,
@@ -14140,6 +14154,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const resetHostLayout = (host) => {
                     if (!host) return;
                     host.style.height = '';
+                    
+                    // 重置聊天界面的特殊样式
+                    if (host.id === 'chatModal') {
+                        host.style.backgroundColor = '';
+                        host.style.position = '';
+                        host.style.top = '';
+                        host.style.left = '';
+                        host.style.right = '';
+                        host.style.bottom = '';
+                        host.style.zIndex = '';
+                    }
+                    
                     const content = host.querySelector('.modal-content');
                     if (content) {
                         content.style.height = '';
@@ -14168,11 +14194,24 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         const keyboardHeight = Math.max(0, window.innerHeight - vv.height);
                         const editableFocused = isEditable(focused);
                         const host = editableFocused ? getActiveHost(focused) : null;
-
-                        if (keyboardHeight > 50 && host) {
+                        
+                        // 降低键盘检测阈值，提高灵敏度
+                        if (keyboardHeight > 30 && host) {
                             if (activeHost && activeHost !== host) resetHostLayout(activeHost);
                             activeHost = host;
                             activeHost.style.height = vv.height + 'px';
+                            
+                            // 聊天界面特殊处理 - 确保背景完全覆盖
+                            if (activeHost.id === 'chatModal') {
+                                activeHost.style.backgroundColor = 'var(--color-bg-white)';
+                                activeHost.style.position = 'fixed';
+                                activeHost.style.top = '0';
+                                activeHost.style.left = '0';
+                                activeHost.style.right = '0';
+                                activeHost.style.bottom = '0';
+                                activeHost.style.zIndex = '9999';
+                            }
+                            
                             const content = activeHost.querySelector('.modal-content');
                             if (content) {
                                 content.style.height = vv.height + 'px';
