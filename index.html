@@ -1701,25 +1701,81 @@
         }
 
         /* ============================================================
-           聊天消息样式
-           消息气泡、图片、语音等核心聊天功能样式
+           聊天消息样式 — QQ风格头像+气泡布局
            ============================================================ */
 
+        /* 消息行：头像 + 气泡内容 */
+        .message-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 8px;
+            animation: messageAppear 0.3s ease-out;
+        }
+
+        .message-row.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-row.ai {
+            flex-direction: row;
+        }
+
+        /* 消息头像 */
+        .msg-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: var(--color-bg-light);
+            box-shadow: 0 1px 4px var(--shadow-color-light);
+        }
+
+        .msg-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .msg-avatar .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--avatar-gradient-start), var(--avatar-gradient-end));
+            color: var(--icon-color);
+            font-size: 16px;
+        }
+
+        /* 消息内容区 */
+        .msg-content {
+            max-width: calc(100% - 52px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-row.user .msg-content {
+            align-items: flex-end;
+        }
+
+        .message-row.ai .msg-content {
+            align-items: flex-start;
+        }
+
         .message {
-            margin-bottom: 15px;
             padding: 10px 15px;
             border-radius: 12px;
-            max-width: 70%;
+            max-width: 100%;
             word-wrap: break-word;
             word-break: break-word;
             font-size: 15px;
             line-height: 1.5;
             box-shadow: 0 1px 4px var(--shadow-color-light);
-            animation: messageAppear 0.3s ease-out;
             height: auto;
             min-height: auto;
             overflow: visible;
-            /* 禁用文本选择和系统菜单 */
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -1739,7 +1795,6 @@
             }
         }
 
-        /* 禁用消息容器的文本选择和系统菜单 */
         .message.user,
         .message.ai {
             user-select: none;
@@ -1751,7 +1806,6 @@
         .message.user {
             background-color: var(--color-bg-user-msg) !important;
             color: var(--color-text-darker);
-            margin-left: auto;
             border-bottom-right-radius: 4px;
         }
 
@@ -1759,12 +1813,11 @@
         .message.assistant {
             background-color: var(--color-bg-ai-msg) !important;
             color: var(--color-text-darker);
-            margin-right: auto;
             border-bottom-left-radius: 4px;
         }
 
         .reply-quote {
-            max-width: 80%;
+            max-width: 100%;
             font-size: 12px;
             color: var(--color-text-medium);
             background: var(--color-bg-pressed);
@@ -1773,18 +1826,9 @@
             margin-bottom: 6px;
             border-left: 3px solid var(--color-border);
             word-break: break-word;
-            /* 禁用长按菜单 */
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
-        }
-
-        .reply-quote.user {
-            margin-left: auto;
-        }
-
-        .reply-quote.ai {
-            margin-right: auto;
         }
 
         .reply-preview {
@@ -1868,14 +1912,6 @@
             margin-top: 6px;
             border-radius: 12px;
             overflow: hidden;
-        }
-
-        .message-image-wrap.user {
-            margin-left: auto;
-        }
-
-        .message-image-wrap.ai {
-            margin-right: auto;
         }
 
         .message-image.desc-thumb {
@@ -2396,14 +2432,11 @@
             color: var(--color-bg-white);
         }
 
-        body.multi-select-active #chatMessages>div[data-msg-id] {
-            flex-direction: row !important;
-            align-items: center !important;
-            gap: 8px;
+        body.multi-select-active #chatMessages>.message-row {
             cursor: pointer;
         }
 
-        body.multi-select-active #chatMessages>div[data-msg-id] .multi-select-checkbox {
+        body.multi-select-active #chatMessages div[data-msg-id] .multi-select-checkbox {
             display: flex;
         }
 
@@ -3978,7 +4011,8 @@
             /* 全屏模态在移动端用实色背景，防止键盘弹出时主屏幕露出 */
             #chatModal,
             #apiModal,
-            #profileModal {
+            #profileModal,
+            #profileEditModal {
                 background-color: var(--color-bg-white) !important;
                 /* 强制覆盖，确保键盘弹出时不会透出主屏幕 */
             }
@@ -4000,6 +4034,7 @@
             .friend-settings-screen,
             #apiModal .modal-content,
             #profileModal .modal-content,
+            #profileEditModal .modal-content,
             .settings-screen {
                 width: 100%;
                 max-width: 100%;
@@ -4051,6 +4086,7 @@
             .friend-settings-screen,
             #apiModal .modal-content,
             #profileModal .modal-content,
+            #profileEditModal .modal-content,
             .settings-screen {
                 width: 100%;
                 max-width: 430px;
@@ -4241,11 +4277,12 @@
         .profile-content {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - var(--status-bar-height) - 50px);
-            background: linear-gradient(135deg, 
-                #f5f8fa 0%, 
-                #eef4f8 35%, 
-                #e8f2f7 65%, 
+            flex: 1;
+            min-height: 0;
+            background: linear-gradient(135deg,
+                #f5f8fa 0%,
+                #eef4f8 35%,
+                #e8f2f7 65%,
                 #f0f6fa 100%);
             overflow-y: auto;
         }
@@ -4550,28 +4587,16 @@
             border: 1.5px solid var(--glass-border-light);
         }
 
-        .profile-card:nth-child(1) .card-icon {
-            background: linear-gradient(135deg, 
-                var(--icon-gradient-2-start) 0%, 
+        .profile-card:nth-of-type(1) .card-icon {
+            background: linear-gradient(135deg,
+                var(--icon-gradient-2-start) 0%,
                 var(--icon-gradient-2-end) 100%);
         }
 
-        .profile-card:nth-child(2) .card-icon {
-            background: linear-gradient(135deg, 
-                var(--icon-gradient-3-start) 0%, 
+        .profile-card:nth-of-type(2) .card-icon {
+            background: linear-gradient(135deg,
+                var(--icon-gradient-3-start) 0%,
                 var(--icon-gradient-3-end) 100%);
-        }
-
-        .profile-card:nth-child(3) .card-icon {
-            background: linear-gradient(135deg, 
-                var(--icon-gradient-4-start) 0%, 
-                var(--icon-gradient-4-end) 100%);
-        }
-
-        .profile-card:nth-child(4) .card-icon {
-            background: linear-gradient(135deg, 
-                var(--icon-gradient-5-start) 0%, 
-                var(--icon-gradient-5-end) 100%);
         }
 
         .card-content {
@@ -4618,34 +4643,106 @@
             color: var(--color-text);
         }
 
-        /* 个人资料页按“页面切换”呈现，不使用弹窗动画 */
-        #profileModal {
+        /* 个人资料信息展示卡片 */
+        .profile-info-card {
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border-strong);
+            box-shadow: 0 4px 16px var(--shadow-color-light);
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .profile-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--color-border-lighter);
+        }
+
+        .profile-info-label {
+            font-size: 14px;
+            color: var(--color-text-medium);
+            flex-shrink: 0;
+        }
+
+        .profile-info-value {
+            font-size: 14px;
+            color: var(--color-text-dark);
+            text-align: right;
+        }
+
+        /* 编辑页面表单样式 */
+        .profile-edit-group {
+            margin-bottom: 20px;
+        }
+
+        .profile-edit-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .profile-edit-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--color-border-input);
+            border-radius: 14px;
+            font-size: 14px;
+            color: var(--color-text-dark);
+            background: var(--color-bg-input);
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .profile-edit-input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        /* 个人资料页按"页面切换"呈现，不使用弹窗动画 */
+        #profileModal,
+        #profileEditModal {
             background-color: var(--overlay-darker);
         }
 
-        #profileModal .modal-content {
+        #profileModal .modal-content,
+        #profileEditModal .modal-content {
             animation: none;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         /* 个人资料顶部栏点击兜底：强制保证顶部按钮可交互 */
-        #profileModal .status-bar {
+        #profileModal .status-bar,
+        #profileEditModal .status-bar {
             pointer-events: none;
             z-index: 3004;
         }
 
-        #profileModal .settings-nav {
+        #profileModal .settings-nav,
+        #profileEditModal .settings-nav {
             position: sticky;
             top: 0;
             z-index: 3005 !important;
             pointer-events: auto;
         }
 
-        #profileModal .settings-title {
+        #profileModal .settings-title,
+        #profileEditModal .settings-title {
             pointer-events: none;
         }
 
         #profileModal #closeProfileModal,
-        #profileModal #profileEditBtn {
+        #profileEditModal #closeProfileEditModal,
+        #profileEditModal #profileSaveBtn {
             position: relative;
             z-index: 3006 !important;
             pointer-events: auto !important;
@@ -4653,24 +4750,20 @@
 
         /* 响应式调整 */
         @media (max-width: 400px) {
-            .profile-content {
-                height: calc(100vh - var(--status-bar-height) - 45px);
-            }
-            
             .profile-header {
                 padding: 40px 20px 28px;
             }
-            
+
             .profile-avatar {
                 width: 95px;
                 height: 95px;
                 font-size: 45px;
             }
-            
+
             .profile-name-section h2 {
                 font-size: 22px;
             }
-            
+
             .profile-cards-section {
                 padding: 0 20px 28px;
             }
@@ -5907,9 +6000,9 @@
     </div>
 
     <!-- 个人资料页面弹窗 -->
+    <!-- 个人资料页面（查看） -->
     <div class="modal" id="profileModal" style="display: none;">
         <div class="modal-content">
-            <!-- 状态栏 -->
             <div class="status-bar">
                 <div id="profileStatusTime" class="time">14:30</div>
                 <div class="status-icons">
@@ -5918,154 +6011,146 @@
                     <i id="profileStatusBattery" class="fas fa-battery-three-quarters"></i>
                 </div>
             </div>
-
-            <!-- 顶部导航 -->
             <div class="settings-nav">
                 <button class="settings-back" id="closeProfileModal" type="button"
                     onclick="event.stopPropagation(); if (window.closeProfileModal) window.closeProfileModal();">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="settings-title">个人资料</div>
-                <button class="profile-edit-btn" id="profileEditBtn" type="button">
-                    <i class="fas fa-edit"></i>
-                </button>
+                <div style="width: 34px;"></div>
             </div>
-
-            <!-- 个人资料内容 -->
             <div class="profile-content">
-                <!-- 头部背景区域 -->
                 <div class="profile-header">
                     <div class="profile-bg-gradient"></div>
-                    
-                    <!-- 头像区域 -->
                     <div class="profile-avatar-section">
-                        <div class="profile-avatar" id="profileAvatar">
-                            <i class="fas fa-user-circle"></i>
-                            <div class="avatar-edit-overlay" id="avatarEditOverlay" style="display: none;">
-                                <i class="fas fa-camera"></i>
-                            </div>
+                        <div class="profile-avatar" id="profileAvatar" style="background-size: cover; background-position: center;">
+                            <i class="fas fa-user-circle" id="profileAvatarIcon"></i>
                         </div>
                     </div>
-
-                    <!-- 基本信息 -->
                     <div class="profile-basic-info">
                         <div class="profile-name-section">
                             <h2 id="profileDisplayName">芋圆</h2>
-                            <span class="profile-gender-icon">
-                                <i class="fas fa-venus" id="profileGenderIcon"></i>
-                            </span>
                         </div>
-                        <div class="profile-id">QQ号：<span id="profileIdDisplay">1234567890</span></div>
                         <div class="profile-signature" id="profileSignatureDisplay">这个人很懒，什么都没有留下~</div>
                     </div>
                 </div>
-
-                <!-- 编辑表单区域 -->
-                <div class="profile-edit-form" id="profileEditForm" style="display: none;">
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">昵称</label>
-                        <input type="text" id="profileNameInput" class="form-control" placeholder="请输入昵称" maxlength="20">
-                    </div>
-
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">QQ号</label>
-                        <input type="text" id="profileIdInput" class="form-control" placeholder="请输入QQ号" maxlength="15">
-                    </div>
-
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">性别</label>
-                        <div class="profile-gender-selector">
-                            <label class="gender-option">
-                                <input type="radio" name="gender" value="female" checked>
-                                <span class="gender-icon female"><i class="fas fa-venus"></i></span>
-                                <span>女</span>
-                            </label>
-                            <label class="gender-option">
-                                <input type="radio" name="gender" value="male">
-                                <span class="gender-icon male"><i class="fas fa-mars"></i></span>
-                                <span>男</span>
-                            </label>
-                            <label class="gender-option">
-                                <input type="radio" name="gender" value="other">
-                                <span class="gender-icon other"><i class="fas fa-genderless"></i></span>
-                                <span>其他</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">个性签名</label>
-                        <textarea id="profileSignatureInput" class="form-control" rows="3" placeholder="写点什么吧..." maxlength="100"></textarea>
-                    </div>
-
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">角色人设</label>
-                        <textarea id="profilePersonalityInput" class="form-control" rows="5" placeholder="描述一下你的性格、爱好、特点等..." maxlength="500"></textarea>
-                        <div class="form-help-text">用于角色更好地理解你的个性</div>
-                    </div>
-
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">生日</label>
-                        <input type="date" id="profileBirthdayInput" class="form-control">
-                    </div>
-
-                    <div class="profile-form-section">
-                        <label class="profile-form-label">所在地</label>
-                        <input type="text" id="profileLocationInput" class="form-control" placeholder="你在哪个城市呢？" maxlength="50">
-                    </div>
-
-                    <!-- 保存按钮 -->
-                    <div class="profile-form-actions">
-                        <button class="btn btn-secondary" id="profileCancelBtn">取消</button>
-                        <button class="btn btn-primary" id="profileSaveBtn">保存</button>
-                    </div>
-                </div>
-
-                <!-- 功能卡片区域 -->
+                <!-- 信息展示列表 -->
                 <div class="profile-cards-section" id="profileCardsSection">
-                    <div class="profile-card" onclick="alert('收藏功能开发中...')">
-                        <div class="card-icon">
-                            <i class="fas fa-heart"></i>
+                    <div class="profile-info-card">
+                        <div class="profile-info-row">
+                            <span class="profile-info-label">QQ号</span>
+                            <span class="profile-info-value" id="profileIdDisplay">1234567890</span>
                         </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label">生日</span>
+                            <span class="profile-info-value" id="profileBirthdayDisplay">未设置</span>
+                        </div>
+                        <div class="profile-info-row" style="border-bottom: none;">
+                            <span class="profile-info-label">所在地</span>
+                            <span class="profile-info-value" id="profileLocationDisplay">未设置</span>
+                        </div>
+                    </div>
+                    <!-- 编辑资料入口 -->
+                    <div class="profile-card" onclick="if(window.openProfileEditModal) window.openProfileEditModal();">
+                        <div class="card-icon"><i class="fas fa-user-edit"></i></div>
                         <div class="card-content">
-                            <div class="card-title">我的收藏</div>
-                            <div class="card-desc">保存喜欢的内容</div>
+                            <div class="card-title">编辑资料</div>
+                            <div class="card-desc">修改昵称、签名、人设等</div>
                         </div>
                         <i class="fas fa-chevron-right"></i>
                     </div>
-
-                    <div class="profile-card" onclick="alert('相册功能开发中...')">
-                        <div class="card-icon">
-                            <i class="fas fa-images"></i>
-                        </div>
-                        <div class="card-content">
-                            <div class="card-title">我的相册</div>
-                            <div class="card-desc">美好回忆存储</div>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-
-                    <div class="profile-card" onclick="alert('钱包功能开发中...')">
-                        <div class="card-icon">
-                            <i class="fas fa-wallet"></i>
-                        </div>
-                        <div class="card-content">
-                            <div class="card-title">我的钱包</div>
-                            <div class="card-desc">余额和消费记录</div>
-                        </div>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-
-                    <div class="profile-card" onclick="openSettingsModal()">
-                        <div class="card-icon">
-                            <i class="fas fa-cog"></i>
-                        </div>
+                    <div class="profile-card" onclick="ModalManager.show('settings')">
+                        <div class="card-icon"><i class="fas fa-cog"></i></div>
                         <div class="card-content">
                             <div class="card-title">设置</div>
-                            <div class="card-desc">应用设置和偏好</div>
+                            <div class="card-desc">聊天背景更改</div>
                         </div>
                         <i class="fas fa-chevron-right"></i>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人资料编辑页面 -->
+    <div class="modal" id="profileEditModal" style="display: none;">
+        <div class="modal-content">
+            <div class="status-bar">
+                <div id="profileEditStatusTime" class="time">14:30</div>
+                <div class="status-icons">
+                    <i id="profileEditStatusSignal" class="fas fa-signal"></i>
+                    <i id="profileEditStatusWifi" class="fas fa-wifi"></i>
+                    <i id="profileEditStatusBattery" class="fas fa-battery-three-quarters"></i>
+                </div>
+            </div>
+            <div class="settings-nav">
+                <button class="settings-back" id="closeProfileEditModal" type="button"
+                    onclick="event.stopPropagation(); if (window.closeProfileEditModal) window.closeProfileEditModal();">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="settings-title">编辑资料</div>
+                <button class="profile-edit-btn" id="profileSaveBtn" type="button"
+                    onclick="event.stopPropagation(); if (window.saveProfileData) window.saveProfileData();"
+                    style="font-size: 14px; padding: 6px 14px; border-radius: 16px; width: auto;">
+                    保存
+                </button>
+            </div>
+            <div class="profile-content" style="padding: 20px 22px 30px;">
+                <!-- 头像上传 -->
+                <div class="profile-edit-group" style="text-align: center;">
+                    <div id="profileAvatarEdit" style="width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 8px; background: var(--color-bg-input); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 38px; color: var(--color-text-lighter); background-size: cover; background-position: center; position: relative; border: 2px solid var(--glass-border-white);">
+                        <i class="fas fa-user-circle" id="profileAvatarEditIcon"></i>
+                        <div style="position: absolute; bottom: 0; right: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--color-text-dark); border: 2px solid #fff;">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="profileAvatarFileInput" accept="image/*" style="display: none;">
+                    <input type="text" id="profileAvatarUrlInput" class="profile-edit-input" placeholder="或粘贴头像图片URL" style="margin-top: 8px; font-size: 13px;">
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">昵称</label>
+                    <input type="text" id="profileNameInput" class="profile-edit-input" placeholder="请输入昵称" maxlength="20">
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">QQ号</label>
+                    <input type="text" id="profileIdInput" class="profile-edit-input" placeholder="请输入QQ号" maxlength="15">
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">性别</label>
+                    <div class="profile-gender-selector">
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="female" checked>
+                            <span class="gender-icon female"><i class="fas fa-venus"></i></span>
+                            <span>女</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="male">
+                            <span class="gender-icon male"><i class="fas fa-mars"></i></span>
+                            <span>男</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="other">
+                            <span class="gender-icon other"><i class="fas fa-genderless"></i></span>
+                            <span>其他</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">个性签名</label>
+                    <textarea id="profileSignatureInput" class="profile-edit-input" rows="2" placeholder="写点什么吧..." maxlength="100" style="resize: none;"></textarea>
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">角色人设</label>
+                    <textarea id="profilePersonalityInput" class="profile-edit-input" rows="4" placeholder="描述一下你的性格、爱好、特点等..." maxlength="500" style="resize: none;"></textarea>
+                    <div class="form-help-text">用于角色更好地理解你的个性</div>
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">生日</label>
+                    <input type="date" id="profileBirthdayInput" class="profile-edit-input">
+                </div>
+                <div class="profile-edit-group">
+                    <label class="profile-edit-label">所在地</label>
+                    <input type="text" id="profileLocationInput" class="profile-edit-input" placeholder="你在哪个城市呢？" maxlength="50">
                 </div>
             </div>
         </div>
@@ -7348,7 +7433,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 { name: 'customError', modal: 'customErrorModal' },
                 { name: 'summary', modal: 'summaryModal' },
                 { name: 'bigSummary', modal: 'bigSummaryModal' },
-                { name: 'profile', modal: 'profileModal' }
+                { name: 'profile', modal: 'profileModal' },
+                { name: 'profileEdit', modal: 'profileEditModal' }
             ]);
 
             // 暴露到全局，供第二个脚本块和 inline onclick 使用
@@ -11141,7 +11227,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
 
                 this.multiSelect.selectedWrappers.forEach((wrapper, msgId) => {
-                    if (wrapper && wrapper.parentNode) wrapper.remove();
+                    if (wrapper) { const r = wrapper.closest('.message-row'); (r || wrapper).remove(); }
                     const target = history.find(m => m.id === msgId);
                     if (target) target.isDeletedLocal = true;
                 });
@@ -11465,7 +11551,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             }
 
             deleteMessageLocal(messageWrapper, msgId) {
-                if (messageWrapper) messageWrapper.remove();
+                if (messageWrapper) { const r = messageWrapper.closest('.message-row'); (r || messageWrapper).remove(); }
                 if (!msgId || !this.currentFriendId || !this.friendSystem) return;
                 const history = this.friendSystem.getFriendChatHistory(this.currentFriendId);
                 const target = history.find(m => m.id === msgId);
@@ -11486,13 +11572,21 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 if (messageWrapper) {
-                    messageWrapper.innerHTML = '';
-                    messageWrapper.classList.add('message-recalled-wrapper');
+                    // 撤回时替换整行为居中文本
+                    const row = messageWrapper.closest('.message-row');
+                    if (row) {
+                        row.className = '';
+                        row.innerHTML = '';
+                        row.style.marginBottom = '12px';
+                    }
+                    const target = row || messageWrapper;
+                    target.innerHTML = '';
+                    target.classList.add('message-recalled-wrapper');
                     const recalled = document.createElement('div');
                     recalled.className = 'message-recalled';
                     recalled.textContent = recallText;
                     recalled.style.cursor = 'pointer';
-                    messageWrapper.appendChild(recalled);
+                    target.appendChild(recalled);
                 }
 
                 if (!msgId || !this.currentFriendId || !this.friendSystem) return;
@@ -11888,11 +11982,35 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         .trim();
                 }
 
+                // QQ风格：消息行 = 头像 + 内容区
+                const messageRow = document.createElement('div');
+                messageRow.className = `message-row ${role === 'user' ? 'user' : 'ai'}`;
+
+                // 头像
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'msg-avatar';
+                let avatarSrc = '';
+                if (role === 'user') {
+                    const userProfile = StorageManager.get('userProfile', {});
+                    avatarSrc = userProfile.avatar || '';
+                } else {
+                    const friend = this.friendSystem ? this.friendSystem.getFriendById(this.currentFriendId) : null;
+                    avatarSrc = friend?.avatar || '';
+                }
+                if (avatarSrc) {
+                    const avatarImg = document.createElement('img');
+                    avatarImg.src = avatarSrc;
+                    avatarImg.alt = role === 'user' ? '我' : this.getCurrentFriendName();
+                    avatarImg.onerror = () => { avatarDiv.innerHTML = '<div class="avatar-placeholder"><i class="fas fa-user"></i></div>'; };
+                    avatarDiv.appendChild(avatarImg);
+                } else {
+                    avatarDiv.innerHTML = '<div class="avatar-placeholder"><i class="fas fa-user"></i></div>';
+                }
+                messageRow.appendChild(avatarDiv);
+
+                // 内容区（原messageWrapper）
                 const messageWrapper = document.createElement('div');
-                messageWrapper.style.marginBottom = '15px';
-                messageWrapper.style.display = 'flex';
-                messageWrapper.style.flexDirection = 'column';
-                messageWrapper.style.alignItems = role === 'user' ? 'flex-end' : 'flex-start';
+                messageWrapper.className = 'msg-content';
                 if (msgId) messageWrapper.dataset.msgId = msgId;
                 messageWrapper.dataset.role = role;
                 messageWrapper.dataset.content = content;
@@ -11977,7 +12095,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     voiceMessage.style.width = 'auto';  // 根据内容自动计算宽度
                     voiceMessage.style.minWidth = '60px';  // 最小宽度
                     voiceMessage.style.maxWidth = '320px';  // 最大宽度限制，防止冲出屏幕
-                    voiceMessage.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
                     voiceMessage.style.padding = '10px 15px';
                     voiceMessage.style.borderRadius = '12px';
 
@@ -12044,7 +12161,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     if (!isImageDesc && !(forwardBundle && typeof forwardBundle === 'object')) {
                         const messageElement = document.createElement('div');
                         messageElement.className = `message ${role}`;
-                        messageElement.style.backgroundColor = role === 'user' ? '#FFB6C1' : '#B0E0E6';
                         messageElement.textContent = content;
                         messageWrapper.appendChild(messageElement);
                         actionTarget = messageElement;
@@ -12065,7 +12181,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 if (this.multiSelect && this.multiSelect.active) {
                     this.ensureMultiSelectCheckbox(messageWrapper);
                 }
-                chatMessages.appendChild(messageWrapper);
+                messageRow.appendChild(messageWrapper);
+                chatMessages.appendChild(messageRow);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
 
                 // 实时更新好友列表（仅用户消息立即更新，角色消息批量更新避免频繁刷新）
@@ -12095,7 +12212,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 }
 
                 const messageWrapper = document.createElement('div');
-                messageWrapper.style.marginBottom = '15px';
+                messageWrapper.style.marginBottom = '12px';
                 messageWrapper.classList.add('message-recalled-wrapper');
                 messageWrapper.dataset.msgId = msgId;
                 messageWrapper.dataset.friendId = this.currentFriendId;
@@ -12257,10 +12374,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                 return t;
             }
 
-            ensureNonEmptyAiText(text, fallback = '我在，继续说。') {
+            ensureNonEmptyAiText(text, fallback = '') {
                 const t = String(text || '').trim();
                 if (t && t !== '...' && t !== '…') return t;
-                return fallback;
+                // 清洗失败不允许返回空，直接返回原始文本
+                return fallback ? fallback : text;
             }
 
             buildPromptContextHistory(chatHistory, memoryChatCount) {
@@ -12329,14 +12447,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     response = String(response || '');
                 }
 
+                // 保存原始文本，清洗失败时作为fallback
+                const originalResponse = response;
                 response = this.normalizeAiReplyForDisplay(response);
-                response = this.ensureNonEmptyAiText(response);
-
-                // 如果清理后为空，直接返回原始文本作为单条消息
-                if (response.trim().length === 0) {
-                    console.error('[generateAIMessages] 输入为空字符串');
-                    return [{ content: '我在，继续说。', isVoice: false }];
-                }
+                response = this.ensureNonEmptyAiText(response, originalResponse);
 
                 const sentences = this.splitSentences(response);
                 let validSentences = sentences.filter(s => s.trim());
@@ -12546,17 +12660,18 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             let foundTarget = false;
                             allMessageWrappers.forEach(wrapper => {
                                 if (foundTarget || wrapper.dataset.msgId === msgId) {
-                                    wrapper.remove();
+                                    const row = wrapper.closest('.message-row');
+                                    (row || wrapper).remove();
                                     foundTarget = true;
                                 }
                             });
                         } else {
                             console.warn('[修正] 未找到目标消息，仅删除DOM元素');
-                            if (messageWrapper) messageWrapper.remove();
+                            if (messageWrapper) { const row = messageWrapper.closest('.message-row'); (row || messageWrapper).remove(); }
                         }
                     } else {
                         // 没有friendSystem时，只删除DOM元素
-                        if (messageWrapper) messageWrapper.remove();
+                        if (messageWrapper) { const row = messageWrapper.closest('.message-row'); (row || messageWrapper).remove(); }
                     }
 
                     // 清除角色回复缓存，避免防重复检测影响新回复
@@ -12820,7 +12935,21 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             const relationshipMatch = personaText.match(/女友为(.+?)(?:[，。]|$)|配偶[：:](.+?)(?:[，。]|$)|伴侣[：:](.+?)(?:[，。]|$)|关系[：:](.+?)(?:[，。]|$)/);
                             const relationshipInfo = relationshipMatch ? (relationshipMatch[1] || relationshipMatch[2] || relationshipMatch[3] || relationshipMatch[4]).trim() : '';
 
-                            systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}\n\n【硬约束】\n- 世界书优先级最高，必须遵守\n- 保持角色一致，不要无理由OOC\n- 回应必须贴合用户当前问题与需求\n\n【表达约束】\n- 不写动作旁白\n- 不在回复开头加"${characterName}："或任何名字标识\n- 允许自然承接上文，不要机械重复\n- 避免油腻、过甜、过度表演式表达\n\n【行为要求】根据实时人设信息和当前语境（对话历史、角色主动性），动态调整语气、句子长短、礼貌和疏离程度，给出符合角色背景和语境的回应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
+                            // 5. 读取用户个人资料，注入到系统提示词
+                            const userProfile = StorageManager.get('userProfile', {});
+                            const userName = userProfile.name || '用户';
+                            let userProfileDesc = `\n\n【与你对话的用户信息】\n用户名：${userName}`;
+                            if (userProfile.gender) {
+                                const genderMap = { male: '男', female: '女', other: '其他' };
+                                userProfileDesc += `\n性别：${genderMap[userProfile.gender] || userProfile.gender}`;
+                            }
+                            if (userProfile.signature) userProfileDesc += `\n个性签名：${userProfile.signature}`;
+                            if (userProfile.personality) userProfileDesc += `\n用户人设：${userProfile.personality}`;
+                            if (userProfile.birthday) userProfileDesc += `\n生日：${userProfile.birthday}`;
+                            if (userProfile.location) userProfileDesc += `\n所在地：${userProfile.location}`;
+                            userProfileDesc += `\n注意：以上是用户（对话对象）的信息，不是你自己的信息。你是${characterName}，用户是${userName}，你们是不同的人。`;
+
+                            systemPrompt = `【你的身份】你是${characterName}。${relationshipInfo ? `用户是${relationshipInfo}。` : ''}这是你的完整人设：\n${personaText}${userProfileDesc}\n\n【硬约束】\n- 世界书优先级最高，必须遵守\n- 保持角色一致，不要无理由OOC\n- 回应必须贴合用户当前问题与需求\n\n【表达约束】\n- 不写动作旁白\n- 不在回复开头加"${characterName}："或任何名字标识\n- 允许自然承接上文，不要机械重复\n- 避免油腻、过甜、过度表演式表达\n\n【行为要求】根据实时人设信息和当前语境（对话历史、角色主动性），动态调整语气、句子长短、礼貌和疏离程度，给出符合角色背景和语境的回应。根据人设${hasMountedWorldBooks ? '和世界书' : ''}自主决定回复详细程度和是否使用语音。${mountedContentContext}`;
                         }
                     }
 
@@ -15909,9 +16038,6 @@ ${recent}`;
 
 // ========== 个人资料页面功能 ==========
 (() => {
-            let isEditMode = false;
-
-            // 个人资料数据默认值
             const defaultProfile = {
                 name: '芋圆',
                 sweetId: '1234567890',
@@ -15923,21 +16049,18 @@ ${recent}`;
                 avatar: ''
             };
 
-            // 打开个人资料页面
+            // 打开个人资料页面（查看）
             window.openProfileModal = function(options = {}) {
                 const modal = document.getElementById('profileModal');
                 if (!modal) return;
-
                 const from = (options && options.from) ? options.from : '';
                 modal.dataset.from = from;
                 updateStatusBarTime('profile');
-
                 if (from === 'friendList') {
                     ModalManager.switch('friendList', 'profile');
                 } else {
                     ModalManager.show('profile');
                 }
-
                 loadProfileData();
             };
 
@@ -15948,58 +16071,77 @@ ${recent}`;
                     const from = modal.dataset.from || '';
                     ModalManager.hide('profile');
                     modal.dataset.from = '';
-                    exitEditMode();
-
                     if (from === 'friendList') {
                         ModalManager.show('friendList');
-
                         const navItems = document.querySelectorAll('.friend-list-nav-item');
                         navItems.forEach(item => item.classList.remove('active'));
-                        const messagesNav = document.querySelector('.friend-list-nav-item[data-nav=\"messages\"]');
+                        const messagesNav = document.querySelector('.friend-list-nav-item[data-nav="messages"]');
                         if (messagesNav) messagesNav.classList.add('active');
                     }
                 }
             }
 
-            // 加载个人资料数据
+            let pendingProfileAvatar = '';
+
+            // 加载个人资料数据（同时更新查看页和编辑页）
             function loadProfileData() {
                 const profile = StorageManager.get('userProfile', defaultProfile);
-                // 确保使用默认值填充缺失字段
-                const mergedProfile = { ...defaultProfile, ...profile };
+                const p = { ...defaultProfile, ...profile };
 
-                // 显示信息
-                document.getElementById('profileDisplayName').textContent = mergedProfile.name;
-                document.getElementById('profileIdDisplay').textContent = mergedProfile.sweetId;
-                document.getElementById('profileSignatureDisplay').textContent = mergedProfile.signature;
+                // 查看页
+                const el = (id) => document.getElementById(id);
+                el('profileDisplayName').textContent = p.name;
+                el('profileIdDisplay').textContent = p.sweetId;
+                el('profileSignatureDisplay').textContent = p.signature || '这个人很懒，什么都没有留下~';
+                el('profileBirthdayDisplay').textContent = p.birthday || '未设置';
+                el('profileLocationDisplay').textContent = p.location || '未设置';
+                const personalityEl = el('profilePersonalityDisplay');
+                if (personalityEl) personalityEl.textContent = p.personality || '未设置';
 
-                // 设置性别图标
-                const genderIcon = document.getElementById('profileGenderIcon');
-                if (mergedProfile.gender === 'male') {
-                    genderIcon.className = 'fas fa-mars';
-                    genderIcon.style.color = '#8b99a8';
-                } else if (mergedProfile.gender === 'other') {
-                    genderIcon.className = 'fas fa-genderless';
-                    genderIcon.style.color = '#9aa8b5';
+                // 查看页头像
+                const avatarEl = el('profileAvatar');
+                const avatarIconEl = el('profileAvatarIcon');
+                if (p.avatar) {
+                    avatarEl.style.backgroundImage = `url('${p.avatar}')`;
+                    if (avatarIconEl) avatarIconEl.style.display = 'none';
                 } else {
-                    genderIcon.className = 'fas fa-venus';
-                    genderIcon.style.color = '#b5a8c8';
+                    avatarEl.style.backgroundImage = '';
+                    if (avatarIconEl) avatarIconEl.style.display = '';
                 }
 
-                // 填充表单
-                document.getElementById('profileNameInput').value = mergedProfile.name;
-                document.getElementById('profileIdInput').value = mergedProfile.sweetId;
-                document.getElementById('profileSignatureInput').value = mergedProfile.signature;
-                document.getElementById('profilePersonalityInput').value = mergedProfile.personality;
-                document.getElementById('profileBirthdayInput').value = mergedProfile.birthday;
-                document.getElementById('profileLocationInput').value = mergedProfile.location;
+                // 编辑页头像
+                pendingProfileAvatar = p.avatar || '';
+                const avatarEditEl = el('profileAvatarEdit');
+                const avatarEditIconEl = el('profileAvatarEditIcon');
+                if (avatarEditEl) {
+                    if (p.avatar) {
+                        avatarEditEl.style.backgroundImage = `url('${p.avatar}')`;
+                        if (avatarEditIconEl) avatarEditIconEl.style.display = 'none';
+                    } else {
+                        avatarEditEl.style.backgroundImage = '';
+                        if (avatarEditIconEl) avatarEditIconEl.style.display = '';
+                    }
+                }
+                const avatarUrlInput = el('profileAvatarUrlInput');
+                if (avatarUrlInput) avatarUrlInput.value = (p.avatar && !p.avatar.startsWith('data:')) ? p.avatar : '';
 
-                // 设置性别选择
-                const genderRadio = document.querySelector(`input[name="gender"][value="${mergedProfile.gender}"]`);
+                // 编辑页表单
+                el('profileNameInput').value = p.name;
+                el('profileIdInput').value = p.sweetId;
+                el('profileSignatureInput').value = p.signature;
+                el('profilePersonalityInput').value = p.personality;
+                el('profileBirthdayInput').value = p.birthday;
+                el('profileLocationInput').value = p.location;
+                const genderRadio = document.querySelector(`input[name="gender"][value="${p.gender}"]`);
                 if (genderRadio) genderRadio.checked = true;
             }
 
             // 保存个人资料数据
             function saveProfileData() {
+                // 头像：URL输入优先，其次用文件上传的base64
+                const avatarUrlVal = (document.getElementById('profileAvatarUrlInput')?.value || '').trim();
+                const finalAvatar = avatarUrlVal || pendingProfileAvatar || '';
+
                 const profile = {
                     name: document.getElementById('profileNameInput').value.trim() || defaultProfile.name,
                     sweetId: document.getElementById('profileIdInput').value.trim() || defaultProfile.sweetId,
@@ -16007,217 +16149,93 @@ ${recent}`;
                     signature: document.getElementById('profileSignatureInput').value.trim() || defaultProfile.signature,
                     personality: document.getElementById('profilePersonalityInput').value.trim(),
                     birthday: document.getElementById('profileBirthdayInput').value,
-                    location: document.getElementById('profileLocationInput').value.trim()
+                    location: document.getElementById('profileLocationInput').value.trim(),
+                    avatar: finalAvatar
                 };
-
-                // 保存到localStorage
                 StorageManager.set('userProfile', profile);
-                
-                // 更新显示
                 loadProfileData();
-                
-                // 显示保存成功提示
-                showCuteToast('个人资料保存成功！✨');
-                
-                exitEditMode();
+                showCuteToast('保存成功');
+                closeProfileEditModal();
             }
 
-            // 进入编辑模式
-            function enterEditMode() {
-                isEditMode = true;
-                document.getElementById('profileEditForm').style.display = 'block';
-                document.getElementById('profileCardsSection').style.display = 'none';
-                
-                const editBtn = document.getElementById('profileEditBtn');
-                editBtn.innerHTML = '<i class="fas fa-times"></i>';
-                editBtn.style.color = '#d89595';
+            // 打开编辑资料页面
+            function openProfileEditModal() {
+                loadProfileData();
+                updateStatusBarTime('profileEdit');
+                ModalManager.show('profileEdit');
             }
 
-            // 退出编辑模式
-            function exitEditMode() {
-                isEditMode = false;
-                document.getElementById('profileEditForm').style.display = 'none';
-                document.getElementById('profileCardsSection').style.display = 'block';
-                
-                const editBtn = document.getElementById('profileEditBtn');
-                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-                editBtn.style.color = '#7a8a9a';
+            // 关闭编辑资料页面
+            function closeProfileEditModal() {
+                ModalManager.hide('profileEdit');
             }
 
-            // 更新状态栏时间
             function updateStatusBarTime(prefix) {
                 const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const time = `${hours}:${minutes}`;
-                
-                document.getElementById(`${prefix}StatusTime`).textContent = time;
+                const h = now.getHours().toString().padStart(2, '0');
+                const m = now.getMinutes().toString().padStart(2, '0');
+                const timeEl = document.getElementById(`${prefix}StatusTime`);
+                if (timeEl) timeEl.textContent = `${h}:${m}`;
             }
 
-            // 可爱的toast提示
             function showCuteToast(message) {
-                // 创建toast元素
                 const toast = document.createElement('div');
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-                    color: white;
-                    padding: 12px 20px;
-                    border-radius: 20px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    z-index: 10000;
-                    box-shadow: 0 8px 25px rgba(255, 154, 158, 0.6);
-                    animation: toastFadeIn 0.3s ease-out;
-                `;
+                toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#ff9a9e 0%,#fecfef 100%);color:white;padding:12px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:10000;box-shadow:0 8px 25px rgba(255,154,158,0.6);animation:toastFadeIn 0.3s ease-out;';
                 toast.textContent = message;
-
-                // 添加动画keyframes
                 if (!document.getElementById('toast-styles')) {
                     const style = document.createElement('style');
                     style.id = 'toast-styles';
-                    style.textContent = `
-                        @keyframes toastFadeIn {
-                            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                        }
-                        @keyframes toastFadeOut {
-                            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-                        }
-                    `;
+                    style.textContent = '@keyframes toastFadeIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.8)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}@keyframes toastFadeOut{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0.8)}}';
                     document.head.appendChild(style);
                 }
-
                 document.body.appendChild(toast);
-
-                // 2秒后消失
                 setTimeout(() => {
                     toast.style.animation = 'toastFadeOut 0.3s ease-in';
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.parentNode.removeChild(toast);
-                        }
-                    }, 300);
+                    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
                 }, 2000);
             }
 
-            function toggleProfileEditMode() {
-                if (isEditMode) {
-                    exitEditMode();
-                } else {
-                    enterEditMode();
-                }
+            // 头像上传事件
+            const profileAvatarEdit = document.getElementById('profileAvatarEdit');
+            const profileAvatarFileInput = document.getElementById('profileAvatarFileInput');
+            const profileAvatarUrlInput = document.getElementById('profileAvatarUrlInput');
+
+            if (profileAvatarEdit && profileAvatarFileInput) {
+                profileAvatarEdit.addEventListener('click', () => profileAvatarFileInput.click());
+
+                profileAvatarFileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        pendingProfileAvatar = event.target.result;
+                        profileAvatarEdit.style.backgroundImage = `url('${pendingProfileAvatar}')`;
+                        const icon = document.getElementById('profileAvatarEditIcon');
+                        if (icon) icon.style.display = 'none';
+                        if (profileAvatarUrlInput) profileAvatarUrlInput.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                });
             }
 
-            function bindProfileNavHotzoneFallback() {
-                if (document.documentElement.dataset.profileNavHotzoneBound) return;
-                document.documentElement.dataset.profileNavHotzoneBound = '1';
-
-                const handler = (e) => {
-                    const modal = document.getElementById('profileModal');
-                    if (!modal || modal.style.display === 'none') return;
-
-                    const nav = modal.querySelector('.settings-nav');
-                    if (!nav) return;
-
-                    const rect = nav.getBoundingClientRect();
-                    const x = e.clientX;
-                    const y = e.clientY;
-                    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) return;
-
-                    const target = e.target;
-                    if (target && (target.closest('#closeProfileModal') || target.closest('#profileEditBtn'))) return;
-
-                    const hitWidth = Math.min(76, Math.floor(rect.width * 0.22));
-                    if (x <= rect.left + hitWidth) {
-                        e.preventDefault();
-                        closeProfileModal();
-                        return;
+            if (profileAvatarUrlInput) {
+                profileAvatarUrlInput.addEventListener('input', (e) => {
+                    const url = e.target.value.trim();
+                    if (url) {
+                        pendingProfileAvatar = url;
+                        profileAvatarEdit.style.backgroundImage = `url('${url}')`;
+                        const icon = document.getElementById('profileAvatarEditIcon');
+                        if (icon) icon.style.display = 'none';
                     }
-                    if (x >= rect.right - hitWidth) {
-                        e.preventDefault();
-                        toggleProfileEditMode();
-                    }
-                };
-
-                document.addEventListener('pointerup', handler, true);
-                document.addEventListener('touchend', handler, true);
-            }
-
-            // 绑定事件监听器
-            function bindProfileEventListeners() {
-                // 关闭按钮
-                const closeBtn = document.getElementById('closeProfileModal');
-                if (closeBtn && !closeBtn.dataset.boundClick) {
-                    closeBtn.dataset.boundClick = '1';
-                    closeBtn.addEventListener('click', closeProfileModal);
-                }
-
-                // 编辑按钮
-                const editBtn = document.getElementById('profileEditBtn');
-                if (editBtn && !editBtn.dataset.boundClick) {
-                    editBtn.dataset.boundClick = '1';
-                    editBtn.addEventListener('click', toggleProfileEditMode);
-                }
-
-                // 保存按钮
-                const saveBtn = document.getElementById('profileSaveBtn');
-                if (saveBtn && !saveBtn.dataset.boundClick) {
-                    saveBtn.dataset.boundClick = '1';
-                    saveBtn.addEventListener('click', saveProfileData);
-                }
-
-                // 取消按钮
-                const cancelBtn = document.getElementById('profileCancelBtn');
-                if (cancelBtn && !cancelBtn.dataset.boundClick) {
-                    cancelBtn.dataset.boundClick = '1';
-                    cancelBtn.addEventListener('click', exitEditMode);
-                }
-
-                // 头像点击编辑
-                const avatar = document.getElementById('profileAvatar');
-                if (avatar && !avatar.dataset.boundClick) {
-                    avatar.dataset.boundClick = '1';
-                    avatar.addEventListener('click', () => {
-                        if (isEditMode) {
-                            showCuteToast('头像上传功能开发中... 🎨');
-                        } else {
-                            enterEditMode();
-                        }
-                    });
-                }
-
-                // 模态框点击背景关闭
-                const modal = document.getElementById('profileModal');
-                if (modal && !modal.dataset.boundClick) {
-                    modal.dataset.boundClick = '1';
-                    modal.addEventListener('click', (e) => {
-                        if (e.target === modal) {
-                            closeProfileModal();
-                        }
-                    });
-                }
-            }
-
-            bindProfileEventListeners();
-            bindProfileNavHotzoneFallback();
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', bindProfileEventListeners);
+                });
             }
 
             // 暴露给外部
             window.closeProfileModal = closeProfileModal;
-            window.toggleProfileEditMode = toggleProfileEditMode;
-            window.profileSystem = {
-                openProfileModal,
-                loadProfileData,
-                saveProfileData,
-                showCuteToast
-            };
+            window.openProfileEditModal = openProfileEditModal;
+            window.closeProfileEditModal = closeProfileEditModal;
+            window.saveProfileData = saveProfileData;
+            window.profileSystem = { openProfileModal: window.openProfileModal, loadProfileData, saveProfileData, showCuteToast };
         })();
     </script>
 </body>
