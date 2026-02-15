@@ -1732,6 +1732,10 @@
             box-shadow: 0 1px 4px var(--shadow-color-light);
         }
 
+        .msg-avatar.square {
+            border-radius: 6px;
+        }
+
         .msg-avatar img {
             width: 100%;
             height: 100%;
@@ -1751,7 +1755,7 @@
 
         /* 消息内容区 */
         .msg-content {
-            max-width: calc(100% - 52px);
+            max-width: 70%;
             display: flex;
             flex-direction: column;
         }
@@ -1768,6 +1772,7 @@
             padding: 10px 15px;
             border-radius: 12px;
             max-width: 100%;
+            width: fit-content;
             word-wrap: break-word;
             word-break: break-word;
             font-size: 15px;
@@ -5804,6 +5809,13 @@
                             <span class="ios-slider"></span>
                         </label>
                     </div>
+                    <div class="friend-settings-row">
+                        <div class="friend-settings-desc">方形头像</div>
+                        <label class="ios-switch">
+                            <input id="chatSquareAvatarToggle" type="checkbox">
+                            <span class="ios-slider"></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="friend-settings-card">
@@ -7861,6 +7873,10 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         if (chatHideAvatarToggle) {
                             chatHideAvatarToggle.checked = friend.chatHideAvatar ?? FeatureConfig.friend.defaultHideAvatar;
                         }
+                        const chatSquareAvatarToggle = document.getElementById('chatSquareAvatarToggle');
+                        if (chatSquareAvatarToggle) {
+                            chatSquareAvatarToggle.checked = friend.chatSquareAvatar ?? false;
+                        }
                         if (charAvatarInput) {
                             charAvatarInput.value = '';
                         }
@@ -7984,6 +8000,7 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     return;
                 }
 
+                const sqToggle = document.getElementById('chatSquareAvatarToggle');
                 const updated = friendSystem ? friendSystem.updateFriend(currentFriendId, {
                     name: newName,
                     persona: charPersonaInput.value.trim(),
@@ -7992,7 +8009,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     voiceIdMode: voiceIdMode ? voiceIdMode.value : 'auto',
                     chatShowTime: chatShowTimeToggle ? chatShowTimeToggle.checked : FeatureConfig.friend.defaultShowTime,
                     chatReadStatus: chatReadToggle ? chatReadToggle.checked : FeatureConfig.friend.defaultReadStatus,
-                    chatHideAvatar: chatHideAvatarToggle ? chatHideAvatarToggle.checked : FeatureConfig.friend.defaultHideAvatar
+                    chatHideAvatar: chatHideAvatarToggle ? chatHideAvatarToggle.checked : FeatureConfig.friend.defaultHideAvatar,
+                    chatSquareAvatar: sqToggle ? sqToggle.checked : false
                 }) : null;
                 if (updated) {
                     ModalManager.hide('charSettings');
@@ -8027,6 +8045,13 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                         }
 
                         chatSession.showChatStatus('好友设置已保存', 'success');
+                        // 刷新聊天消息中的头像形状和隐藏状态
+                        const sq = sqToggle ? sqToggle.checked : false;
+                        const hd = chatHideAvatarToggle ? chatHideAvatarToggle.checked : false;
+                        chatMessages.querySelectorAll('.msg-avatar').forEach(el => {
+                            el.classList.toggle('square', sq);
+                            el.style.visibility = hd ? 'hidden' : '';
+                        });
                     }
                     // 刷新好友列表
                     renderFriendList();
@@ -11988,14 +12013,17 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 // 头像
                 const avatarDiv = document.createElement('div');
-                avatarDiv.className = 'msg-avatar';
+                const curFriend = this.friendSystem ? this.friendSystem.getFriendById(this.currentFriendId) : null;
+                const isSquare = curFriend?.chatSquareAvatar ?? false;
+                const isHidden = curFriend?.chatHideAvatar ?? false;
+                avatarDiv.className = 'msg-avatar' + (isSquare ? ' square' : '');
+                if (isHidden) avatarDiv.style.visibility = 'hidden';
                 let avatarSrc = '';
                 if (role === 'user') {
                     const userProfile = StorageManager.get('userProfile', {});
                     avatarSrc = userProfile.avatar || '';
                 } else {
-                    const friend = this.friendSystem ? this.friendSystem.getFriendById(this.currentFriendId) : null;
-                    avatarSrc = friend?.avatar || '';
+                    avatarSrc = curFriend?.avatar || '';
                 }
                 if (avatarSrc) {
                     const avatarImg = document.createElement('img');
