@@ -392,23 +392,68 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
+        /* ============================================================
+           移动端布局加固 - 防止页面拖动、缩放、错位
+           ============================================================ */
+        
+        html {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
         body {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            overscroll-behavior: none;
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
             background: linear-gradient(135deg, 
                 #f5f8fa 0%, 
                 #eef4f8 50%, 
                 #f0f6fa 100%);
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            /* 禁止移动端页面可以被拖动 */
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+        }
+
+        /* 禁止所有元素的滚动橡皮筋效果和意外拖拽 */
+        * {
+            overscroll-behavior: contain;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+
+        /* 只允许某些特定元素的自然滚动 */
+        .main-content,
+        .modal-content,
+        .modal-body,
+        .chat-messages,
+        .friend-list,
+        .form-control,
+        .chat-input,
+        .fullscreen-chat-messages,
+        [style*="overflow-y: auto"] {
+            touch-action: pan-y;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 桌面端恢复padding */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
         }
 
         /* ============================================================
@@ -447,17 +492,33 @@
         .iphone-container {
             width: 100%;
             max-width: 430px;
-            height: 90vh;
-            max-height: 932px;
+            height: 100%;
+            max-height: 100%;
             background-color: var(--color-background);
-            border-radius: 40px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border-radius: 0;
+            box-shadow: none;
             overflow: hidden;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
-            /* 禁止容器本身被拖动 */
             touch-action: pan-y;
+            overscroll-behavior: contain;
+        }
+
+        /* 桌面端恢复圆角和阴影 */
+        @media (min-width: 768px) {
+            .iphone-container {
+                position: relative;
+                height: 90vh;
+                max-height: 932px;
+                border-radius: 40px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+                transform: none;
+                left: auto;
+            }
         }
 
         .status-bar {
@@ -503,8 +564,8 @@
             flex-direction: column;
             align-items: center;
             -webkit-overflow-scrolling: touch;
-            /* 防止内容区域水平滚动导致整体移动 */
             overscroll-behavior: contain;
+            touch-action: pan-y;
             position: relative;
         }
 
@@ -513,8 +574,6 @@
             height: 100%;
             position: relative;
             overflow: visible;
-            /* 禁止主屏幕内容可以被水平拖动 */
-            touch-action: pan-y;
         }
         
         /* ========== 玻璃质感组件系统 ========== */
@@ -1033,7 +1092,17 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 0;
+            overflow: hidden;
+            overscroll-behavior: contain;
+            touch-action: none;
+        }
+
+        /* 桌面端恢复padding */
+        @media (min-width: 768px) {
+            .modal {
+                padding: 20px;
+            }
         }
 
         .modal-content {
@@ -1044,19 +1113,33 @@
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 50px var(--shadow-color-strong);
+            overscroll-behavior: contain;
+            touch-action: pan-y;
             animation: modalSlideIn 0.3s ease;
         }
 
         /* API 配置弹窗全屏（手机内）样式 */
         #apiModal .modal-content {
             width: 100%;
-            max-width: 430px;
-            height: 90vh;
-            max-height: 932px;
-            border-radius: 40px;
+            max-width: 100%;
+            height: 100%;
+            max-height: 100%;
+            border-radius: 0;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+        }
+
+        /* 桌面端恢复圆角和尺寸 */
+        @media (min-width: 768px) {
+            #apiModal .modal-content {
+                max-width: 430px;
+                height: 90vh;
+                max-height: 932px;
+                border-radius: 40px;
+            }
         }
 
         #apiModal .modal-header {
@@ -1068,6 +1151,8 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px 22px 26px;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
         }
 
         #apiModal .form-control {
@@ -1157,14 +1242,18 @@
             background-color: transparent;
             justify-content: center;
             align-items: center;
+            padding: 0;
+            overflow: hidden;
+            overscroll-behavior: contain;
+            touch-action: none;
         }
 
         #chatModal .modal-content {
             width: 100%;
-            max-width: 430px;
-            height: 90vh;
-            max-height: 932px;
-            border-radius: 40px;
+            max-width: 100%;
+            height: 100%;
+            max-height: 100%;
+            border-radius: 0;
             box-shadow: none;
             display: flex;
             flex-direction: column;
@@ -1172,8 +1261,18 @@
             animation: none;
             overflow: hidden;
             position: relative;
-            /* 禁止聊天页面被拖动 */
+            overscroll-behavior: contain;
             touch-action: pan-y;
+        }
+
+        /* 桌面端恢复圆角和尺寸 */
+        @media (min-width: 768px) {
+            #chatModal .modal-content {
+                max-width: 430px;
+                height: 90vh;
+                max-height: 932px;
+                border-radius: 40px;
+            }
         }
 
         /* 聊天页消息区覆盖通用样式，避免底部出现多余分隔缝 */
@@ -1449,6 +1548,11 @@
             -webkit-backdrop-filter: blur(15px);
             color: var(--color-text-dark);
             font-weight: 400;
+            /* 移动端输入防护 */
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         textarea.form-control {
@@ -1456,6 +1560,9 @@
             padding: 14px 18px;
             min-height: 48px;
             resize: none;
+            /* 移动端文本域防护 */
+            overscroll-behavior: contain;
+            touch-action: pan-y;
         }
 
         #modelSelect {
@@ -1614,9 +1721,10 @@
             -moz-user-select: none;
             -ms-user-select: none;
             -webkit-touch-callout: none;
-            /* 确保滚动不会影响外部容器 */
+            /* 移动端防滚动穿透 */
             overscroll-behavior: contain;
-            position: relative;
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* ============================================================
@@ -2457,11 +2565,6 @@
             display: flex;
             gap: 8px;
             align-items: flex-end;
-            /* 确保输入区域在键盘弹出时保持在底部 */
-            position: relative;
-            background: var(--color-bg-white);
-            padding: 12px 16px;
-            border-top: 1px solid var(--color-border-lighter);
         }
 
         .chat-input-area-wrap.chat-extra-open .chat-input-row {
@@ -2551,6 +2654,10 @@
             min-height: 40px;
             max-height: 120px;
             line-height: 20px;
+            /* 移动端输入防护 */
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            overscroll-behavior: contain;
         }
 
         .chat-send-btn {
@@ -2585,8 +2692,9 @@
             max-height: 100%;
             overflow-y: auto;
             padding: 16px !important;
-            /* 防止滚动传播 */
+            /* 移动端防滚动穿透 */
             overscroll-behavior: contain;
+            touch-action: pan-y;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -2756,9 +2864,6 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            /* 禁止设置页面被拖动 */
-            touch-action: pan-y;
-            position: relative;
         }
 
         .settings-nav {
@@ -2821,9 +2926,6 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            /* 防止滚动传播到父容器 */
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
         }
 
         /* 页面提示词统一样式 */
@@ -3017,9 +3119,6 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            /* 禁止好友设置页面被拖动 */
-            touch-action: pan-y;
-            position: relative;
         }
 
         .friend-settings-nav {
@@ -3874,11 +3973,6 @@
                 padding: 0;
                 background: var(--color-background);
                 align-items: flex-start;
-                /* 移动端：防止页面可以被拖出视口 */
-                overflow: hidden;
-                position: fixed;
-                width: 100%;
-                height: 100%;
             }
 
             .iphone-container {
@@ -3890,11 +3984,6 @@
                 border-radius: 0;
                 box-shadow: none;
                 background-color: var(--color-background);
-                /* 移动端：禁止整个容器被拖动 */
-                position: fixed;
-                top: 0;
-                left: 0;
-                touch-action: none;
             }
 
             .status-bar {
@@ -3902,10 +3991,6 @@
                 height: auto;
                 min-height: 44px;
                 padding-bottom: 5px;
-                /* 防止状态栏被拖动 */
-                position: sticky;
-                top: 0;
-                z-index: 1000;
             }
 
             .dock {
@@ -3921,9 +4006,6 @@
             .modal {
                 padding: 0;
                 background-color: transparent;
-                /* 禁止模态框容器被拖动 */
-                overflow: hidden;
-                position: fixed;
             }
 
             #chatModal .modal-content,
@@ -3939,11 +4021,6 @@
                 border-radius: 0;
                 margin: 0;
                 box-shadow: none;
-                /* 防止内容页面被拖动 */
-                position: fixed;
-                top: 0;
-                left: 0;
-                touch-action: none;
             }
 
             /* 显示状态栏时的导航栏样式（紧贴状态栏） */
@@ -4182,12 +4259,6 @@
                 #e8f2f7 65%, 
                 #f0f6fa 100%);
             overflow-y: auto;
-            /* 防止滚动传播到父容器 */
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-            /* 确保内容区域正确定位 */
-            position: relative;
-            flex: 1;
         }
 
         .profile-header {
@@ -4196,8 +4267,6 @@
             padding: 48px 24px 32px;
             text-align: center;
             overflow: hidden;
-            /* 头部区域不需要固定 */
-            flex-shrink: 0;
         }
 
         .profile-bg-gradient {
@@ -4874,117 +4943,6 @@
         /* 边框颜色类 */
         .border-ui { border-color: var(--color-ui-border) !important; }
         .border-accent { border-color: var(--color-accent) !important; }
-
-        /* ============================================================
-           移动端布局修复 - 防止页面错位和拖动
-           ⚠️ 重要：这套系统是通用的，新页面自动继承！
-           
-           【新页面开发者指南】
-           只要你的新页面遵循以下任一结构，就自动获得所有修复：
-           
-           结构A - 小弹窗：
-           <div class="modal" id="yourModal">
-               <div class="modal-content">
-                   <div class="status-bar">...</div>
-                   <div class="modal-header">...</div>
-                   <div class="modal-body">...</div>
-               </div>
-           </div>
-           
-           结构B - 全屏页面：
-           <div class="modal" id="yourModal">
-               <div class="settings-screen">
-                   <div class="status-bar">...</div>
-                   <div class="settings-nav">...</div>
-                   <div class="settings-scroll">...</div>
-               </div>
-           </div>
-           
-           ✅ 自动获得的功能：
-           - 防止页面被拖出视口
-           - 键盘弹出时布局不错位
-           - 滚动区域正确隔离
-           - iOS橡皮筋效果禁用
-           - 触摸优化和平滑滚动
-           ============================================================ */
-        
-        /* 【第1层保障】全局基础：禁止橡皮筋效果和过度滚动 */
-        html, body {
-            overscroll-behavior-y: none;
-            overscroll-behavior-x: none;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* 【第2层保障】所有模态窗口：禁止内容被拖出视口 */
-        .modal {
-            overscroll-behavior: none;
-        }
-        
-        /* 【第3层保障】所有弹窗内容区：只允许垂直滚动 */
-        /* 通用选择器自动覆盖所有符合规范的页面 */
-        .modal-content,
-        .settings-screen,
-        .friend-settings-screen,
-        .modal .modal-content,
-        .modal .settings-screen,
-        .modal .friend-settings-screen {
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-            /* 新页面自动获得触摸优化 */
-        }
-        
-        /* 主容器：完全固定，防止被拖动 */
-        .iphone-container {
-            overscroll-behavior: none;
-        }
-        
-        /* 聊天输入框容器：固定在底部 */
-        .chat-input-area-wrap {
-            position: relative;
-            flex-shrink: 0;
-            background: var(--color-bg-white);
-        }
-        
-        /* Friend List导航栏：固定在底部 */
-        .friend-list-nav {
-            position: relative;
-            flex-shrink: 0;
-        }
-        
-        /* 【第4层保障】确保所有滚动容器都有正确的行为 */
-        /* 包括：设置页、好友列表、聊天消息、个人资料、主内容区 */
-        /* 任何使用这些类名的新页面都会自动获得修复 */
-        .settings-scroll,
-        .friend-list,
-        .chat-messages,
-        .profile-content,
-        .main-content,
-        .modal-body,
-        /* 通配：任何在modal内的滚动容器 */
-        .modal [class*="-scroll"],
-        .modal [class*="-list"],
-        .modal [class*="-content"][style*="overflow"] {
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* iOS特定修复：防止键盘弹出时布局崩溃 */
-        @supports (-webkit-touch-callout: none) {
-            /* iOS Safari专用 */
-            body {
-                position: fixed;
-                width: 100%;
-            }
-            
-            .iphone-container {
-                position: absolute;
-            }
-            
-            /* 确保输入框在键盘弹出时可见 */
-            input, textarea {
-                font-size: 16px !important; /* 防止iOS自动缩放 */
-            }
-        }
     </style>
 
 </head>
