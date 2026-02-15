@@ -4847,12 +4847,11 @@
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="profile-info">
-                        <div class="profile-username">小雨=</div>
-                        <div class="profile-handle">disappear</div>
-                        <div class="profile-bio">' ELL IS FELL '</div>
+                        <div class="profile-username">小雨</div>
+                        <div class="profile-handle">@XY521</div>
                         <div class="profile-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>孤岛</span>
+                            <span>爱尔兰</span>
                         </div>
                     </div>
                 </div>
@@ -14150,9 +14149,9 @@ UIManager.hideUIDemo() // 隐藏此测试页面
 
                 const getActiveHost = (activeEl) => {
                     if (!activeEl) return null;
-                    const directHost = activeEl.closest('.modal, [id$="Modal"], [class*="modal"], [class*="Modal"]');
+                    const directHost = activeEl.closest('.modal, [id$="Modal"]');
                     if (isVisible(directHost)) return directHost;
-                    const allHosts = Array.from(document.querySelectorAll('.modal, [id$="Modal"], [class*="modal"], [class*="Modal"]'));
+                    const allHosts = Array.from(document.querySelectorAll('.modal, [id$="Modal"]'));
                     for (let i = allHosts.length - 1; i >= 0; i--) {
                         if (isVisible(allHosts[i])) return allHosts[i];
                     }
