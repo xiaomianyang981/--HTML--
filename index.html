@@ -14124,9 +14124,8 @@ UIManager.hideUIDemo() // 隐藏此测试页面
             // ========== 虚拟键盘自适应功能 ==========
             // 使用 visualViewport API 动态调整容器高度，确保键盘弹出时输入框始终可见
             (function () {
-                const chatModalEl = document.getElementById('chatModal');
                 const chatModalContent = document.querySelector('#chatModal .modal-content');
-                if (!chatModalContent || !chatModalEl) return;
+                if (!chatModalContent) return;
 
                 let rafId = 0;
                 function adjustForKeyboard() {
@@ -14134,15 +14133,11 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     rafId = requestAnimationFrame(() => {
                         if (!window.visualViewport) return;
                         const vv = window.visualViewport;
-                        const keyboardHeight = window.innerHeight - vv.height;
+                        const keyboardHeight = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
 
                         if (keyboardHeight > 50 && document.activeElement &&
                             (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                            // 键盘弹出：把整个弹窗钉在可视区域顶部
-                            chatModalEl.style.position = 'fixed';
-                            chatModalEl.style.top = vv.offsetTop + 'px';
-                            chatModalEl.style.height = vv.height + 'px';
-                            chatModalEl.style.backgroundColor = 'var(--color-bg-white)';
+                            // 键盘弹出：仅调整聊天内容高度，保持 modal 全屏覆盖避免露出主屏
                             chatModalContent.style.height = vv.height + 'px';
                             chatModalContent.style.maxHeight = vv.height + 'px';
                             if (chatMessages) {
@@ -14150,10 +14145,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                             }
                         } else {
                             // 键盘收起：恢复
-                            chatModalEl.style.position = '';
-                            chatModalEl.style.top = '';
-                            chatModalEl.style.height = '';
-                            chatModalEl.style.backgroundColor = '';
                             chatModalContent.style.height = '';
                             chatModalContent.style.maxHeight = '';
                             // 重置视口滚动偏移
@@ -14174,10 +14165,6 @@ UIManager.hideUIDemo() // 隐藏此测试页面
                     });
                     chatInput.addEventListener('blur', () => {
                         setTimeout(() => {
-                            chatModalEl.style.position = '';
-                            chatModalEl.style.top = '';
-                            chatModalEl.style.height = '';
-                            chatModalEl.style.backgroundColor = '';
                             chatModalContent.style.height = '';
                             chatModalContent.style.maxHeight = '';
                             window.scrollTo(0, 0);
